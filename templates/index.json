@@ -23,7 +23,9 @@
           }
         }
       },
-      "block_order": ["slide-1"],
+      "block_order": [
+        "slide-1"
+      ],
       "settings": {
         "layout": "full_bleed",
         "slide_height": "adapt_image",
@@ -40,7 +42,7 @@
       "settings": {
         "title": "",
         "heading_size": "h2",
-        "description": "",
+        "description": "<p><strong>BEST-SELLER</strong></p>",
         "show_description": false,
         "description_style": "subtitle",
         "collection": "best-sellers",
@@ -82,7 +84,10 @@
           }
         }
       },
-      "block_order": ["heading", "text"],
+      "block_order": [
+        "heading",
+        "text"
+      ],
       "settings": {
         "image": "shopify://shop_images/1.jpg",
         "height": "adapt",
@@ -118,7 +123,10 @@
           }
         }
       },
-      "block_order": ["heading", "text"],
+      "block_order": [
+        "heading",
+        "text"
+      ],
       "settings": {
         "image": "shopify://shop_images/4a9620d25330211b40ab15925c3cc30f.jpg",
         "height": "adapt",
@@ -138,13 +146,49 @@
     "communaute": {
       "type": "anaphys-gallery",
       "blocks": {
-        "image-1": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_3.png", "link": "" } },
-        "image-2": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_2.png", "link": "" } },
-        "image-3": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_1_c319bf50-280a-4b66-bb1f-86b70ad68524.png", "link": "" } },
-        "image-4": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys.png", "link": "" } },
-        "image-5": { "type": "image", "settings": { "image": "shopify://shop_images/Design_sans_titre_1.png", "link": "" } }
+        "image-1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/anaphys_3.png",
+            "link": ""
+          }
+        },
+        "image-2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/anaphys_2.png",
+            "link": ""
+          }
+        },
+        "image-3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/anaphys_1_c319bf50-280a-4b66-bb1f-86b70ad68524.png",
+            "link": ""
+          }
+        },
+        "image-4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/anaphys.png",
+            "link": ""
+          }
+        },
+        "image-5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/Design_sans_titre_1.png",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["image-1", "image-2", "image-3", "image-4", "image-5"],
+      "block_order": [
+        "image-1",
+        "image-2",
+        "image-3",
+        "image-4",
+        "image-5"
+      ],
       "settings": {
         "eyebrow": "",
         "heading": "#ANAPHYS",
@@ -162,5 +206,11 @@
       }
     }
   },
-  "order": ["hero", "best-sellers", "source", "rituel", "communaute"]
+  "order": [
+    "hero",
+    "best-sellers",
+    "source",
+    "rituel",
+    "communaute"
+  ]
 }

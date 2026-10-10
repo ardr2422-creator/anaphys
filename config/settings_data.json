@@ -201,7 +201,8 @@
       }
     },
     "logo": "shopify://shop_images/Copie_de_Noir_Et_Blanc_Minimaliste_Logo.png",
-    "logo_width_mobile": 80
+    "logo_width_mobile": 80,
+    "accent_color": "#ACBFA4"
   },
   "presets": {
     "Dawn": {

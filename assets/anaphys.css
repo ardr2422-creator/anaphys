@@ -390,3 +390,76 @@
   width: 2.6rem;
   height: 2.6rem;
 }
+
+/* Typographie alignée sur l'ancien site : pas d'espacement des lettres, titres plus compacts */
+body {
+  color: rgba(var(--color-foreground), 0.9);
+  letter-spacing: normal;
+}
+h1, h2, h3, h4, h5,
+.h0, .h1, .h2, .h3, .h4, .h5 {
+  letter-spacing: normal;
+}
+h1,
+.h1 {
+  font-size: calc(var(--font-heading-scale) * 2.25rem);
+}
+.h0 {
+  font-size: calc(var(--font-heading-scale) * 3.25rem);
+}
+@media only screen and (min-width: 750px) {
+  h1,
+  .h1 {
+    font-size: calc(var(--font-heading-scale) * 3rem);
+  }
+  .h0 {
+    font-size: calc(var(--font-heading-scale) * 4.25rem);
+  }
+}
+
+/* Bandeau d'annonce : police du texte courant, non grasse */
+.announcement-bar__message {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+}
+
+/* Logo de l'en-tête sans marge autour */
+.header__heading,
+.header__heading-link {
+  line-height: 0;
+}
+.header__heading-link {
+  padding: 0;
+}
+
+/* Prix en couleur d'accent */
+.card-information .price-item,
+.product .price-item {
+  color: rgb(var(--color-accent-anaphys));
+  font-weight: var(--font-body-weight-bold);
+}
+.card-information .price-item--regular.price-item--last,
+.product .price__sale .price-item--regular {
+  color: rgba(var(--color-foreground), 0.75);
+  font-weight: var(--font-body-weight);
+}
+
+/* Libellé au-dessus des meilleures ventes */
+.collection .collection__description.subtitle {
+  width: 100%;
+  margin-top: 0;
+  text-align: center;
+}
+
+/* Bloc image + texte : le texte colle au bord extérieur, l'image garde ses 4 coins arrondis */
+@media screen and (min-width: 750px) {
+  .image-with-text__grid:not(.image-with-text__grid--reverse) .image-with-text__content {
+    padding-right: 0;
+  }
+  .image-with-text__grid--reverse .image-with-text__content {
+    padding-left: 0;
+  }
+}
+.image-with-text .image-with-text__media {
+  border-radius: var(--media-radius) !important;
+}

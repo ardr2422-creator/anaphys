@@ -108,6 +108,13 @@
           "on_secondary_button": "secondary_button_label",
           "secondary_button_border": "secondary_button_label"
         }
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "default": "#ACBFA4",
+        "label": "Couleur d'accent",
+        "info": "Utilisée pour les prix des cartes produit et de la fiche produit."
       }
     ]
   },
