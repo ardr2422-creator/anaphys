@@ -1,0 +1,122 @@
+{%- comment -%}
+  Mode d'emploi du produit : étapes (custom.mode_emploi), temps de pose
+  (custom.temps_de_pose) et conseil (custom.conseil), avec une image facultative.
+{%- endcomment -%}
+{{ 'anaphys-product.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign steps = product.metafields.custom.mode_emploi.value
+  assign pose = product.metafields.custom.temps_de_pose.value
+  assign conseil = product.metafields.custom.conseil.value
+-%}
+
+{%- if steps != blank or request.design_mode -%}
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="anaphys-howto page-width section-{{ section.id }}-padding{% if section.settings.image != blank %} anaphys-howto--image{% endif %}">
+      {%- if section.settings.image != blank -%}
+        <div class="anaphys-howto__media">
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: loading: 'lazy', widths: '400, 600, 800, 1200', sizes: '(min-width: 990px) 45vw, 100vw', alt: section.settings.image.alt
+          }}
+        </div>
+      {%- endif -%}
+      <div class="anaphys-howto__content">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="anaphys-howto__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+        {%- if pose != blank -%}
+          <p class="anaphys-howto__pose">
+            {%- render 'anaphys-icon', icon: 'schedule' -%}
+            <span>Temps de pose : <strong>{{ pose | escape }}</strong></span>
+          </p>
+        {%- endif -%}
+        {%- if steps != blank -%}
+          <ol class="anaphys-howto__steps list-unstyled" role="list">
+            {%- for step in steps -%}
+              <li class="anaphys-howto__step">
+                <span class="anaphys-howto__index" aria-hidden="true">{{ forloop.index }}</span>
+                <p>{{ step | escape }}</p>
+              </li>
+            {%- endfor -%}
+          </ol>
+        {%- else -%}
+          <p>Aucune étape reliée à ce produit (métachamp custom.mode_emploi).</p>
+        {%- endif -%}
+        {%- if conseil != blank -%}
+          <p class="anaphys-howto__tip">{{ conseil | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Mode d'emploi",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Comment <strong>l'utiliser</strong>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "presets": [
+    {
+      "name": "Mode d'emploi"
+    }
+  ]
+}
+{% endschema %}

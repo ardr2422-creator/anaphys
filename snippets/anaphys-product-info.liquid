@@ -1,0 +1,70 @@
+{%- comment -%}
+  Accordéon d'informations du bloc d'achat.
+  Utilisation et composition viennent des métachamps du produit
+  (custom.mode_emploi, custom.temps_de_pose, custom.conseil, custom.inci) ;
+  livraison et retours sont des textes du bloc, modifiables dans l'éditeur.
+  Accepts:
+  - block: {Object} bloc « Informations produit »
+  - product: {Object}
+{%- endcomment -%}
+{%- liquid
+  assign steps = product.metafields.custom.mode_emploi.value
+  assign pose = product.metafields.custom.temps_de_pose.value
+  assign conseil = product.metafields.custom.conseil.value
+  assign inci = product.metafields.custom.inci.value
+-%}
+<div class="anaphys-info" {{ block.shopify_attributes }}>
+  {%- if block.settings.show_usage and steps != blank -%}
+    <details class="anaphys-info__item"{% if block.settings.open_first %} open{% endif %}>
+      <summary class="anaphys-info__summary">
+        {%- render 'anaphys-icon', icon: 'water_drop', class: 'anaphys-info__icon' -%}
+        <span>{{ block.settings.usage_title | escape }}</span>
+      </summary>
+      <div class="anaphys-info__content">
+        <ol class="anaphys-info__steps">
+          {%- for step in steps -%}
+            <li>{{ step | escape }}</li>
+          {%- endfor -%}
+        </ol>
+        {%- if pose != blank -%}
+          <p class="anaphys-info__note"><strong>Temps de pose :</strong> {{ pose | escape }}</p>
+        {%- endif -%}
+        {%- if conseil != blank -%}
+          <p class="anaphys-info__note">{{ conseil | escape }}</p>
+        {%- endif -%}
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if block.settings.show_inci and inci != blank -%}
+    <details class="anaphys-info__item">
+      <summary class="anaphys-info__summary">
+        {%- render 'anaphys-icon', icon: 'science', class: 'anaphys-info__icon' -%}
+        <span>{{ block.settings.inci_title | escape }}</span>
+      </summary>
+      <div class="anaphys-info__content anaphys-info__inci">
+        {{ inci | escape | newline_to_br }}
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if block.settings.shipping_text != blank -%}
+    <details class="anaphys-info__item">
+      <summary class="anaphys-info__summary">
+        {%- render 'anaphys-icon', icon: 'local_shipping', class: 'anaphys-info__icon' -%}
+        <span>{{ block.settings.shipping_title | escape }}</span>
+      </summary>
+      <div class="anaphys-info__content rte">{{ block.settings.shipping_text }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if block.settings.returns_text != blank -%}
+    <details class="anaphys-info__item">
+      <summary class="anaphys-info__summary">
+        {%- render 'anaphys-icon', icon: 'autorenew', class: 'anaphys-info__icon' -%}
+        <span>{{ block.settings.returns_title | escape }}</span>
+      </summary>
+      <div class="anaphys-info__content rte">{{ block.settings.returns_text }}</div>
+    </details>
+  {%- endif -%}
+</div>

@@ -1,0 +1,33 @@
+{%- comment -%}
+  Ligne de réassurance sous le bouton : jusqu'à 3 engagements courts + moyens de paiement.
+  Accepts:
+  - block: {Object} bloc « Réassurance »
+{%- endcomment -%}
+<div class="anaphys-trust" {{ block.shopify_attributes }}>
+  {%- assign has_items = false -%}
+  {%- for i in (1..3) -%}
+    {%- assign text_key = 'text_' | append: i -%}
+    {%- if block.settings[text_key] != blank -%}{%- assign has_items = true -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if has_items -%}
+    <ul class="anaphys-trust__list list-unstyled" role="list">
+      {%- for i in (1..3) -%}
+        {%- assign text_key = 'text_' | append: i -%}
+        {%- assign icon_key = 'icon_' | append: i -%}
+        {%- if block.settings[text_key] != blank -%}
+          <li class="anaphys-trust__item">
+            {%- render 'anaphys-icon', icon: block.settings[icon_key] -%}
+            <span>{{ block.settings[text_key] | escape }}</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+  {%- if block.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+    <ul class="anaphys-trust__payments list-unstyled" role="list" aria-label="{{ 'sections.footer.payment' | t }}">
+      {%- for type in shop.enabled_payment_types -%}
+        <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>

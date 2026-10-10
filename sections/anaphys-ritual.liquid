@@ -1,0 +1,205 @@
+{%- comment -%}
+  Le rituel ANAPHYS : les 5 étapes, du cuir chevelu aux longueurs.
+  Sur une fiche produit, l'étape du produit affiché est mise en avant.
+  Chaque autre étape peut s'ajouter au panier directement.
+{%- endcomment -%}
+{{ 'anaphys-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="anaphys-ritual page-width section-{{ section.id }}-padding">
+    <div class="anaphys-ritual__intro">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="anaphys-ritual__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+          {{- section.settings.heading -}}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="anaphys-ritual__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </div>
+
+    <ol class="anaphys-ritual__steps list-unstyled" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign step_product = block.settings.product
+          assign is_current = false
+          if product and step_product and step_product.id == product.id
+            assign is_current = true
+          endif
+        -%}
+        <li
+          class="anaphys-ritual__step{% if is_current %} is-current{% endif %}"
+          {% if is_current %}
+            aria-current="step"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <p class="anaphys-ritual__label">
+            <span class="anaphys-ritual__index">{{ forloop.index }}</span>
+            {{ block.settings.step_name | escape }}
+            {%- if is_current -%}
+              <span class="anaphys-ritual__here">{{ section.settings.current_label | escape }}</span>
+            {%- endif -%}
+          </p>
+
+          {%- if step_product != blank -%}
+            <a href="{{ step_product.url }}" class="anaphys-ritual__media" tabindex="-1" aria-hidden="true">
+              {%- if step_product.featured_media -%}
+                {{
+                  step_product.featured_media
+                  | image_url: width: 600
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '200, 300, 400, 600',
+                    sizes: '(min-width: 990px) 18vw, (min-width: 750px) 30vw, 60vw',
+                    alt: ''
+                }}
+              {%- endif -%}
+            </a>
+            <a href="{{ step_product.url }}" class="anaphys-ritual__title">{{ step_product.title | escape }}</a>
+            {%- if block.settings.text != blank -%}
+              <p class="anaphys-ritual__desc">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+            <div class="anaphys-ritual__footer">
+              <span class="anaphys-ritual__price">{{ step_product.price | money }}</span>
+              {%- if section.settings.show_add and is_current == false and step_product.available -%}
+                <product-form class="anaphys-ritual__form" data-hide-errors="true">
+                  {%- form 'product', step_product, class: 'anaphys-ritual__add-form', novalidate: 'novalidate' -%}
+                    <input type="hidden" name="id" value="{{ step_product.selected_or_first_available_variant.id }}">
+                    <button type="submit" name="add" class="anaphys-ritual__add">
+                      <span>{{ section.settings.add_label | escape }}<span class="visually-hidden"> : {{ step_product.title | escape }}</span></span>
+                      <div class="loading__spinner hidden">
+                        <svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                          <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                        </svg>
+                      </div>
+                    </button>
+                  {%- endform -%}
+                </product-form>
+              {%- endif -%}
+            </div>
+          {%- elsif request.design_mode -%}
+            <p class="anaphys-ritual__desc">Choisis un produit pour cette étape.</p>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rituel ANAPHYS",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Le rituel <strong>ANAPHYS</strong>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Le soin commence à la source : on s'occupe d'abord du cuir chevelu, puis des longueurs.</p>"
+    },
+    {
+      "type": "text",
+      "id": "current_label",
+      "label": "Libellé de l'étape en cours",
+      "default": "Tu es ici"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add",
+      "default": true,
+      "label": "Bouton d'ajout au panier sur les autres étapes"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Texte du bouton",
+      "default": "Ajouter"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "settings": [
+        {
+          "type": "text",
+          "id": "step_name",
+          "label": "Nom de l'étape",
+          "default": "Purifier"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Phrase courte"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rituel ANAPHYS",
+      "blocks": [
+        { "type": "step", "settings": { "step_name": "Purifier" } },
+        { "type": "step", "settings": { "step_name": "Nettoyer" } },
+        { "type": "step", "settings": { "step_name": "Nourrir" } },
+        { "type": "step", "settings": { "step_name": "Réparer" } },
+        { "type": "step", "settings": { "step_name": "Fortifier" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

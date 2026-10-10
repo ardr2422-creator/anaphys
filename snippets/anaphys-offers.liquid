@@ -1,0 +1,218 @@
+{%- comment -%}
+  Choix de l'offre dans le bloc d'achat : cartes « 1 article », « 2 articles »…
+  Chaque option fixe la quantité ajoutée au panier et affiche le prix total
+  (remise affichée seulement si elle est renseignée : la remise réelle est faite
+  par une réduction automatique Shopify).
+  Option avec cadeau : la variante cadeau est ajoutée au panier en même temps.
+  Accepts:
+  - block: {Object} bloc « Offres »
+  - product: {Object}
+  - product_form_id: {String}
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign default_index = block.settings.default_option | plus: 0
+  assign gift_variant = block.settings.gift_product.selected_or_first_available_variant
+-%}
+
+<anaphys-offers
+  class="anaphys-offers"
+  data-form-id="{{ product_form_id }}"
+  data-unit-price="{{ variant.price }}"
+  data-money-format="{{ shop.money_format | escape }}"
+  {% if gift_variant and gift_variant.available %}
+    data-gift-variant="{{ gift_variant.id }}"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <fieldset class="anaphys-offers__fieldset">
+    {%- if block.settings.heading != blank -%}
+      <legend class="anaphys-offers__legend">{{ block.settings.heading | escape }}</legend>
+    {%- endif -%}
+
+    {%- for i in (1..3) -%}
+      {%- liquid
+        assign enabled_key = 'option_' | append: i | append: '_enabled'
+        assign label_key = 'option_' | append: i | append: '_label'
+        assign qty_key = 'option_' | append: i | append: '_quantity'
+        assign discount_key = 'option_' | append: i | append: '_discount'
+        assign badge_key = 'option_' | append: i | append: '_badge'
+        assign perks_key = 'option_' | append: i | append: '_perks'
+        assign gift_key = 'option_' | append: i | append: '_gift'
+        unless block.settings[enabled_key]
+          continue
+        endunless
+        assign qty = block.settings[qty_key] | at_least: 1
+        assign discount = block.settings[discount_key] | default: 0
+        assign full_total = variant.price | times: qty
+        assign remaining = 100 | minus: discount
+        assign total = full_total | times: remaining | divided_by: 100
+        assign checked = false
+        if forloop.index == default_index
+          assign checked = true
+        endif
+        assign perks = block.settings[perks_key] | newline_to_br | split: '<br />'
+      -%}
+      <label class="anaphys-offer{% if checked %} is-selected{% endif %}">
+        <input
+          class="anaphys-offer__input visually-hidden"
+          type="radio"
+          name="anaphys-offer-{{ block.id }}"
+          value="{{ qty }}"
+          data-discount="{{ discount }}"
+          data-gift="{{ block.settings[gift_key] }}"
+          {% if checked %}
+            checked
+          {% endif %}
+        >
+        <span class="anaphys-offer__check" aria-hidden="true"></span>
+        <span class="anaphys-offer__body">
+          <span class="anaphys-offer__top">
+            <span class="anaphys-offer__label">{{ block.settings[label_key] | escape }}</span>
+            {%- if block.settings[badge_key] != blank -%}
+              <span class="anaphys-offer__badge">{{ block.settings[badge_key] | escape }}</span>
+            {%- endif -%}
+          </span>
+          {%- if perks.size > 0 and block.settings[perks_key] != blank -%}
+            <span class="anaphys-offer__perks">
+              {%- for perk in perks -%}
+                {%- assign perk_text = perk | strip -%}
+                {%- if perk_text != blank -%}
+                  <span class="anaphys-offer__perk">
+                    {%- render 'anaphys-icon', icon: 'check_circle' -%}
+                    {{- perk_text | escape -}}
+                  </span>
+                {%- endif -%}
+              {%- endfor -%}
+            </span>
+          {%- endif -%}
+        </span>
+        <span class="anaphys-offer__price">
+          <span class="anaphys-offer__total" data-offer-total>{{ total | money }}</span>
+          {%- if discount > 0 -%}
+            <s class="anaphys-offer__compare" data-offer-compare>{{ full_total | money }}</s>
+          {%- endif -%}
+        </span>
+      </label>
+    {%- endfor -%}
+  </fieldset>
+
+  <input type="hidden" name="quantity" value="1" form="{{ product_form_id }}" data-offer-quantity>
+</anaphys-offers>
+
+<script>
+  if (!customElements.get('anaphys-offers')) {
+    customElements.define(
+      'anaphys-offers',
+      class AnaphysOffers extends HTMLElement {
+        connectedCallback() {
+          this.form = document.getElementById(this.dataset.formId);
+          this.quantityInput = this.querySelector('[data-offer-quantity]');
+          this.unitPrice = Number(this.dataset.unitPrice);
+          this.giftVariant = this.dataset.giftVariant;
+          this.giftInCart = false;
+
+          this.querySelectorAll('.anaphys-offer__input').forEach((input) => {
+            input.addEventListener('change', () => this.select(input));
+          });
+          this.select(this.querySelector('.anaphys-offer__input:checked') || this.querySelector('.anaphys-offer__input'));
+
+          // Le cadeau part avec le produit : le formulaire envoie une liste d'articles à la place de id + quantity.
+          if (this.form && this.giftVariant) {
+            this.form.closest('product-form')?.addEventListener('submit', (event) => this.withGift(event), true);
+            this.refreshGiftState();
+            if (typeof subscribe === 'function') subscribe(PUB_SUB_EVENTS.cartUpdate, () => this.refreshGiftState());
+          }
+
+          if (typeof subscribe === 'function') {
+            this.unsubscribeVariant = subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+              const variant = event.data?.variant;
+              if (!variant) return;
+              this.unitPrice = variant.price;
+              this.renderPrices();
+            });
+          }
+        }
+
+        disconnectedCallback() {
+          this.unsubscribeVariant?.();
+        }
+
+        select(input) {
+          if (!input) return;
+          input.checked = true;
+          this.querySelectorAll('.anaphys-offer').forEach((card) => card.classList.toggle('is-selected', card.contains(input)));
+          this.quantityInput.value = input.value;
+          this.current = input;
+        }
+
+        renderPrices() {
+          this.querySelectorAll('.anaphys-offer__input').forEach((input) => {
+            const card = input.closest('.anaphys-offer');
+            const full = this.unitPrice * Number(input.value);
+            const total = Math.round((full * (100 - Number(input.dataset.discount || 0))) / 100);
+            card.querySelector('[data-offer-total]').textContent = this.format(total);
+            const compare = card.querySelector('[data-offer-compare]');
+            if (compare) compare.textContent = this.format(full);
+          });
+        }
+
+        // Applique le format de prix de la boutique (ex. « €{{amount_with_comma_separator}} »).
+        format(cents) {
+          const group = (value, thousands, decimal, decimals = 2) => {
+            const [int, dec] = (cents / 100).toFixed(decimals).split('.');
+            return int.replace(/\B(?=(\d{3})+(?!\d))/g, thousands) + (dec ? decimal + dec : '');
+          };
+          const amounts = {
+            amount: () => group(cents, ',', '.'),
+            amount_no_decimals: () => group(cents, ',', '.', 0),
+            amount_with_comma_separator: () => group(cents, '.', ','),
+            amount_no_decimals_with_comma_separator: () => group(cents, '.', ',', 0),
+            amount_with_space_separator: () => group(cents, ' ', ','),
+            amount_with_apostrophe_separator: () => group(cents, "'", '.'),
+          };
+          return (this.dataset.moneyFormat || '{{amount_with_comma_separator}} €').replace(
+            /\{\{\s*(\w+)\s*\}\}/,
+            (match, key) => (amounts[key] || amounts.amount)()
+          );
+        }
+
+        async refreshGiftState() {
+          try {
+            const cart = await fetch(`${window.routes.cart_url}.js`).then((r) => r.json());
+            this.giftInCart = cart.items.some((item) => String(item.variant_id) === this.giftVariant);
+          } catch (e) {
+            this.giftInCart = false;
+          }
+        }
+
+        withGift() {
+          if (this.current?.dataset.gift !== 'true' || this.giftInCart) return;
+          const idInput = this.form.querySelector('[name="id"]');
+          if (!idInput) return;
+          const added = [
+            ['items[0][id]', idInput.value],
+            ['items[0][quantity]', this.quantityInput.value],
+            ['items[1][id]', this.giftVariant],
+            ['items[1][quantity]', '1'],
+          ].map(([name, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            this.form.appendChild(input);
+            return input;
+          });
+          idInput.disabled = true;
+          this.quantityInput.disabled = true;
+          // Rétablit le formulaire une fois les données lues par product-form.
+          setTimeout(() => {
+            added.forEach((input) => input.remove());
+            idInput.disabled = false;
+            this.quantityInput.disabled = false;
+          });
+        }
+      }
+    );
+  }
+</script>

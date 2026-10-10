@@ -196,7 +196,11 @@
                 {%- when 'description' -%}
                   {%- if product.description != blank -%}
                     <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                      {{ product.description }}
+                      {%- if block.settings.intro_only -%}
+                        {{- product.description | split: '<h3' | first -}}
+                      {%- else -%}
+                        {{ product.description }}
+                      {%- endif -%}
                     </div>
                   {%- endif -%}
                 {%- when 'sku' -%}
@@ -693,6 +697,12 @@
                   {% render 'anaphys-benefits', block: block, product: product %}
                 {%- when 'delivery_steps' -%}
                   {% render 'anaphys-delivery-steps', block: block %}
+                {%- when 'offers' -%}
+                  {% render 'anaphys-offers', block: block, product: product, product_form_id: product_form_id %}
+                {%- when 'trust_row' -%}
+                  {% render 'anaphys-trust-row', block: block %}
+                {%- when 'product_info' -%}
+                  {% render 'anaphys-product-info', block: block, product: product %}
               {%- endcase -%}
             {%- endfor -%}
             <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -961,7 +971,16 @@
     {
       "type": "description",
       "name": "t:sections.main-product.blocks.description.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "intro_only",
+          "default": false,
+          "label": "Afficher seulement l'introduction",
+          "info": "S'arrête au premier sous-titre de la description (le reste est affiché par les autres blocs et sections)."
+        }
+      ]
     },
     {
       "type": "share",
@@ -2540,6 +2559,404 @@
           "max": 30,
           "step": 1,
           "default": 0
+        }
+      ]
+    },
+    {
+      "type": "offers",
+      "name": "Offres",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Choisis ton offre"
+        },
+        {
+          "type": "range",
+          "id": "default_option",
+          "label": "Offre sélectionnée par défaut",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "product",
+          "id": "gift_product",
+          "label": "Produit cadeau",
+          "info": "Ajouté au panier avec les offres cochées « Avec cadeau ». La gratuité se règle par une réduction automatique Shopify."
+        },
+        {
+          "type": "header",
+          "content": "Offre 1"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_enabled",
+          "label": "Afficher cette offre",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "option_1_label",
+          "label": "Nom",
+          "default": "1 article"
+        },
+        {
+          "type": "range",
+          "id": "option_1_quantity",
+          "label": "Quantité",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "option_1_discount",
+          "label": "Remise affichée",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 0,
+          "info": "Affichage seulement : crée la même remise en réduction automatique."
+        },
+        {
+          "type": "text",
+          "id": "option_1_badge",
+          "label": "Pastille"
+        },
+        {
+          "type": "textarea",
+          "id": "option_1_perks",
+          "label": "Avantages (un par ligne)",
+          "default": "Livraison standard"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_1_gift",
+          "label": "Avec cadeau",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Offre 2"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_enabled",
+          "label": "Afficher cette offre",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "option_2_label",
+          "label": "Nom",
+          "default": "2 articles"
+        },
+        {
+          "type": "range",
+          "id": "option_2_quantity",
+          "label": "Quantité",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "range",
+          "id": "option_2_discount",
+          "label": "Remise affichée",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 10,
+          "info": "Affichage seulement : crée la même remise en réduction automatique."
+        },
+        {
+          "type": "text",
+          "id": "option_2_badge",
+          "label": "Pastille",
+          "default": "Le plus choisi"
+        },
+        {
+          "type": "textarea",
+          "id": "option_2_perks",
+          "label": "Avantages (un par ligne)",
+          "default": "-10 % sur ta commande\nLivraison offerte\nPetit sac de soin offert"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_2_gift",
+          "label": "Avec cadeau",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Offre 3"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_3_enabled",
+          "label": "Afficher cette offre",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "option_3_label",
+          "label": "Nom",
+          "default": "3 articles"
+        },
+        {
+          "type": "range",
+          "id": "option_3_quantity",
+          "label": "Quantité",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "option_3_discount",
+          "label": "Remise affichée",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 0,
+          "info": "Affichage seulement : crée la même remise en réduction automatique."
+        },
+        {
+          "type": "text",
+          "id": "option_3_badge",
+          "label": "Pastille"
+        },
+        {
+          "type": "textarea",
+          "id": "option_3_perks",
+          "label": "Avantages (un par ligne)"
+        },
+        {
+          "type": "checkbox",
+          "id": "option_3_gift",
+          "label": "Avec cadeau",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "trust_row",
+      "name": "Réassurance",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_1",
+          "label": "Icône 1",
+          "default": "local_shipping",
+          "options": [
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "lock",
+              "label": "Cadenas"
+            },
+            {
+              "value": "credit_card",
+              "label": "Carte bancaire"
+            },
+            {
+              "value": "autorenew",
+              "label": "Retour"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "support_agent",
+              "label": "Service client"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text_1",
+          "label": "Texte 1",
+          "default": "Expédié sous 2 jours ouvrés"
+        },
+        {
+          "type": "select",
+          "id": "icon_2",
+          "label": "Icône 2",
+          "default": "lock",
+          "options": [
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "lock",
+              "label": "Cadenas"
+            },
+            {
+              "value": "credit_card",
+              "label": "Carte bancaire"
+            },
+            {
+              "value": "autorenew",
+              "label": "Retour"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "support_agent",
+              "label": "Service client"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "Texte 2",
+          "default": "Paiement sécurisé"
+        },
+        {
+          "type": "select",
+          "id": "icon_3",
+          "label": "Icône 3",
+          "default": "support_agent",
+          "options": [
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "lock",
+              "label": "Cadenas"
+            },
+            {
+              "value": "credit_card",
+              "label": "Carte bancaire"
+            },
+            {
+              "value": "autorenew",
+              "label": "Retour"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "support_agent",
+              "label": "Service client"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text_3",
+          "label": "Texte 3",
+          "default": "Une question ? On te répond"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_payment_icons",
+          "label": "Afficher les moyens de paiement",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "product_info",
+      "name": "Informations produit",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_usage",
+          "label": "Utilisation (depuis les métachamps)",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "usage_title",
+          "label": "Titre utilisation",
+          "default": "Comment l'utiliser"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_first",
+          "label": "Ouvrir l'utilisation par défaut",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_inci",
+          "label": "Composition (depuis les métachamps)",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "inci_title",
+          "label": "Titre composition",
+          "default": "Composition (INCI)"
+        },
+        {
+          "type": "text",
+          "id": "shipping_title",
+          "label": "Titre livraison",
+          "default": "Livraison"
+        },
+        {
+          "type": "richtext",
+          "id": "shipping_text",
+          "label": "Texte livraison",
+          "default": "<p>Ta commande est préparée sous 2 jours ouvrés, puis livrée en 8 à 10 jours ouvrés au total. Les frais de livraison s'affichent au moment du paiement.</p>"
+        },
+        {
+          "type": "text",
+          "id": "returns_title",
+          "label": "Titre retours",
+          "default": "Retours"
+        },
+        {
+          "type": "richtext",
+          "id": "returns_text",
+          "label": "Texte retours",
+          "info": "Laisse vide tant que la politique de retour n'est pas définie."
         }
       ]
     }

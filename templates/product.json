@@ -24,9 +24,6 @@
             "swatch_shape": "circle"
           }
         },
-        "quantity_selector": {
-          "type": "quantity_selector"
-        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -63,7 +60,64 @@
           }
         },
         "description": {
-          "type": "description"
+          "type": "description",
+          "settings": {
+            "intro_only": true
+          }
+        },
+        "offers": {
+          "type": "offers",
+          "settings": {
+            "heading": "Choisis ton offre",
+            "default_option": 2,
+            "option_1_enabled": true,
+            "option_1_label": "1 article",
+            "option_1_quantity": 1,
+            "option_1_discount": 0,
+            "option_1_badge": "",
+            "option_1_perks": "Livraison standard",
+            "option_1_gift": false,
+            "option_2_enabled": true,
+            "option_2_label": "2 articles",
+            "option_2_quantity": 2,
+            "option_2_discount": 10,
+            "option_2_badge": "Le plus choisi",
+            "option_2_perks": "-10 % sur ta commande\nLivraison offerte\nPetit sac de soin offert",
+            "option_2_gift": true,
+            "option_3_enabled": false,
+            "option_3_label": "3 articles",
+            "option_3_quantity": 3,
+            "option_3_discount": 0,
+            "option_3_badge": "",
+            "option_3_perks": "",
+            "option_3_gift": false
+          }
+        },
+        "trust": {
+          "type": "trust_row",
+          "settings": {
+            "icon_1": "local_shipping",
+            "text_1": "Expédié sous 2 jours ouvrés",
+            "icon_2": "lock",
+            "text_2": "Paiement sécurisé",
+            "icon_3": "support_agent",
+            "text_3": "Une question ? On te répond",
+            "show_payment_icons": true
+          }
+        },
+        "info": {
+          "type": "product_info",
+          "settings": {
+            "show_usage": true,
+            "usage_title": "Comment l'utiliser",
+            "open_first": false,
+            "show_inci": true,
+            "inci_title": "Composition (INCI)",
+            "shipping_title": "Livraison",
+            "shipping_text": "<p>Ta commande est préparée sous 2 jours ouvrés, puis livrée en 8 à 10 jours ouvrés au total. Les frais de livraison s'affichent au moment du paiement.</p>",
+            "returns_title": "Retours",
+            "returns_text": ""
+          }
         }
       },
       "block_order": [
@@ -71,10 +125,12 @@
         "benefits",
         "price",
         "variant_picker",
-        "quantity_selector",
+        "offers",
         "buy_buttons",
+        "trust",
         "delivery_steps",
-        "description"
+        "description",
+        "info"
       ],
       "settings": {
         "enable_sticky_info": true,
@@ -112,7 +168,204 @@
         "padding_top": 36,
         "padding_bottom": 24
       }
+    },
+    "rituel": {
+      "type": "anaphys-ritual",
+      "blocks": {
+        "etape-1": {
+          "type": "step",
+          "settings": {
+            "step_name": "Purifier",
+            "product": "exfoliant-pour-cuir-chevelu-deep-cleanse-romarin-et-menthe",
+            "text": "Libère le cuir chevelu des résidus accumulés."
+          }
+        },
+        "etape-2": {
+          "type": "step",
+          "settings": {
+            "step_name": "Nettoyer",
+            "product": "shampooing-smoky-green-vetiver",
+            "text": "Un lavage doux, cuir chevelu compris."
+          }
+        },
+        "etape-3": {
+          "type": "step",
+          "settings": {
+            "step_name": "Nourrir",
+            "product": "apres-shampooing-smoky-green-vetiver",
+            "text": "Nourrit les longueurs et facilite le démêlage."
+          }
+        },
+        "etape-4": {
+          "type": "step",
+          "settings": {
+            "step_name": "Réparer",
+            "product": "masque-capillaire-reparateur-intensif-a-la-keratine",
+            "text": "Un soin profond pour les longueurs abîmées."
+          }
+        },
+        "etape-5": {
+          "type": "step",
+          "settings": {
+            "step_name": "Fortifier",
+            "product": "huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin",
+            "text": "Nourrit le cuir chevelu et les longueurs."
+          }
+        }
+      },
+      "block_order": [
+        "etape-1",
+        "etape-2",
+        "etape-3",
+        "etape-4",
+        "etape-5"
+      ],
+      "settings": {
+        "heading": "Le rituel <strong>ANAPHYS</strong>",
+        "text": "<p>Le soin commence à la source : on s'occupe d'abord du cuir chevelu, puis des longueurs. Cinq gestes, à composer selon tes besoins.</p>",
+        "current_label": "Tu es ici",
+        "show_add": true,
+        "add_label": "Ajouter",
+        "color_scheme": "scheme-2",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "actifs": {
+      "type": "anaphys-actives",
+      "settings": {
+        "heading": "Ce qu'il y a <strong>dedans</strong>",
+        "text": "<p>Des actifs inspirés de la nature, choisis pour ce qu'ils apportent au cheveu. La composition complète est juste au-dessus.</p>",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 48
+      }
+    },
+    "mode-emploi": {
+      "type": "anaphys-how-to",
+      "settings": {
+        "heading": "Comment <strong>l'utiliser</strong>",
+        "image": "shopify://shop_images/1.jpg",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "source": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Pourquoi commencer par le <strong>cuir chevelu</strong> ?",
+            "heading_size": "h1",
+            "highlight_color": "#acbfa4"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Parce que tout part de là. Au fil des jours, il accumule des résidus de produits coiffants, de sébum et de pollution. Tant qu'il n'est pas propre et à l'aise, les soins que tu appliques ensuite travaillent moins bien.</p><p>C'est pour ça que notre rituel démarre par l'exfoliant et se termine par l'huile : on s'occupe d'abord de la racine, ensuite des longueurs.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/4a9620d25330211b40ab15925c3cc30f.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "faq": {
+      "type": "anaphys-faq",
+      "blocks": {
+        "theme": {
+          "type": "group",
+          "settings": {
+            "title": "Questions fréquentes",
+            "anchor": "questions"
+          }
+        },
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Est-ce que je peux utiliser un seul produit ?",
+            "answer": "<p>Oui. Chaque soin fonctionne seul et s'intègre sans problème à ta routine actuelle, y compris avec des produits d'autres marques.</p><p>Ils sont simplement pensés pour se compléter : chacun prépare le terrain pour le suivant.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Dans quel ordre utiliser les soins ?",
+            "answer": "<p>Le rituel complet se fait en cinq gestes :</p><ol><li><strong>Purifier</strong> avec l'exfoliant Deep Cleanse.</li><li><strong>Nettoyer</strong> avec le shampooing.</li><li><strong>Nourrir</strong> avec l'après-shampooing.</li><li><strong>Réparer</strong> avec le masque à la kératine.</li><li><strong>Fortifier</strong> avec l'huile au romarin.</li></ol><p>Tu n'as pas à tout faire à chaque lavage. Le shampooing et l'après-shampooing sont tes gestes de base, les trois autres viennent en renfort selon tes besoins.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "J'ai une allergie ou un cuir chevelu sensible, que dois-je savoir ?",
+            "answer": "<p>Vérifie toujours la liste des ingrédients sur la fiche produit avant d'acheter. À noter en particulier :</p><ul><li>le shampooing, l'après-shampooing et le masque contiennent des <strong>protéines de blé</strong> ;</li><li>l'huile fortifiante contient de l'<strong>huile d'amande douce</strong> (fruit à coque) ;</li><li>l'exfoliant et l'huile contiennent du <strong>romarin</strong> et de la <strong>menthe poivrée</strong>, qui procurent une sensation de fraîcheur.</li></ul><p>Pour une première utilisation, fais un test sur une petite zone et attends 24 heures. En cas de rougeur ou de démangeaison, rince abondamment et arrête le produit.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Quels sont les délais de livraison ?",
+            "answer": "<p>Ta commande est préparée sous 2 jours ouvrés, puis acheminée en 6 jours ouvrés environ. Compte <strong>8 à 10 jours ouvrés</strong> au total entre ta commande et la réception.</p><p>Les jours ouvrés vont du lundi au vendredi, hors jours fériés. Les délais peuvent s'allonger un peu pendant les périodes chargées (fêtes, soldes).</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Combien coûte la livraison ?",
+            "answer": "<p>Les frais de livraison sont calculés et affichés au moment du paiement, avant que tu valides ta commande.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "theme",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "show_page_title": false,
+        "eyebrow": "",
+        "intro": "",
+        "show_nav": false,
+        "cta_heading": "Tu n'as pas trouvé ta réponse ?",
+        "cta_text": "<p>Toutes les réponses sont dans notre FAQ, et on te répond si besoin.</p>",
+        "cta_label": "Voir la FAQ",
+        "cta_link": "/pages/faq",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
     }
   },
-  "order": ["main", "related-products"]
+  "order": [
+    "main",
+    "rituel",
+    "actifs",
+    "mode-emploi",
+    "source",
+    "faq",
+    "related-products"
+  ]
 }
