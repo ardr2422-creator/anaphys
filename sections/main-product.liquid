@@ -2589,6 +2589,12 @@
           "info": "Ajouté au panier avec les offres cochées « Avec cadeau ». La gratuité se règle par une réduction automatique Shopify."
         },
         {
+          "type": "image_picker",
+          "id": "gift_image",
+          "label": "Image du cadeau",
+          "info": "Sinon, l'image du produit cadeau est utilisée."
+        },
+        {
           "type": "header",
           "content": "Offre 1"
         },
@@ -2627,19 +2633,25 @@
         {
           "type": "text",
           "id": "option_1_badge",
-          "label": "Pastille"
+          "label": "Étiquette (ex. Le plus choisi)"
         },
         {
-          "type": "textarea",
-          "id": "option_1_perks",
-          "label": "Avantages (un par ligne)",
-          "default": "Livraison standard"
+          "type": "inline_richtext",
+          "id": "option_1_subtitle",
+          "label": "Sous-titre",
+          "info": "Ex. Livraison <strong>offerte</strong>. L'économie est calculée automatiquement à partir de la remise."
         },
         {
           "type": "checkbox",
           "id": "option_1_gift",
           "label": "Avec cadeau",
           "default": false
+        },
+        {
+          "type": "inline_richtext",
+          "id": "option_1_gift_text",
+          "label": "Texte du bandeau cadeau",
+          "default": "+ <strong>OFFERT</strong> : petit sac de soin"
         },
         {
           "type": "header",
@@ -2680,20 +2692,26 @@
         {
           "type": "text",
           "id": "option_2_badge",
-          "label": "Pastille",
+          "label": "Étiquette (ex. Le plus choisi)",
           "default": "Le plus choisi"
         },
         {
-          "type": "textarea",
-          "id": "option_2_perks",
-          "label": "Avantages (un par ligne)",
-          "default": "-10 % sur ta commande\nLivraison offerte\nPetit sac de soin offert"
+          "type": "inline_richtext",
+          "id": "option_2_subtitle",
+          "label": "Sous-titre",
+          "info": "Ex. Livraison <strong>offerte</strong>. L'économie est calculée automatiquement à partir de la remise."
         },
         {
           "type": "checkbox",
           "id": "option_2_gift",
           "label": "Avec cadeau",
           "default": true
+        },
+        {
+          "type": "inline_richtext",
+          "id": "option_2_gift_text",
+          "label": "Texte du bandeau cadeau",
+          "default": "+ <strong>OFFERT</strong> : petit sac de soin"
         },
         {
           "type": "header",
@@ -2734,18 +2752,25 @@
         {
           "type": "text",
           "id": "option_3_badge",
-          "label": "Pastille"
+          "label": "Étiquette (ex. Le plus choisi)"
         },
         {
-          "type": "textarea",
-          "id": "option_3_perks",
-          "label": "Avantages (un par ligne)"
+          "type": "inline_richtext",
+          "id": "option_3_subtitle",
+          "label": "Sous-titre",
+          "info": "Ex. Livraison <strong>offerte</strong>. L'économie est calculée automatiquement à partir de la remise."
         },
         {
           "type": "checkbox",
           "id": "option_3_gift",
           "label": "Avec cadeau",
           "default": false
+        },
+        {
+          "type": "inline_richtext",
+          "id": "option_3_gift_text",
+          "label": "Texte du bandeau cadeau",
+          "default": "+ <strong>OFFERT</strong> : petit sac de soin"
         }
       ]
     },

@@ -37,8 +37,9 @@
         assign qty_key = 'option_' | append: i | append: '_quantity'
         assign discount_key = 'option_' | append: i | append: '_discount'
         assign badge_key = 'option_' | append: i | append: '_badge'
-        assign perks_key = 'option_' | append: i | append: '_perks'
+        assign subtitle_key = 'option_' | append: i | append: '_subtitle'
         assign gift_key = 'option_' | append: i | append: '_gift'
+        assign gift_text_key = 'option_' | append: i | append: '_gift_text'
         unless block.settings[enabled_key]
           continue
         endunless
@@ -47,54 +48,71 @@
         assign full_total = variant.price | times: qty
         assign remaining = 100 | minus: discount
         assign total = full_total | times: remaining | divided_by: 100
+        assign saving = full_total | minus: total
         assign checked = false
         if forloop.index == default_index
           assign checked = true
         endif
-        assign perks = block.settings[perks_key] | newline_to_br | split: '<br />'
+        assign has_gift = false
+        if block.settings[gift_key] and block.settings[gift_text_key] != blank
+          assign has_gift = true
+        endif
+        assign thumbs = qty | at_most: 3
+        assign gift_image = block.settings.gift_image | default: block.settings.gift_product.featured_media
       -%}
-      <label class="anaphys-offer{% if checked %} is-selected{% endif %}">
-        <input
-          class="anaphys-offer__input visually-hidden"
-          type="radio"
-          name="anaphys-offer-{{ block.id }}"
-          value="{{ qty }}"
-          data-discount="{{ discount }}"
-          data-gift="{{ block.settings[gift_key] }}"
-          {% if checked %}
-            checked
-          {% endif %}
-        >
-        <span class="anaphys-offer__check" aria-hidden="true"></span>
-        <span class="anaphys-offer__body">
-          <span class="anaphys-offer__top">
-            <span class="anaphys-offer__label">{{ block.settings[label_key] | escape }}</span>
-            {%- if block.settings[badge_key] != blank -%}
-              <span class="anaphys-offer__badge">{{ block.settings[badge_key] | escape }}</span>
-            {%- endif -%}
-          </span>
-          {%- if perks.size > 0 and block.settings[perks_key] != blank -%}
-            <span class="anaphys-offer__perks">
-              {%- for perk in perks -%}
-                {%- assign perk_text = perk | strip -%}
-                {%- if perk_text != blank -%}
-                  <span class="anaphys-offer__perk">
-                    {%- render 'anaphys-icon', icon: 'check_circle' -%}
-                    {{- perk_text | escape -}}
-                  </span>
-                {%- endif -%}
+      <label class="anaphys-offer{% if checked %} is-selected{% endif %}{% if has_gift %} has-gift{% endif %}">
+        {%- if block.settings[badge_key] != blank -%}
+          <span class="anaphys-offer__flag">{{ block.settings[badge_key] | escape }}</span>
+        {%- endif -%}
+        <span class="anaphys-offer__main">
+          <input
+            class="anaphys-offer__input visually-hidden"
+            type="radio"
+            name="anaphys-offer-{{ block.id }}"
+            value="{{ qty }}"
+            data-discount="{{ discount }}"
+            data-gift="{{ block.settings[gift_key] }}"
+            {% if checked %}
+              checked
+            {% endif %}
+          >
+          <span class="anaphys-offer__check" aria-hidden="true"></span>
+          {%- if product.featured_media -%}
+            <span class="anaphys-offer__thumbs anaphys-offer__thumbs--{{ thumbs }}" aria-hidden="true">
+              {%- for n in (1..thumbs) -%}
+                {{ product.featured_media | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', class: 'anaphys-offer__thumb' }}
               {%- endfor -%}
             </span>
           {%- endif -%}
+          <span class="anaphys-offer__body">
+            <span class="anaphys-offer__top">
+              <span class="anaphys-offer__label">{{ block.settings[label_key] | escape }}</span>
+              {%- if saving > 0 -%}
+                <span class="anaphys-offer__saving" data-offer-saving>Économise {{ saving | money }}</span>
+              {%- endif -%}
+            </span>
+            {%- if block.settings[subtitle_key] != blank -%}
+              <span class="anaphys-offer__subtitle">{{ block.settings[subtitle_key] }}</span>
+            {%- endif -%}
+          </span>
+          <span class="anaphys-offer__price">
+            <span class="anaphys-offer__total" data-offer-total>{{ total | money }}</span>
+            {%- if discount > 0 -%}
+              <s class="anaphys-offer__compare" data-offer-compare>{{ full_total | money }}</s>
+            {%- endif -%}
+          </span>
         </span>
-        <span class="anaphys-offer__price">
-          <span class="anaphys-offer__total" data-offer-total>{{ total | money }}</span>
-          {%- if discount > 0 -%}
-            <s class="anaphys-offer__compare" data-offer-compare>{{ full_total | money }}</s>
-          {%- endif -%}
-        </span>
+        {%- if has_gift -%}
+          <span class="anaphys-offer__gift">
+            {%- if gift_image != blank -%}
+              {{ gift_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', class: 'anaphys-offer__gift-image' }}
+            {%- else -%}
+              {%- render 'anaphys-icon', icon: 'redeem', class: 'anaphys-offer__gift-icon' -%}
+            {%- endif -%}
+            <span>{{ block.settings[gift_text_key] }}</span>
+          </span>
+        {%- endif -%}
       </label>
-    {%- endfor -%}
   </fieldset>
 
   <input type="hidden" name="quantity" value="1" form="{{ product_form_id }}" data-offer-quantity>
@@ -154,6 +172,8 @@
             card.querySelector('[data-offer-total]').textContent = this.format(total);
             const compare = card.querySelector('[data-offer-compare]');
             if (compare) compare.textContent = this.format(full);
+            const saving = card.querySelector('[data-offer-saving]');
+            if (saving) saving.textContent = `Économise ${this.format(full - total)}`;
           });
         }
 

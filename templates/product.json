@@ -68,29 +68,32 @@
         "offers": {
           "type": "offers",
           "settings": {
-            "heading": "Choisis ton offre",
+            "heading": "",
             "default_option": 2,
             "option_1_enabled": true,
             "option_1_label": "1 article",
             "option_1_quantity": 1,
             "option_1_discount": 0,
             "option_1_badge": "",
-            "option_1_perks": "Livraison standard",
             "option_1_gift": false,
             "option_2_enabled": true,
             "option_2_label": "2 articles",
             "option_2_quantity": 2,
             "option_2_discount": 10,
             "option_2_badge": "Le plus choisi",
-            "option_2_perks": "-10 % sur ta commande\nLivraison offerte\nPetit sac de soin offert",
             "option_2_gift": true,
             "option_3_enabled": false,
             "option_3_label": "3 articles",
             "option_3_quantity": 3,
             "option_3_discount": 0,
             "option_3_badge": "",
-            "option_3_perks": "",
-            "option_3_gift": false
+            "option_3_gift": false,
+            "option_1_subtitle": "",
+            "option_1_gift_text": "",
+            "option_2_subtitle": "-10 % et livraison <strong>offerte</strong>",
+            "option_2_gift_text": "+ <strong>OFFERT</strong> : petit sac de soin",
+            "option_3_subtitle": "",
+            "option_3_gift_text": ""
           }
         },
         "trust": {
