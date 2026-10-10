@@ -22,6 +22,18 @@
   height: 2.2rem;
   color: var(--benefits-icon-color, rgb(var(--color-button)));
 }
+/* Mobile : chaque bénéfice tient sur une ligne (taille calée sur la largeur d'écran) */
+@media screen and (max-width: 749px) {
+  .anaphys-benefits__item {
+    align-items: center;
+    gap: 0.6rem;
+    font-size: min(1.4rem, calc((100vw - 5.4rem) / 26.5));
+  }
+  .anaphys-benefits__icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
 .anaphys-benefits__empty {
   margin: 0;
   padding: 1rem;

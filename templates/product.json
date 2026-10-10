@@ -109,7 +109,7 @@
         "sticky_atc_color_scheme": "scheme-1",
         "color_scheme": "scheme-1",
         "media_size": "medium",
-        "constrain_to_viewport": true,
+        "constrain_to_viewport": false,
         "media_fit": "contain",
         "gallery_layout": "thumbnail_slider",
         "mobile_thumbnails": "hide",
