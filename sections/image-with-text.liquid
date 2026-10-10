@@ -68,7 +68,10 @@
               {% case block.type %}
                 {%- when 'heading' -%}
                   <h2
-                    class="image-with-text__heading inline-richtext {{ block.settings.heading_size }}"
+                    class="image-with-text__heading inline-richtext {{ block.settings.heading_size }}{% if block.settings.highlight_color != blank %} heading-highlight{% endif %}"
+                    {% if block.settings.highlight_color != blank %}
+                      style="--highlight-color: {{ block.settings.highlight_color }};"
+                    {% endif %}
                     {{ block.shopify_attributes }}
                   >
                     {{ block.settings.heading }}
@@ -112,7 +115,10 @@
   "name": "t:sections.image-with-text.name",
   "class": "section",
   "disabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "settings": [
     {
@@ -203,7 +209,7 @@
     {
       "type": "header",
       "content": "t:sections.image-with-text.settings.header.content"
-    }, 
+    },
     {
       "type": "select",
       "id": "content_layout",
@@ -219,7 +225,7 @@
       ],
       "default": "no-overlap",
       "label": "t:sections.image-with-text.settings.content_layout.label"
-    },       
+    },
     {
       "type": "select",
       "id": "desktop_content_position",
@@ -283,7 +289,7 @@
     {
       "type": "header",
       "content": "t:sections.image-with-text.settings.header_colors.content"
-    },        
+    },
     {
       "type": "color_scheme",
       "id": "section_color_scheme",
@@ -360,6 +366,12 @@
           ],
           "default": "h1",
           "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "color",
+          "id": "highlight_color",
+          "label": "Couleur des mots en gras",
+          "info": "Les mots mis en gras dans le titre prennent cette couleur. Laisse vide pour garder la couleur du texte."
         }
       ]
     },

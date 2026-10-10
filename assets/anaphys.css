@@ -1,0 +1,88 @@
+/* ANAPHYS : ajouts au thème Dawn */
+
+/* Mots en gras colorés dans un titre */
+.heading-highlight strong {
+  color: var(--highlight-color);
+  font-weight: inherit;
+}
+
+/* Galerie défilante */
+.anaphys-gallery {
+  padding-inline: 1.5rem;
+  text-align: center;
+}
+.anaphys-gallery.page-width {
+  padding-inline: 1.5rem;
+}
+.anaphys-gallery__eyebrow {
+  margin: 0 0 1rem;
+}
+.anaphys-gallery__heading {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--gallery-heading-size);
+  line-height: 1.3;
+}
+.anaphys-gallery__text {
+  margin-top: 0.9rem;
+  color: rgba(var(--color-foreground), 0.7);
+}
+.anaphys-gallery__text p {
+  margin: 0;
+  font-size: 1.36rem;
+  line-height: 1.3;
+}
+.anaphys-gallery__track {
+  display: flex;
+  gap: var(--gallery-gap);
+  margin: 4.5rem 0 0;
+  padding: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.anaphys-gallery__track::-webkit-scrollbar {
+  display: none;
+}
+.anaphys-gallery__item {
+  flex: 0 0 calc((100% - (var(--gallery-visible) - 1) * var(--gallery-gap)) / var(--gallery-visible));
+  scroll-snap-align: start;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--gallery-radius);
+  overflow: hidden;
+}
+.anaphys-gallery__link {
+  display: block;
+  height: 100%;
+}
+.anaphys-gallery__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anaphys-gallery__empty {
+  margin-top: 2rem;
+  opacity: 0.6;
+}
+@media screen and (min-width: 750px) {
+  .anaphys-gallery,
+  .anaphys-gallery.page-width {
+    padding-inline: 5rem;
+  }
+  .anaphys-gallery__eyebrow {
+    margin-bottom: 1.2rem;
+  }
+  .anaphys-gallery__heading,
+  .anaphys-gallery__text {
+    margin-top: 1.2rem;
+  }
+  .anaphys-gallery__text p {
+    font-size: 1.6rem;
+  }
+  .anaphys-gallery__track {
+    margin-top: 6rem;
+  }
+}

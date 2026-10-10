@@ -1,75 +1,166 @@
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero": {
+      "type": "slideshow",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Design_sans_titre.png",
+            "mobile_image": "shopify://shop_images/Repare_tes_cheveux_revele_leur_beaute_naturelle_et_retrouve_douceur_force_et_eclat..png",
+            "image_overlay_opacity": 0,
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-center",
+            "text_alignment": "center",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-1"
+          }
+        }
+      },
+      "block_order": ["slide-1"],
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "adapt_image",
+        "slider_visual": "dots",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Diaporama ANAPHYS"
+      }
+    },
+    "best-sellers": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "subtitle",
+        "collection": "best-sellers",
+        "products_to_show": 25,
+        "columns_desktop": 3,
+        "full_width": true,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "source": {
+      "type": "image-with-text",
       "blocks": {
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "heading": "Le soin commence à la <strong>source</strong>",
+            "heading_size": "h1",
+            "highlight_color": "#acbfa4"
           }
         },
-        "button": {
-          "type": "buttons",
+        "text": {
+          "type": "text",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "text": "<p>Des soins capillaires inspirés de la nature, pensés pour prendre soin du cuir chevelu et de la fibre au quotidien.</p><p>Des formules soigneusement sélectionnées pour nourrir, renforcer et préserver la santé des cheveux, naturellement.</p>",
+            "text_style": "body"
           }
         }
       },
-      "block_order": [
-        "heading",
-        "button"
-      ],
+      "block_order": ["heading", "text"],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
+        "image": "shopify://shop_images/1.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
         "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-1",
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
+    "rituel": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le rituel <strong>essentiel</strong> pour des cheveux <strong>sains</strong>",
+            "heading_size": "h1",
+            "highlight_color": "#acbfa4"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Du cuir chevelu aux longueurs, chaque étape compte. Nos soins associent des ingrédients soigneusement sélectionnés et une approche inspirée de la nature pour nourrir, renforcer et préserver la santé de tes cheveux au quotidien.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": ["heading", "text"],
       "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
+        "image": "shopify://shop_images/4a9620d25330211b40ab15925c3cc30f.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-1",
         "color_scheme": "scheme-1",
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "padding_top": 44,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "communaute": {
+      "type": "anaphys-gallery",
+      "blocks": {
+        "image-1": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_3.png", "link": "" } },
+        "image-2": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_2.png", "link": "" } },
+        "image-3": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys_1_c319bf50-280a-4b66-bb1f-86b70ad68524.png", "link": "" } },
+        "image-4": { "type": "image", "settings": { "image": "shopify://shop_images/anaphys.png", "link": "" } },
+        "image-5": { "type": "image", "settings": { "image": "shopify://shop_images/Design_sans_titre_1.png", "link": "" } }
+      },
+      "block_order": ["image-1", "image-2", "image-3", "image-4", "image-5"],
+      "settings": {
+        "eyebrow": "",
+        "heading": "#ANAPHYS",
+        "heading_size": 40,
+        "text": "<p>Partage ton utilisation de nos produits avec la communauté !</p>",
+        "visible_desktop": 6,
+        "visible_mobile": "1.3",
+        "gap_desktop": 20,
+        "gap_mobile": 32,
+        "image_radius": 28,
+        "full_width": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
         "padding_bottom": 36
       }
     }
   },
-  "order": [
-    "image_banner",
-    "featured_collection"
-  ]
+  "order": ["hero", "best-sellers", "source", "rituel", "communaute"]
 }
