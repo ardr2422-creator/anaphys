@@ -1,0 +1,236 @@
+{%- comment -%}
+  FAQ ANAPHYS : questions groupées par thème, navigation par ancres,
+  encart de contact et données structurées FAQPage pour les moteurs de recherche.
+  Chaque question est un bloc : tout se modifie dans l'éditeur de thème.
+{%- endcomment -%}
+{{ 'anaphys-faq.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign groups = section.blocks | where: 'type', 'group'
+  assign questions = section.blocks | where: 'type', 'question'
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="anaphys-faq page-width section-{{ section.id }}-padding">
+    {%- if section.settings.show_page_title and page.title != blank -%}
+      <h1 class="anaphys-faq__title main-page-title page-title h0">{{ page.title | escape }}</h1>
+    {%- endif -%}
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="anaphys-faq__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.intro != blank -%}
+      <div class="anaphys-faq__intro">{{ section.settings.intro }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.show_nav and groups.size > 1 -%}
+      <nav class="anaphys-faq__nav" aria-label="Thèmes de la FAQ">
+        <ul class="list-unstyled" role="list">
+          {%- for group in groups -%}
+            {%- assign anchor = group.settings.anchor | default: group.settings.title | handleize -%}
+            <li><a href="#{{ anchor }}">{{ group.settings.title | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'group' -%}
+          {%- unless forloop.first -%}</div>{%- endunless -%}
+          {%- assign anchor = block.settings.anchor | default: block.settings.title | handleize -%}
+          <div class="anaphys-faq__group" id="{{ anchor }}" {{ block.shopify_attributes }}>
+          <h2 class="anaphys-faq__group-title">{{ block.settings.title | escape }}</h2>
+        {%- when 'question' -%}
+          {%- if forloop.first -%}<div class="anaphys-faq__group">{%- endif -%}
+          <details class="anaphys-faq__item" {{ block.shopify_attributes }}>
+            <summary class="anaphys-faq__question">{{ block.settings.question | escape }}</summary>
+            <div class="anaphys-faq__answer rte">{{ block.settings.answer }}</div>
+          </details>
+      {%- endcase -%}
+      {%- if forloop.last -%}</div>{%- endif -%}
+    {%- endfor -%}
+
+    {%- if section.settings.cta_heading != blank or section.settings.cta_label != blank -%}
+      <div class="anaphys-faq__cta">
+        {%- if section.settings.cta_heading != blank -%}
+          <h2 class="anaphys-faq__cta-heading">{{ section.settings.cta_heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.cta_text != blank -%}
+          <div class="anaphys-faq__cta-text">{{ section.settings.cta_text }}</div>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a class="button button--secondary" href="{{ section.settings.cta_link | default: routes.root_url }}">
+            {{- section.settings.cta_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if questions.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in questions -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "default": true,
+      "label": "Afficher le titre de la page"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav",
+      "default": true,
+      "label": "Afficher la navigation par thème"
+    },
+    {
+      "type": "header",
+      "content": "Encart de contact"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Titre",
+      "default": "Tu n'as pas trouvé ta réponse ?"
+    },
+    {
+      "type": "richtext",
+      "id": "cta_text",
+      "label": "Texte"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texte du bouton",
+      "default": "Nous contacter"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Thème",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre du thème",
+          "default": "Livraison"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Ancre",
+          "info": "Identifiant utilisé dans l'adresse (#livraison). Sans espace ni accent. Laisse vide pour le générer à partir du titre."
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Quels sont les délais de livraison ?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Réponse",
+          "default": "<p>Écris ta réponse ici.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [{ "type": "group" }, { "type": "question" }, { "type": "question" }]
+    }
+  ]
+}
+{% endschema %}

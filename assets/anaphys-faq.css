@@ -1,0 +1,146 @@
+/* ANAPHYS : page FAQ */
+.anaphys-faq {
+  max-width: 78rem;
+}
+.anaphys-faq__title {
+  margin: 0 0 1.6rem;
+  text-align: center;
+}
+.anaphys-faq__eyebrow {
+  margin: 0 0 1.2rem;
+  font-size: 1.2rem;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.65);
+}
+.anaphys-faq__intro {
+  max-width: 56rem;
+  margin: 0 auto 3.2rem;
+  line-height: 1.6;
+  text-align: center;
+  color: rgba(var(--color-foreground), 0.8);
+}
+.anaphys-faq__intro p {
+  margin: 0;
+}
+.anaphys-faq__nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0 0 4rem;
+  padding: 0;
+}
+.anaphys-faq__nav a {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border: 1px solid rgba(var(--color-foreground), 0.22);
+  border-radius: 99.9rem;
+  font-size: 1.3rem;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.anaphys-faq__nav a:hover {
+  opacity: 0.6;
+}
+.anaphys-faq__group {
+  margin: 0 0 4.4rem;
+  scroll-margin-top: 11rem;
+}
+.anaphys-faq__group-title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.65);
+}
+.anaphys-faq__item {
+  border-top: 1px solid rgba(var(--color-foreground), 0.16);
+}
+.anaphys-faq__item:last-child {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.16);
+}
+.anaphys-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 1.8rem 0;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1.4;
+  list-style: none;
+  cursor: pointer;
+}
+.anaphys-faq__question::-webkit-details-marker {
+  display: none;
+}
+.anaphys-faq__question::after {
+  content: '+';
+  flex: none;
+  font-size: 2.2rem;
+  font-weight: 300;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.anaphys-faq__item[open] .anaphys-faq__question::after {
+  transform: rotate(45deg);
+}
+.anaphys-faq__question:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 0.4rem;
+}
+.anaphys-faq__answer {
+  padding: 0 0 2rem;
+  line-height: 1.65;
+  color: rgba(var(--color-foreground), 0.88);
+}
+.anaphys-faq__answer p,
+.anaphys-faq__answer ul,
+.anaphys-faq__answer ol {
+  margin: 0 0 1.2rem;
+}
+.anaphys-faq__answer > :last-child {
+  margin-bottom: 0;
+}
+.anaphys-faq__answer ul,
+.anaphys-faq__answer ol {
+  padding-left: 2rem;
+}
+.anaphys-faq__answer li {
+  margin-bottom: 0.6rem;
+}
+.anaphys-faq__answer a {
+  color: inherit;
+  text-underline-offset: 0.3rem;
+}
+.anaphys-faq__cta {
+  padding: 3.2rem 2rem;
+  border: 1px solid rgba(var(--color-foreground), 0.16);
+  border-radius: 0.6rem;
+  text-align: center;
+}
+.anaphys-faq__cta-heading {
+  margin: 0 0 0.8rem;
+  font-size: 2rem;
+}
+.anaphys-faq__cta-text {
+  margin: 0 0 1.8rem;
+  color: rgba(var(--color-foreground), 0.8);
+}
+.anaphys-faq__cta-text p {
+  margin: 0;
+}
+@media screen and (max-width: 600px) {
+  .anaphys-faq__nav ul {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+  }
+  .anaphys-faq__nav a {
+    white-space: nowrap;
+  }
+}

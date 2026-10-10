@@ -1,0 +1,396 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "faq": {
+      "type": "anaphys-faq",
+      "blocks": {
+        "groupe-1": {
+          "type": "group",
+          "settings": {
+            "title": "La marque",
+            "anchor": "faq-marque"
+          }
+        },
+        "q-1-1": {
+          "type": "question",
+          "settings": {
+            "question": "C'est quoi, ANAPHYS ?",
+            "answer": "<p>ANAPHYS, ce sont des soins capillaires inspirés de la nature, pensés comme un rituel complet : on commence par le cuir chevelu, puis on nourrit, on répare et on protège la fibre jusqu'aux pointes.</p><p>L'idée n'est pas de maquiller tes cheveux le temps d'un brushing. C'est de prendre soin de la base pour qu'ils retrouvent, lavage après lavage, de la douceur, de la souplesse et de l'éclat.</p>"
+          }
+        },
+        "q-1-2": {
+          "type": "question",
+          "settings": {
+            "question": "Que veut dire « Connaissance, Renaissance, Abondance » ?",
+            "answer": "<p>C'est notre façon de voir le soin, en trois temps :</p><ul><li><strong>Connaissance</strong> : comprendre ce dont ton cheveu et ton cuir chevelu ont vraiment besoin.</li><li><strong>Renaissance</strong> : leur redonner de la vitalité avec les bons gestes et les bonnes formules.</li><li><strong>Abondance</strong> : révéler une chevelure pleine de douceur, de force et d'éclat.</li></ul>"
+          }
+        },
+        "q-1-3": {
+          "type": "question",
+          "settings": {
+            "question": "Pourquoi dites-vous que « le soin commence à la source » ?",
+            "answer": "<p>Parce que tout part du cuir chevelu. Au fil des jours, il accumule des résidus de produits coiffants, de sébum et de pollution. Tant qu'il n'est pas propre et à l'aise, les soins que tu appliques ensuite travaillent moins bien.</p><p>C'est pour ça que notre rituel démarre par l'exfoliant et se termine par l'huile : on s'occupe d'abord de la racine, ensuite des longueurs.</p>"
+          }
+        },
+        "q-1-4": {
+          "type": "question",
+          "settings": {
+            "question": "Où sont fabriqués vos soins ?",
+            "answer": "<p>En Europe. Nos soins sont formulés et fabriqués par notre laboratoire partenaire à Riga, en Lettonie, dans un site certifié ISO 22716, la norme des bonnes pratiques de fabrication cosmétique.</p><p>Ils sont conformes au règlement cosmétique européen et notifiés sur le portail européen des produits cosmétiques (CPNP) avant leur mise en vente.</p>"
+          }
+        },
+        "groupe-2": {
+          "type": "group",
+          "settings": {
+            "title": "Choisir ses soins",
+            "anchor": "faq-choisir"
+          }
+        },
+        "q-2-1": {
+          "type": "question",
+          "settings": {
+            "question": "Pour quels types de cheveux sont faits vos soins ?",
+            "answer": "<p>Ils s'adressent en priorité aux cheveux secs, fragilisés, cassants ou en manque d'éclat, et aux cuirs chevelus qui ont besoin d'être purifiés et rafraîchis.</p><p>Chaque fiche produit précise à qui le soin est destiné. En cas de doute, écris-nous avec une description de tes cheveux et on t'oriente.</p>"
+          }
+        },
+        "q-2-2": {
+          "type": "question",
+          "settings": {
+            "question": "Quel soin pour quel besoin ?",
+            "answer": "<ul><li><strong>Cuir chevelu chargé, racines lourdes</strong> : l'<a href=\"/products/exfoliant-pour-cuir-chevelu-deep-cleanse-romarin-et-menthe\">exfoliant Deep Cleanse</a> au romarin et à la menthe.</li><li><strong>Un lavage doux au quotidien</strong> : le <a href=\"/products/shampooing-smoky-green-vetiver\">shampooing Smoky Green Vetiver</a>.</li><li><strong>Longueurs rêches, difficiles à démêler</strong> : l'<a href=\"/products/apres-shampooing-smoky-green-vetiver\">après-shampooing Smoky Green Vetiver</a>.</li><li><strong>Cheveux abîmés, pointes sèches, manque d'éclat</strong> : le <a href=\"/products/masque-capillaire-reparateur-intensif-a-la-keratine\">masque réparateur à la kératine</a>.</li><li><strong>Cheveux secs ou cassants, cuir chevelu à nourrir</strong> : l'<a href=\"/products/huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin\">huile fortifiante au romarin</a>.</li></ul>"
+          }
+        },
+        "q-2-3": {
+          "type": "question",
+          "settings": {
+            "question": "Par où commencer si je découvre la marque ?",
+            "answer": "<p>Le plus simple : le duo shampooing + après-shampooing. Ce sont les deux gestes que tu fais déjà à chaque lavage, donc tu ne changes rien à tes habitudes.</p><p>Ensuite, ajoute le soin qui répond à ton besoin principal : l'exfoliant si ton cuir chevelu est chargé, le masque si tes longueurs sont abîmées, l'huile si tes cheveux sont secs ou cassants.</p>"
+          }
+        },
+        "q-2-4": {
+          "type": "question",
+          "settings": {
+            "question": "Est-ce que je peux utiliser un seul produit ?",
+            "answer": "<p>Oui. Chaque soin fonctionne seul et s'intègre sans problème à ta routine actuelle, y compris avec des produits d'autres marques.</p><p>Ils sont simplement pensés pour se compléter : chacun prépare le terrain pour le suivant.</p>"
+          }
+        },
+        "q-2-5": {
+          "type": "question",
+          "settings": {
+            "question": "L'huile au romarin fait-elle pousser les cheveux ?",
+            "answer": "<p>On préfère être clairs : c'est un soin cosmétique, pas un traitement. Elle nourrit le cuir chevelu et les longueurs, aide à renforcer et protéger la fibre, et apporte douceur et brillance.</p><p>On ne te promet ni pousse accélérée ni effet anti-chute. Si tu perds tes cheveux de façon inhabituelle, le bon réflexe est d'en parler à un professionnel de santé.</p>"
+          }
+        },
+        "groupe-3": {
+          "type": "group",
+          "settings": {
+            "title": "Le rituel",
+            "anchor": "faq-rituel"
+          }
+        },
+        "q-3-1": {
+          "type": "question",
+          "settings": {
+            "question": "Dans quel ordre utiliser les soins ?",
+            "answer": "<p>Le rituel complet se fait en cinq gestes :</p><ol><li><strong>Purifier</strong> avec l'exfoliant Deep Cleanse.</li><li><strong>Nettoyer</strong> avec le shampooing.</li><li><strong>Nourrir</strong> avec l'après-shampooing.</li><li><strong>Réparer</strong> avec le masque à la kératine.</li><li><strong>Fortifier</strong> avec l'huile au romarin.</li></ol><p>Tu n'as pas à tout faire à chaque lavage. Le shampooing et l'après-shampooing sont tes gestes de base, les trois autres viennent en renfort selon tes besoins.</p>"
+          }
+        },
+        "q-3-2": {
+          "type": "question",
+          "settings": {
+            "question": "Comment utiliser l'exfoliant pour cuir chevelu ?",
+            "answer": "<p>Applique-le directement sur le cuir chevelu, laisse poser 5 à 15 minutes, puis rince soigneusement avant de passer au shampooing.</p><p>C'est un soin ponctuel, pas quotidien : il est là pour débarrasser le cuir chevelu des accumulations quand tu sens tes racines lourdes ou chargées.</p>"
+          }
+        },
+        "q-3-3": {
+          "type": "question",
+          "settings": {
+            "question": "Comment utiliser l'huile fortifiante au romarin ?",
+            "answer": "<p>En soin avant-shampooing : applique-la sur le cuir chevelu et les longueurs, laisse poser au moins 15 minutes, puis lave tes cheveux comme d'habitude.</p><p>Tu peux aussi en déposer une touche sur les pointes sèches pour les nourrir.</p>"
+          }
+        },
+        "q-3-4": {
+          "type": "question",
+          "settings": {
+            "question": "Combien de temps laisser poser l'après-shampooing et le masque ?",
+            "answer": "<ul><li><strong>Après-shampooing</strong> : 1 à 3 minutes, sur les longueurs et les pointes.</li><li><strong>Masque à la kératine</strong> : 5 à 10 minutes, sur les longueurs et les pointes.</li></ul><p>Dans les deux cas, rince bien ensuite.</p>"
+          }
+        },
+        "q-3-5": {
+          "type": "question",
+          "settings": {
+            "question": "À quelle fréquence faire chaque soin ?",
+            "answer": "<ul><li><strong>Shampooing et après-shampooing</strong> : à chaque lavage.</li><li><strong>Exfoliant</strong> : de temps en temps, quand le cuir chevelu en a besoin.</li><li><strong>Masque et huile</strong> : selon l'état de tes cheveux. Plus ils sont secs ou abîmés, plus ils apprécieront.</li></ul><p>Le mode d'emploi détaillé figure sur chaque fiche produit.</p>"
+          }
+        },
+        "q-3-6": {
+          "type": "question",
+          "settings": {
+            "question": "Quand vais-je voir une différence ?",
+            "answer": "<p>Le masque laisse les cheveux mieux nourris dès la première utilisation, et l'après-shampooing facilite le démêlage à chaque lavage.</p><p>Pour le reste, on ne te vendra pas de miracle en quelques jours. Des cheveux plus doux, plus souples et plus brillants, ça se construit avec un rituel régulier.</p>"
+          }
+        },
+        "groupe-4": {
+          "type": "group",
+          "settings": {
+            "title": "Formules & engagements",
+            "anchor": "faq-formules"
+          }
+        },
+        "q-4-1": {
+          "type": "question",
+          "settings": {
+            "question": "Qu'y a-t-il dans vos formules ?",
+            "answer": "<p>Des actifs inspirés de la nature, choisis pour ce qu'ils apportent au cheveu :</p><ul><li><strong>Shampooing</strong> : aloe vera, bétaïne, protéines de blé, thé noir et myrtille.</li><li><strong>Après-shampooing</strong> : panthénol, bétaïne, protéines de blé et huile d'avocat issue de l'agriculture biologique.</li><li><strong>Exfoliant</strong> : kaolin, poudre de coque de cerise, romarin et menthe poivrée.</li><li><strong>Huile fortifiante</strong> : huiles de tournesol, ricin, amande douce, argan, chanvre, olive et avocat, avec romarin, menthe poivrée et extrait d'ortie.</li><li><strong>Masque</strong> : kératine hydrolysée, protéines de blé, peptides, beurre de karité, vitamine E et huiles végétales.</li></ul><p>La liste complète des ingrédients (INCI) est disponible sur chaque fiche produit.</p>"
+          }
+        },
+        "q-4-2": {
+          "type": "question",
+          "settings": {
+            "question": "Qu'est-ce que vous n'utilisez pas ?",
+            "answer": "<p>Nos soins sont formulés sans parabènes, sans silicones, sans huiles minérales, sans PEG, sans microplastiques, sans parfums de synthèse et sans colorants artificiels.</p>"
+          }
+        },
+        "q-4-3": {
+          "type": "question",
+          "settings": {
+            "question": "Vos produits contiennent-ils des sulfates ?",
+            "answer": "<p>Aucun SLS (sodium lauryl sulfate), connu pour être agressif. Selon les formules, la base lavante peut contenir du sodium coco sulfate, un tensioactif d'origine végétale autorisé par le référentiel de cosmétique naturelle COSMOS.</p><p>Tu retrouves la composition exacte sur chaque fiche produit.</p>"
+          }
+        },
+        "q-4-4": {
+          "type": "question",
+          "settings": {
+            "question": "Vos soins sont-ils testés sur les animaux ?",
+            "answer": "<p>Non. Ni les produits finis ni leurs ingrédients ne sont testés sur les animaux.</p>"
+          }
+        },
+        "q-4-5": {
+          "type": "question",
+          "settings": {
+            "question": "Vos soins sont-ils vegan ?",
+            "answer": "<p>Pas tous, et on préfère te le dire. Le masque réparateur contient de la kératine, issue de laine de mouton : il n'est donc pas vegan.</p><p>Pour les autres soins, la composition complète est indiquée sur chaque fiche produit. Si c'est un critère important pour toi, écris-nous avant de commander.</p>"
+          }
+        },
+        "q-4-6": {
+          "type": "question",
+          "settings": {
+            "question": "J'ai une allergie ou un cuir chevelu sensible, que dois-je savoir ?",
+            "answer": "<p>Vérifie toujours la liste des ingrédients sur la fiche produit avant d'acheter. À noter en particulier :</p><ul><li>le shampooing, l'après-shampooing et le masque contiennent des <strong>protéines de blé</strong> ;</li><li>l'huile fortifiante contient de l'<strong>huile d'amande douce</strong> (fruit à coque) ;</li><li>l'exfoliant et l'huile contiennent du <strong>romarin</strong> et de la <strong>menthe poivrée</strong>, qui procurent une sensation de fraîcheur.</li></ul><p>Pour une première utilisation, fais un test sur une petite zone et attends 24 heures. En cas de rougeur ou de démangeaison, rince abondamment et arrête le produit.</p>"
+          }
+        },
+        "q-4-7": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je utiliser vos soins pendant la grossesse ?",
+            "answer": "<p>Certains de nos soins contiennent du romarin et de la menthe poivrée. Pendant la grossesse ou l'allaitement, demande l'avis de ton médecin ou de ta sage-femme avant de les utiliser.</p>"
+          }
+        },
+        "q-4-8": {
+          "type": "question",
+          "settings": {
+            "question": "Comment conserver mes soins, et combien de temps ?",
+            "answer": "<p>Garde-les bien fermés, à l'abri de la chaleur et de la lumière directe, et évite de laisser entrer de l'eau dans les pots.</p><p>La durée d'utilisation après ouverture est indiquée sur l'emballage, à côté du symbole du petit pot ouvert.</p>"
+          }
+        },
+        "groupe-5": {
+          "type": "group",
+          "settings": {
+            "title": "Commande & paiement",
+            "anchor": "faq-commande"
+          }
+        },
+        "q-5-1": {
+          "type": "question",
+          "settings": {
+            "question": "Quels moyens de paiement acceptez-vous ?",
+            "answer": "<p>Tous les moyens de paiement disponibles s'affichent au moment de régler ta commande.</p>"
+          }
+        },
+        "q-5-2": {
+          "type": "question",
+          "settings": {
+            "question": "Le paiement est-il sécurisé ?",
+            "answer": "<p>Oui. Le paiement passe par une page chiffrée, et tes coordonnées bancaires ne sont ni visibles ni conservées par ANAPHYS.</p>"
+          }
+        },
+        "q-5-3": {
+          "type": "question",
+          "settings": {
+            "question": "Comment utiliser un code promo ?",
+            "answer": "<p>Saisis ton code dans le champ « Code de réduction » sur la page de paiement, puis valide. La remise s'applique avant que tu règles.</p><p>Un seul code par commande, non cumulable avec une autre offre en cours.</p>"
+          }
+        },
+        "q-5-4": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je modifier ou annuler ma commande ?",
+            "answer": "<p>Écris-nous le plus vite possible avec ton numéro de commande. Tant qu'elle n'est pas partie en préparation, on peut la modifier ou l'annuler.</p><p>Une fois la préparation lancée, ce n'est plus possible, mais tu gardes ton droit de retour à réception du colis.</p>"
+          }
+        },
+        "q-5-5": {
+          "type": "question",
+          "settings": {
+            "question": "Je n'ai pas reçu de mail de confirmation, c'est normal ?",
+            "answer": "<p>Il arrive en général dans les minutes qui suivent. Regarde dans tes spams et tes onglets « Promotions ». S'il n'y est pas, il y a peut-être une faute dans l'adresse saisie : contacte-nous et on corrige.</p>"
+          }
+        },
+        "groupe-6": {
+          "type": "group",
+          "settings": {
+            "title": "Livraison",
+            "anchor": "faq-livraison"
+          }
+        },
+        "q-6-1": {
+          "type": "question",
+          "settings": {
+            "question": "Quels sont les délais de livraison ?",
+            "answer": "<p>Ta commande est préparée sous 2 jours ouvrés, puis acheminée en 6 jours ouvrés environ. Compte <strong>8 à 10 jours ouvrés</strong> au total entre ta commande et la réception.</p><p>Les jours ouvrés vont du lundi au vendredi, hors jours fériés. Les délais peuvent s'allonger un peu pendant les périodes chargées (fêtes, soldes).</p>"
+          }
+        },
+        "q-6-2": {
+          "type": "question",
+          "settings": {
+            "question": "Combien coûte la livraison ?",
+            "answer": "<p>Les frais de livraison sont calculés et affichés au moment du paiement, avant que tu valides ta commande.</p>"
+          }
+        },
+        "q-6-3": {
+          "type": "question",
+          "settings": {
+            "question": "Où livrez-vous ?",
+            "answer": "<p>Nous livrons actuellement en France métropolitaine. Tu habites ailleurs ? Écris-nous, on te dira si c'est possible.</p>"
+          }
+        },
+        "q-6-4": {
+          "type": "question",
+          "settings": {
+            "question": "Comment suivre mon colis ?",
+            "answer": "<p>Dès que ta commande est expédiée, tu reçois un mail de confirmation avec les informations de suivi. Pense à vérifier tes spams s'il n'arrive pas.</p>"
+          }
+        },
+        "q-6-5": {
+          "type": "question",
+          "settings": {
+            "question": "Mon colis est en retard, que faire ?",
+            "answer": "<p>Si tu n'as rien reçu une fois le délai annoncé dépassé, contacte-nous avec ton numéro de commande. On fait le point avec le transporteur et on revient vers toi avec une solution.</p>"
+          }
+        },
+        "q-6-6": {
+          "type": "question",
+          "settings": {
+            "question": "Mon colis est arrivé abîmé ou il manque un produit",
+            "answer": "<p>Désolés pour ça. Envoie-nous ton numéro de commande et une photo du colis et du produit concerné dans les jours qui suivent la réception. On te renvoie le produit ou on te rembourse, à toi de choisir.</p>"
+          }
+        },
+        "groupe-7": {
+          "type": "group",
+          "settings": {
+            "title": "Retours & remboursements",
+            "anchor": "faq-retours"
+          }
+        },
+        "q-7-1": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je retourner un produit ?",
+            "answer": "<p>Oui. Tu as 14 jours après réception de ton colis pour changer d'avis, sans avoir à te justifier.</p><p>Le produit doit être renvoyé neuf, non ouvert et dans son emballage d'origine.</p>"
+          }
+        },
+        "q-7-2": {
+          "type": "question",
+          "settings": {
+            "question": "Et si j'ai déjà ouvert le produit ?",
+            "answer": "<p>Pour des raisons d'hygiène, un soin ouvert ou entamé ne peut pas être repris.</p><p>Si le produit a un défaut ou provoque une réaction, c'est différent : écris-nous, on regarde ça avec toi.</p>"
+          }
+        },
+        "q-7-3": {
+          "type": "question",
+          "settings": {
+            "question": "Comment faire un retour ?",
+            "answer": "<ol><li>Écris-nous avec ton numéro de commande et le produit concerné.</li><li>On te répond avec l'adresse et la marche à suivre.</li><li>Tu renvoies le produit bien protégé, avec un numéro de suivi de préférence.</li></ol><p>N'envoie rien sans nous avoir contactés avant : un colis renvoyé à la mauvaise adresse ne pourra pas être remboursé.</p>"
+          }
+        },
+        "q-7-4": {
+          "type": "question",
+          "settings": {
+            "question": "Quand serai-je remboursé ?",
+            "answer": "<p>Dès réception et vérification du retour, on lance le remboursement sur le moyen de paiement utilisé à la commande, sous 14 jours maximum. Le délai d'affichage sur ton compte dépend ensuite de ta banque.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "groupe-1",
+        "q-1-1",
+        "q-1-2",
+        "q-1-3",
+        "q-1-4",
+        "groupe-2",
+        "q-2-1",
+        "q-2-2",
+        "q-2-3",
+        "q-2-4",
+        "q-2-5",
+        "groupe-3",
+        "q-3-1",
+        "q-3-2",
+        "q-3-3",
+        "q-3-4",
+        "q-3-5",
+        "q-3-6",
+        "groupe-4",
+        "q-4-1",
+        "q-4-2",
+        "q-4-3",
+        "q-4-4",
+        "q-4-5",
+        "q-4-6",
+        "q-4-7",
+        "q-4-8",
+        "groupe-5",
+        "q-5-1",
+        "q-5-2",
+        "q-5-3",
+        "q-5-4",
+        "q-5-5",
+        "groupe-6",
+        "q-6-1",
+        "q-6-2",
+        "q-6-3",
+        "q-6-4",
+        "q-6-5",
+        "q-6-6",
+        "groupe-7",
+        "q-7-1",
+        "q-7-2",
+        "q-7-3",
+        "q-7-4"
+      ],
+      "settings": {
+        "show_page_title": true,
+        "eyebrow": "Connaissance • Renaissance • Abondance",
+        "intro": "<p>Tout ce qu'il faut savoir sur nos soins, le rituel, la livraison et les retours.</p>",
+        "show_nav": true,
+        "cta_heading": "Tu n'as pas trouvé ta réponse ?",
+        "cta_text": "<p>Écris-nous, on te répond au plus vite.</p>",
+        "cta_label": "Nous contacter",
+        "cta_link": "/pages/contact",
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faq"
+  ]
+}
