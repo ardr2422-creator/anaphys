@@ -463,3 +463,17 @@ h1,
 .image-with-text .image-with-text__media {
   border-radius: var(--media-radius) !important;
 }
+
+/* En-tête mobile comme l'ancien site : menu à gauche, recherche et panier à droite, pas d'icône compte */
+@media screen and (max-width: 989px) {
+  .header > .header__search {
+    display: none !important;
+  }
+  .header .header__icons > .header__search {
+    display: inline-flex !important;
+  }
+  .header .header__icons .header__icon--account,
+  .header .header__icons shopify-account {
+    display: none;
+  }
+}
