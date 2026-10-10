@@ -65,7 +65,7 @@
         "menu": "main-menu",
         "show_social": true,
         "logo": "shopify://shop_images/anaphys-logo-footer.png",
-        "logo_width": 66,
+        "logo_width": 65,
         "logo_width_mobile": 100,
         "heading_size": 20,
         "heading_size_mobile": 16,
