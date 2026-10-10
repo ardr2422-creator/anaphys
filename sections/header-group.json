@@ -2,11 +2,34 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "logo_position": "middle-center",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "highlight_active_link": true,
+        "highlight_color_scheme": "scheme-4",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "color_scheme": "scheme-1",
-        "show_line_separator": true,
+        "color_scheme": "scheme-4",
+        "text_size_desktop": 20,
+        "text_size_mobile": 12,
+        "padding_vertical": 16,
+        "show_line_separator": false,
         "show_social": false,
         "auto_rotate": false,
         "change_slides_speed": 5,
@@ -14,41 +37,38 @@
         "enable_language_selector": false
       },
       "blocks": {
-        "announcement-bar-0": {
+        "signature": {
           "type": "announcement",
           "settings": {
-            "text": "Welcome to our store",
-            "text_alignment": "center",
-            "color_scheme": "scheme-1",
+            "text": "Connaissance • Renaissance • Abondance",
+            "link": ""
+          }
+        },
+        "code-bienvenue": {
+          "type": "announcement",
+          "disabled": true,
+          "settings": {
+            "text": "-10% | Code : BIENVENUE",
+            "link": ""
+          }
+        },
+        "retours": {
+          "type": "announcement",
+          "settings": {
+            "text": "Retours sous 14 jours ouvrés",
             "link": ""
           }
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "signature",
+        "code-bienvenue",
+        "retours"
       ]
-    },
-    "header": {
-      "type": "header",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "menu_color_scheme": "scheme-1",
-        "logo_position": "middle-left",
-        "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
-        "sticky_header_type": "on-scroll-up",
-        "show_line_separator": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "mobile_logo_position": "center",
-        "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
-      }
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "header",
+    "announcement-bar"
   ]
 }

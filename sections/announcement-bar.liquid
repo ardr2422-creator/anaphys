@@ -14,6 +14,19 @@
   endif
 -%}
 
+{%- style -%}
+  #shopify-section-{{ section.id }} .announcement-bar__message {
+    font-size: {{ section.settings.text_size_mobile | divided_by: 10.0 }}rem;
+    padding-block: {{ section.settings.padding_vertical | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .announcement-bar__message {
+      font-size: {{ section.settings.text_size_desktop | divided_by: 10.0 }}rem;
+      padding-block: {{ section.settings.padding_vertical }}px;
+    }
+  }
+{%- endstyle -%}
+
 {% if social_icons %}
   {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 {% endif %}
@@ -168,7 +181,9 @@
   "max_blocks": 12,
   "class": "announcement-bar-section",
   "enabled_on": {
-    "groups": ["header"]
+    "groups": [
+      "header"
+    ]
   },
   "settings": [
     {
@@ -186,13 +201,43 @@
       "unit": "s",
       "label": "t:sections.announcement-bar.settings.change_slides_speed.label",
       "default": 5
-    },    
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 13,
+      "label": "Taille du texte (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 13,
+      "label": "Taille du texte (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 10,
+      "label": "Marge verticale du texte"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-4"
-    },  
+    },
     {
       "type": "checkbox",
       "id": "show_line_separator",
@@ -205,8 +250,8 @@
     },
     {
       "type": "paragraph",
-         "content": "t:sections.announcement-bar.settings.paragraph.content"
-    },             
+      "content": "t:sections.announcement-bar.settings.paragraph.content"
+    },
     {
       "type": "checkbox",
       "id": "show_social",

@@ -26,6 +26,16 @@
         "label": "t:settings_schema.logo.settings.logo_width.label"
       },
       {
+        "type": "range",
+        "id": "logo_width_mobile",
+        "min": 40,
+        "max": 200,
+        "step": 5,
+        "default": 80,
+        "unit": "px",
+        "label": "Largeur du logo sur mobile"
+      },
+      {
         "type": "image_picker",
         "id": "favicon",
         "label": "t:settings_schema.logo.settings.favicon.label",

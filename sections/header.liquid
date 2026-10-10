@@ -17,6 +17,31 @@
 {%- endif -%}
 
 <style>
+  @media screen and (max-width: 749px) {
+    .header__heading-logo-wrapper {
+      width: {{ settings.logo_width_mobile }}px;
+    }
+  }
+
+  {%- if section.settings.highlight_active_link -%}
+    .header__active-menu-item--highlight {
+      position: relative;
+      z-index: 0;
+      padding: 0 0.7em;
+      font-weight: var(--font-body-weight-bold);
+      text-decoration: none;
+      color: rgb(var(--color-foreground));
+    }
+    .header__active-menu-item--highlight::before {
+      content: '';
+      position: absolute;
+      inset: -0.35em 0;
+      z-index: -1;
+      border-radius: 0.4rem;
+      background: rgb(var(--color-background));
+    }
+  {%- endif -%}
+
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
@@ -570,6 +595,18 @@
       ],
       "default": "dropdown",
       "label": "t:sections.header.settings.menu_type_desktop.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_active_link",
+      "default": false,
+      "label": "Mettre en avant le lien de la page en cours"
+    },
+    {
+      "type": "color_scheme",
+      "id": "highlight_color_scheme",
+      "default": "scheme-4",
+      "label": "Couleur du lien mis en avant"
     },
     {
       "type": "select",

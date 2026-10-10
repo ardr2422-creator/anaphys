@@ -89,7 +89,9 @@
             {% endif %}
           >
             <span
-              {%- if link.current %}
+              {%- if link.current and section.settings.highlight_active_link %}
+                class="header__active-menu-item--highlight color-{{ section.settings.highlight_color_scheme }}"
+              {%- elsif link.current %}
                 class="header__active-menu-item"
               {% endif %}
             >
