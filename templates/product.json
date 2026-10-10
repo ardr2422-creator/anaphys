@@ -14,9 +14,6 @@
             "icon_color": "#acbfa4"
           }
         },
-        "price": {
-          "type": "price"
-        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -27,36 +24,9 @@
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": false,
+            "show_dynamic_checkout": true,
             "show_gift_card_recipient": false,
             "uppercase_label": true
-          }
-        },
-        "delivery_steps": {
-          "type": "delivery_steps",
-          "settings": {
-            "business_days": true,
-            "color_scheme": "scheme-3",
-            "icon_1": "add_shopping_cart",
-            "label_1": "Commande passée",
-            "date_text_1": "[debut]",
-            "min_days_1": 0,
-            "max_days_1": 0,
-            "icon_2": "inventory_2",
-            "label_2": "Commande préparée",
-            "date_text_2": "[debut] - [fin]",
-            "min_days_2": 1,
-            "max_days_2": 2,
-            "icon_3": "redeem",
-            "label_3": "Livrée",
-            "date_text_3": "[debut] - [fin]",
-            "min_days_3": 8,
-            "max_days_3": 10,
-            "icon_4": "check_circle",
-            "label_4": "",
-            "date_text_4": "[debut] - [fin]",
-            "min_days_4": 0,
-            "max_days_4": 0
           }
         },
         "description": {
@@ -90,7 +60,7 @@
             "option_3_gift": false,
             "option_1_subtitle": "",
             "option_1_gift_text": "",
-            "option_2_subtitle": "-10 % et livraison <strong>offerte</strong>",
+            "option_2_subtitle": "Livraison <strong>offerte</strong>",
             "option_2_gift_text": "+ <strong>OFFERT</strong> : petit sac de soin",
             "option_3_subtitle": "",
             "option_3_gift_text": ""
@@ -126,12 +96,10 @@
       "block_order": [
         "title",
         "benefits",
-        "price",
         "variant_picker",
         "offers",
         "buy_buttons",
         "trust",
-        "delivery_steps",
         "description",
         "info"
       ],
@@ -229,7 +197,7 @@
         "current_label": "Tu es ici",
         "show_add": true,
         "add_label": "Ajouter",
-        "color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
         "padding_top": 64,
         "padding_bottom": 64
       }
@@ -248,7 +216,7 @@
       "type": "anaphys-how-to",
       "settings": {
         "heading": "Comment <strong>l'utiliser</strong>",
-        "image": "shopify://shop_images/1.jpg",
+        "image": "shopify://shop_images/anaphys_1_c319bf50-280a-4b66-bb1f-86b70ad68524.png",
         "color_scheme": "scheme-1",
         "padding_top": 48,
         "padding_bottom": 64
@@ -278,7 +246,7 @@
         "text"
       ],
       "settings": {
-        "image": "shopify://shop_images/4a9620d25330211b40ab15925c3cc30f.jpg",
+        "image": "shopify://shop_images/anaphys_2.png",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "text_first",

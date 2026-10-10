@@ -11,6 +11,7 @@
         "mobile_logo_position": "center",
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
+        "show_search": false,
         "highlight_active_link": true,
         "highlight_color_scheme": "scheme-4",
         "sticky_header_type": "on-scroll-up",
@@ -46,7 +47,6 @@
         },
         "code-bienvenue": {
           "type": "announcement",
-          "disabled": true,
           "settings": {
             "text": "-10% | Code : BIENVENUE",
             "link": ""

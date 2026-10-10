@@ -281,6 +281,15 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'anaphys.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'product' -%}
+      {%- comment -%} Styles de la fiche produit dès le head : la galerie s'affiche directement à la bonne taille {%- endcomment -%}
+      {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+      {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+      {{ 'component-price.css' | asset_url | stylesheet_tag }}
+      {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+      {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+      {{ 'anaphys-product.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}

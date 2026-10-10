@@ -48,7 +48,6 @@
         assign full_total = variant.price | times: qty
         assign remaining = 100 | minus: discount
         assign total = full_total | times: remaining | divided_by: 100
-        assign saving = full_total | minus: total
         assign checked = false
         if forloop.index == default_index
           assign checked = true
@@ -87,18 +86,22 @@
           <span class="anaphys-offer__body">
             <span class="anaphys-offer__top">
               <span class="anaphys-offer__label">{{ block.settings[label_key] | escape }}</span>
-              {%- if saving > 0 -%}
-                <span class="anaphys-offer__saving" data-offer-saving>Économise {{ saving | money }}</span>
-              {%- endif -%}
             </span>
             {%- if block.settings[subtitle_key] != blank -%}
               <span class="anaphys-offer__subtitle">{{ block.settings[subtitle_key] }}</span>
             {%- endif -%}
           </span>
           <span class="anaphys-offer__price">
-            <span class="anaphys-offer__total" data-offer-total>{{ total | money }}</span>
+            <span class="anaphys-offer__price-row">
+              {%- if discount > 0 -%}
+                <span class="anaphys-offer__discount">-{{ discount }} %</span>
+              {%- endif -%}
+              <span class="anaphys-offer__total" data-offer-total>{{ total | money }}</span>
+            </span>
             {%- if discount > 0 -%}
-              <s class="anaphys-offer__compare" data-offer-compare>{{ full_total | money }}</s>
+              <s class="anaphys-offer__compare" data-offer-compare>
+                <span class="visually-hidden">Au lieu de </span>{{- full_total | money -}}
+              </s>
             {%- endif -%}
           </span>
         </span>
@@ -172,9 +175,7 @@
             const total = Math.round((full * (100 - Number(input.dataset.discount || 0))) / 100);
             card.querySelector('[data-offer-total]').textContent = this.format(total);
             const compare = card.querySelector('[data-offer-compare]');
-            if (compare) compare.textContent = this.format(full);
-            const saving = card.querySelector('[data-offer-saving]');
-            if (saving) saving.textContent = `Économise ${this.format(full - total)}`;
+            if (compare) compare.lastChild.textContent = this.format(full);
           });
         }
 

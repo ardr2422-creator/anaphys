@@ -305,16 +305,21 @@
   font-weight: var(--font-body-weight-bold);
   line-height: 1.2;
 }
-.anaphys-offer__saving {
-  padding: 0.3rem 1rem;
-  border-radius: 10rem;
-  background: rgba(var(--color-accent-anaphys), 0.28);
-  color: rgb(var(--color-foreground));
-  font-size: 1.2rem;
+.anaphys-offer__price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+/* Remise affichée en clair à côté du prix */
+.anaphys-offer__discount {
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.6rem;
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  font-size: 1.4rem;
   font-weight: var(--font-body-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
+  line-height: 1.3;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .anaphys-offer__subtitle {
@@ -508,8 +513,10 @@
   grid-auto-flow: column;
   grid-auto-columns: minmax(22rem, 1fr);
   gap: 1.6rem;
-  margin: 0;
-  padding: 0 0 1rem;
+  /* Marge intérieure pour que le contour et l'ombre de la carte en cours ne soient pas coupés */
+  margin: -1.2rem -1.2rem 0;
+  padding: 1.2rem 1.2rem 2.4rem;
+  scroll-padding-inline: 1.2rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
@@ -526,7 +533,7 @@
   scroll-snap-align: start;
 }
 .anaphys-ritual__step.is-current {
-  box-shadow: 0 0 0 2px rgb(var(--color-accent-anaphys)), 0 1rem 2.4rem rgba(var(--color-accent-anaphys), 0.25);
+  box-shadow: 0 0 0 2px rgb(var(--color-accent-anaphys)), 0 0.8rem 1.6rem rgba(var(--color-accent-anaphys), 0.2);
 }
 .anaphys-ritual__label {
   display: flex;
@@ -609,9 +616,9 @@
   padding: 0 1.6rem;
   border: 1.5px solid rgb(var(--color-foreground));
   border-radius: 10rem;
-  background: transparent;
+  background: #fff;
   color: rgb(var(--color-foreground));
-  font: inherit;
+  font-family: var(--font-body-family);
   font-size: 1.3rem;
   font-weight: var(--font-body-weight-bold);
   cursor: pointer;
@@ -775,4 +782,10 @@
   .anaphys-ritual__add {
     transition: none;
   }
+}
+
+/* Squelette de chargement : fond doux sous les images produit tant qu'elles ne sont pas affichées */
+.product__media-item .product-media-container,
+.product__media-item .product__media {
+  background-color: rgba(var(--color-foreground), 0.04);
 }

@@ -35,8 +35,10 @@
 }
 .anaphys-gallery__track {
   display: flex;
+  align-items: center;
+  justify-content: safe center;
   gap: var(--gallery-gap);
-  margin: 4.5rem 0 0;
+  margin: 4.5rem -1.5rem 0;
   padding: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -48,8 +50,8 @@
 }
 .anaphys-gallery__item {
   flex: 0 0 calc((100% - (var(--gallery-visible) - 1) * var(--gallery-gap)) / var(--gallery-visible));
-  scroll-snap-align: start;
-  aspect-ratio: 1 / 1;
+  scroll-snap-align: center;
+  aspect-ratio: var(--gallery-ratio);
   border-radius: var(--gallery-radius);
   overflow: hidden;
 }
@@ -83,7 +85,7 @@
     font-size: 1.6rem;
   }
   .anaphys-gallery__track {
-    margin-top: 6rem;
+    margin: 6rem -5rem 0;
   }
 }
 
@@ -314,7 +316,12 @@
 .anaphys-footer__logo {
   width: 100%;
   max-width: var(--footer-logo-width);
-  margin: 0 auto;
+  margin: 4.8rem auto 0;
+}
+@media screen and (min-width: 750px) {
+  .anaphys-footer__logo {
+    margin-top: 8rem;
+  }
 }
 .anaphys-footer__logo img {
   display: block;
@@ -464,16 +471,44 @@ h1,
   border-radius: var(--media-radius) !important;
 }
 
-/* En-tête mobile comme l'ancien site : menu à gauche, recherche et panier à droite, pas d'icône compte */
+/* En-tête mobile : menu à gauche, panier à droite, pas d'icône compte */
 @media screen and (max-width: 989px) {
-  .header > .header__search {
-    display: none !important;
-  }
-  .header .header__icons > .header__search {
-    display: inline-flex !important;
-  }
   .header .header__icons .header__icon--account,
   .header .header__icons shopify-account {
     display: none;
+  }
+}
+
+/* Boutons d'ajout au panier : fond vert, texte blanc */
+.quick-add__submit.button,
+.product-form__submit.button {
+  --color-button: var(--color-accent-anaphys);
+  --color-button-text: 255, 255, 255;
+  background-color: rgb(var(--color-accent-anaphys));
+  color: #fff;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.04rem;
+}
+.quick-add__submit.button::after,
+.product-form__submit.button::after {
+  box-shadow: none;
+}
+
+/* Boutons ANAPHYS secondaires : fond blanc */
+.button.anaphys-button-light {
+  --color-button: 255, 255, 255;
+  --color-button-text: var(--color-foreground);
+  background-color: #fff;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.04rem;
+}
+
+/* Bloc image + texte : texte calé à gauche, aligné sur le bord de l'image sur mobile */
+@media screen and (max-width: 749px) {
+  .image-with-text .image-with-text__content {
+    padding-inline: 0;
   }
 }

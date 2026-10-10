@@ -72,7 +72,7 @@
           <div class="anaphys-faq__cta-text">{{ section.settings.cta_text }}</div>
         {%- endif -%}
         {%- if section.settings.cta_label != blank -%}
-          <a class="button button--secondary" href="{{ section.settings.cta_link | default: routes.root_url }}">
+          <a class="button button--secondary anaphys-button-light" href="{{ section.settings.cta_link | default: routes.root_url }}">
             {{- section.settings.cta_label | escape -}}
           </a>
         {%- endif -%}
