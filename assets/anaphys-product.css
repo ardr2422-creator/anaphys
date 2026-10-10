@@ -164,3 +164,23 @@
     min-width: 24rem;
   }
 }
+
+/* Prix principal et bouton d'ajout au panier, tailles reprises de l'ancien site */
+.product .price--large {
+  font-size: 2rem;
+}
+.product-form__buttons {
+  max-width: none;
+}
+.product-form__submit {
+  font-size: 1.6rem;
+  font-weight: var(--font-body-weight-bold);
+}
+@media screen and (min-width: 750px) {
+  .product .price--large {
+    font-size: 2.5rem;
+  }
+  .product-form__submit {
+    font-size: 1.9rem;
+  }
+}
