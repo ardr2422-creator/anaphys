@@ -3,15 +3,16 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
-          }
-        },
         "title": {
           "type": "title"
+        },
+        "benefits": {
+          "type": "benefits",
+          "settings": {
+            "metafield": "custom.benefices",
+            "default_icon": "check_circle",
+            "icon_color": "#acbfa4"
+          }
         },
         "price": {
           "type": "price"
@@ -29,75 +30,89 @@
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": true,
-            "show_gift_card_recipient": true
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false,
+            "uppercase_label": true
+          }
+        },
+        "delivery_steps": {
+          "type": "delivery_steps",
+          "settings": {
+            "business_days": true,
+            "color_scheme": "scheme-3",
+            "icon_1": "add_shopping_cart",
+            "label_1": "Commande passée",
+            "date_text_1": "[debut]",
+            "min_days_1": 0,
+            "max_days_1": 0,
+            "icon_2": "inventory_2",
+            "label_2": "Commande préparée",
+            "date_text_2": "[debut] - [fin]",
+            "min_days_2": 1,
+            "max_days_2": 2,
+            "icon_3": "redeem",
+            "label_3": "Livrée",
+            "date_text_3": "[debut] - [fin]",
+            "min_days_3": 8,
+            "max_days_3": 10,
+            "icon_4": "check_circle",
+            "label_4": "",
+            "date_text_4": "[debut] - [fin]",
+            "min_days_4": 0,
+            "max_days_4": 0
           }
         },
         "description": {
           "type": "description"
-        },
-        "share": {
-          "type": "share",
-          "settings": {
-            "share_label": "Share"
-          }
         }
       },
       "block_order": [
-        "vendor",
         "title",
+        "benefits",
         "price",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "description",
-        "share"
+        "delivery_steps",
+        "description"
       ],
       "settings": {
         "enable_sticky_info": true,
+        "enable_sticky_atc": true,
+        "sticky_atc_color_scheme": "scheme-1",
         "color_scheme": "scheme-1",
-        "media_position": "left",
-        "gallery_layout": "stacked",
-        "media_size": "large",
+        "media_size": "medium",
         "constrain_to_viewport": true,
         "media_fit": "contain",
-        "image_zoom": "lightbox",
+        "gallery_layout": "thumbnail_slider",
         "mobile_thumbnails": "hide",
-        "hide_variants": true,
+        "media_position": "left",
+        "image_zoom": "none",
+        "hide_variants": false,
         "enable_video_looping": false,
         "padding_top": 36,
-        "padding_bottom": 12
-      }
-    },
-    "disclosures": {
-      "type": "disclosures",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 0
+        "padding_bottom": 36
       }
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
-        "heading": "You may also like",
+        "heading": "Tu aimeras aussi",
         "heading_size": "h2",
         "products_to_show": 4,
         "columns_desktop": 4,
         "color_scheme": "scheme-1",
-        "image_ratio": "square",
+        "image_ratio": "adapt",
         "image_shape": "default",
-        "show_secondary_image": true,
+        "show_secondary_image": false,
         "show_vendor": false,
         "show_rating": false,
         "columns_mobile": "2",
         "padding_top": 36,
-        "padding_bottom": 28
+        "padding_bottom": 24
       }
     }
   },
-  "order": [
-    "main",
-    "disclosures",
-    "related-products"
-  ]
+  "order": ["main", "related-products"]
 }

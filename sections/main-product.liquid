@@ -14,6 +14,7 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   {{ 'component-rating.css' | asset_url | stylesheet_tag }}
+  {{ 'anaphys-product.css' | asset_url | stylesheet_tag }}
   {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 
   {% unless product.has_only_default_variant %}
@@ -688,6 +689,10 @@
                   </product-recommendations>
                 {%- when 'icon-with-text' -%}
                   {% render 'icon-with-text', block: block %}
+                {%- when 'benefits' -%}
+                  {% render 'anaphys-benefits', block: block, product: product %}
+                {%- when 'delivery_steps' -%}
+                  {% render 'anaphys-delivery-steps', block: block %}
               {%- endcase -%}
             {%- endfor -%}
             <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -752,6 +757,10 @@
     </div>
   </product-component>
 </product-info>
+
+{%- if section.settings.enable_sticky_atc -%}
+  {% render 'anaphys-sticky-atc', product: product, section: section %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -940,6 +949,12 @@
           "default": true,
           "label": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.label",
           "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "uppercase_label",
+          "default": false,
+          "label": "Texte du bouton en majuscules"
         }
       ]
     },
@@ -2144,6 +2159,389 @@
           "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
         }
       ]
+    },
+    {
+      "type": "benefits",
+      "name": "Bénéfices",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Affiche les phrases de bénéfice reliées au produit par un métachamp (liste de métaobjets avec un champ texte et un champ icone facultatif)."
+        },
+        {
+          "type": "text",
+          "id": "metafield",
+          "label": "Métachamp source",
+          "default": "custom.benefices",
+          "info": "Format espace.clé"
+        },
+        {
+          "type": "select",
+          "id": "default_icon",
+          "label": "Icône par défaut",
+          "default": "check_circle",
+          "options": [
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "science",
+              "label": "Formule"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Couleur des icônes"
+        }
+      ]
+    },
+    {
+      "type": "delivery_steps",
+      "name": "Étapes de livraison",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "business_days",
+          "label": "Compter en jours ouvrés",
+          "default": true,
+          "info": "Le samedi et le dimanche ne sont pas comptés."
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Couleurs des icônes et de la ligne",
+          "default": "scheme-3"
+        },
+        {
+          "type": "header",
+          "content": "Étape 1"
+        },
+        {
+          "type": "select",
+          "id": "icon_1",
+          "label": "Icône",
+          "default": "add_shopping_cart",
+          "options": [
+            {
+              "value": "add_shopping_cart",
+              "label": "Panier"
+            },
+            {
+              "value": "inventory_2",
+              "label": "Préparation"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "redeem",
+              "label": "Cadeau"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "mail",
+              "label": "E-mail"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label_1",
+          "label": "Libellé",
+          "default": "Commande passée"
+        },
+        {
+          "type": "text",
+          "id": "date_text_1",
+          "label": "Texte de date",
+          "default": "[debut]",
+          "info": "[debut] et [fin] sont remplacés par les dates estimées."
+        },
+        {
+          "type": "range",
+          "id": "min_days_1",
+          "label": "Jours minimum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "max_days_1",
+          "label": "Jours maximum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Étape 2"
+        },
+        {
+          "type": "select",
+          "id": "icon_2",
+          "label": "Icône",
+          "default": "inventory_2",
+          "options": [
+            {
+              "value": "add_shopping_cart",
+              "label": "Panier"
+            },
+            {
+              "value": "inventory_2",
+              "label": "Préparation"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "redeem",
+              "label": "Cadeau"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "mail",
+              "label": "E-mail"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label_2",
+          "label": "Libellé",
+          "default": "Commande préparée"
+        },
+        {
+          "type": "text",
+          "id": "date_text_2",
+          "label": "Texte de date",
+          "default": "[debut] - [fin]",
+          "info": "[debut] et [fin] sont remplacés par les dates estimées."
+        },
+        {
+          "type": "range",
+          "id": "min_days_2",
+          "label": "Jours minimum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "max_days_2",
+          "label": "Jours maximum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "header",
+          "content": "Étape 3"
+        },
+        {
+          "type": "select",
+          "id": "icon_3",
+          "label": "Icône",
+          "default": "redeem",
+          "options": [
+            {
+              "value": "add_shopping_cart",
+              "label": "Panier"
+            },
+            {
+              "value": "inventory_2",
+              "label": "Préparation"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "redeem",
+              "label": "Cadeau"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "mail",
+              "label": "E-mail"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label_3",
+          "label": "Libellé",
+          "default": "Livrée"
+        },
+        {
+          "type": "text",
+          "id": "date_text_3",
+          "label": "Texte de date",
+          "default": "[debut] - [fin]",
+          "info": "[debut] et [fin] sont remplacés par les dates estimées."
+        },
+        {
+          "type": "range",
+          "id": "min_days_3",
+          "label": "Jours minimum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 8
+        },
+        {
+          "type": "range",
+          "id": "max_days_3",
+          "label": "Jours maximum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "header",
+          "content": "Étape 4"
+        },
+        {
+          "type": "select",
+          "id": "icon_4",
+          "label": "Icône",
+          "default": "check_circle",
+          "options": [
+            {
+              "value": "add_shopping_cart",
+              "label": "Panier"
+            },
+            {
+              "value": "inventory_2",
+              "label": "Préparation"
+            },
+            {
+              "value": "package_2",
+              "label": "Colis"
+            },
+            {
+              "value": "local_shipping",
+              "label": "Camion"
+            },
+            {
+              "value": "redeem",
+              "label": "Cadeau"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "mail",
+              "label": "E-mail"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "label_4",
+          "label": "Libellé",
+          "info": "Laisse vide pour masquer l'étape."
+        },
+        {
+          "type": "text",
+          "id": "date_text_4",
+          "label": "Texte de date",
+          "default": "[debut] - [fin]",
+          "info": "[debut] et [fin] sont remplacés par les dates estimées."
+        },
+        {
+          "type": "range",
+          "id": "min_days_4",
+          "label": "Jours minimum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "max_days_4",
+          "label": "Jours maximum",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 0
+        }
+      ]
     }
   ],
   "settings": [
@@ -2152,6 +2550,19 @@
       "id": "enable_sticky_info",
       "default": true,
       "label": "t:sections.main-product.settings.enable_sticky_info.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_atc",
+      "default": false,
+      "label": "Barre d'ajout au panier fixe",
+      "info": "Apparaît en bas de l'écran quand le bouton d'ajout au panier n'est plus visible."
+    },
+    {
+      "type": "color_scheme",
+      "id": "sticky_atc_color_scheme",
+      "default": "scheme-1",
+      "label": "Couleurs de la barre d'ajout au panier"
     },
     {
       "type": "color_scheme",

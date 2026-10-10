@@ -1,0 +1,40 @@
+{%- comment -%}
+  Liste des bénéfices du produit, avec icône.
+  Source : métachamp produit de type « liste de références de métaobjets »
+  (par défaut custom.benefices). Chaque métaobjet fournit :
+    - texte : la phrase (obligatoire)
+    - icone : un nom d'icône du snippet anaphys-icon (facultatif)
+  Accepts:
+  - block: {Object} bloc « Bénéfices » de la fiche produit
+  - product: {Object}
+{%- endcomment -%}
+{%- liquid
+  assign source = block.settings.metafield | strip
+  assign source_parts = source | split: '.'
+  assign namespace = source_parts | first
+  assign key = source_parts | last
+  assign entries = product.metafields[namespace][key].value
+-%}
+
+{%- if entries != blank -%}
+  <ul
+    class="anaphys-benefits list-unstyled"
+    style="--benefits-icon-color: {{ block.settings.icon_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- for entry in entries -%}
+      {%- assign text = entry.texte.value | default: entry.texte -%}
+      {%- if text != blank -%}
+        {%- assign icon = entry.icone.value | default: entry.icone | default: block.settings.default_icon -%}
+        <li class="anaphys-benefits__item">
+          {%- render 'anaphys-icon', icon: icon, class: 'anaphys-benefits__icon' -%}
+          <span>{{ text | escape }}</span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- elsif request.design_mode -%}
+  <p class="anaphys-benefits__empty" {{ block.shopify_attributes }}>
+    Aucun bénéfice relié à ce produit (métachamp {{ source }}).
+  </p>
+{%- endif -%}

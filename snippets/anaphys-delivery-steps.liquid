@@ -1,0 +1,89 @@
+{%- comment -%}
+  Étapes de livraison avec dates estimées (jours ouvrés, lundi à vendredi).
+  Les dates sont calculées dans le navigateur, au format français.
+  Dans les textes, [debut] et [fin] sont remplacés par les dates calculées.
+  Accepts:
+  - block: {Object} bloc « Étapes de livraison » de la fiche produit
+{%- endcomment -%}
+{%- liquid
+  assign steps_count = 0
+  for i in (1..4)
+    assign label_key = 'label_' | append: i
+    if block.settings[label_key] != blank
+      assign steps_count = steps_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if steps_count > 0 -%}
+  <delivery-steps
+    class="anaphys-delivery"
+    style="--delivery-steps: {{ steps_count }};"
+    data-business-days="{{ block.settings.business_days }}"
+    {{ block.shopify_attributes }}
+  >
+    <span class="anaphys-delivery__line color-{{ block.settings.color_scheme }}" aria-hidden="true"></span>
+    <ol class="anaphys-delivery__list list-unstyled">
+      {%- for i in (1..4) -%}
+        {%- liquid
+          assign label_key = 'label_' | append: i
+          assign date_key = 'date_text_' | append: i
+          assign icon_key = 'icon_' | append: i
+          assign min_key = 'min_days_' | append: i
+          assign max_key = 'max_days_' | append: i
+        -%}
+        {%- if block.settings[label_key] != blank -%}
+          <li class="anaphys-delivery__step">
+            <span class="anaphys-delivery__icon color-{{ block.settings.color_scheme }}">
+              {%- render 'anaphys-icon', icon: block.settings[icon_key] -%}
+            </span>
+            <span
+              class="anaphys-delivery__date"
+              data-template="{{ block.settings[date_key] | escape }}"
+              data-min="{{ block.settings[min_key] }}"
+              data-max="{{ block.settings[max_key] }}"
+            >
+              {{- block.settings[date_key] | replace: '[debut]', '…' | replace: '[fin]', '…' -}}
+            </span>
+            <span class="anaphys-delivery__label">{{ block.settings[label_key] | escape }}</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ol>
+  </delivery-steps>
+
+  <script>
+    if (!customElements.get('delivery-steps')) {
+      customElements.define(
+        'delivery-steps',
+        class DeliverySteps extends HTMLElement {
+          connectedCallback() {
+            const businessDays = this.dataset.businessDays === 'true';
+            const format = new Intl.DateTimeFormat(document.documentElement.lang || 'fr', {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'short',
+            });
+            const addDays = (count) => {
+              const date = new Date();
+              let added = 0;
+              while (added < count) {
+                date.setDate(date.getDate() + 1);
+                const day = date.getDay();
+                if (!businessDays || (day !== 0 && day !== 6)) added += 1;
+              }
+              return format.format(date);
+            };
+            this.querySelectorAll('[data-template]').forEach((element) => {
+              const start = addDays(Number(element.dataset.min) || 0);
+              const end = addDays(Number(element.dataset.max) || 0);
+              element.textContent = element.dataset.template
+                .replaceAll('[debut]', start)
+                .replaceAll('[fin]', end);
+            });
+          }
+        }
+      );
+    }
+  </script>
+{%- endif -%}

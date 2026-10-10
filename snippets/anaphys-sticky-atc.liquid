@@ -1,0 +1,90 @@
+{%- comment -%}
+  Barre d'ajout au panier fixée en bas de l'écran.
+  Elle apparaît quand le bouton principal de la fiche produit sort de l'écran
+  et déclenche ce même bouton (même formulaire, même panier).
+  Accepts:
+  - product: {Object}
+  - section: {Object} section main-product
+{%- endcomment -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<sticky-add-to-cart
+  class="anaphys-sticky-atc color-{{ section.settings.sticky_atc_color_scheme }} gradient"
+  data-section="{{ section.id }}"
+  hidden
+>
+  <div class="anaphys-sticky-atc__inner page-width">
+    <div class="anaphys-sticky-atc__product">
+      {%- if product.featured_media -%}
+        {{
+          product.featured_media
+          | image_url: width: 160
+          | image_tag: loading: 'lazy', class: 'anaphys-sticky-atc__image', alt: product.featured_media.alt
+        }}
+      {%- endif -%}
+      <div class="anaphys-sticky-atc__info">
+        <p class="anaphys-sticky-atc__title">{{ product.title | escape }}</p>
+        <p class="anaphys-sticky-atc__price">
+          {{- current_variant.price | money -}}
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            <s>{{ current_variant.compare_at_price | money }}</s>
+          {%- endif -%}
+        </p>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="anaphys-sticky-atc__button button button--primary"
+      {% unless current_variant.available %}
+        disabled
+      {% endunless %}
+    >
+      {%- if current_variant.available -%}
+        {{ 'products.product.add_to_cart' | t }}
+      {%- else -%}
+        {{ 'products.product.sold_out' | t }}
+      {%- endif -%}
+    </button>
+  </div>
+</sticky-add-to-cart>
+
+<script>
+  if (!customElements.get('sticky-add-to-cart')) {
+    customElements.define(
+      'sticky-add-to-cart',
+      class StickyAddToCart extends HTMLElement {
+        connectedCallback() {
+          this.mainButton = document.getElementById(`ProductSubmitButton-${this.dataset.section}`);
+          if (!this.mainButton) return;
+
+          this.querySelector('button').addEventListener('click', () => {
+            if (this.mainButton.disabled) {
+              this.mainButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              return;
+            }
+            this.mainButton.click();
+          });
+
+          this.observer = new IntersectionObserver(([entry]) => {
+            const isBelow = entry.boundingClientRect.top > 0;
+            this.toggle(!entry.isIntersecting && !isBelow);
+          });
+          this.observer.observe(this.mainButton);
+        }
+
+        disconnectedCallback() {
+          this.observer?.disconnect();
+          document.body.style.removeProperty('--sticky-bar-height');
+        }
+
+        toggle(visible) {
+          this.hidden = !visible;
+          if (visible) {
+            document.body.style.setProperty('--sticky-bar-height', `${this.offsetHeight}px`);
+          } else {
+            document.body.style.removeProperty('--sticky-bar-height');
+          }
+        }
+      }
+    );
+  }
+</script>
