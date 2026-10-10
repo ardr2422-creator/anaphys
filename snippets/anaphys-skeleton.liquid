@@ -1,0 +1,123 @@
+{%- comment -%}
+  Squelette de chargement plein écran.
+  Il recouvre la page tant qu'elle n'est pas chargée, puis s'efface en fondu.
+  Il n'apparaît qu'après 150 ms : sur une page rapide, on ne le voit pas.
+  Styles en ligne pour qu'il s'affiche dès le premier rendu.
+{%- endcomment -%}
+<style>
+  .anaphys-skeleton {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    overflow: hidden;
+    background: #fff;
+    pointer-events: none;
+    animation: anaphys-skeleton-in 200ms 150ms both;
+  }
+  .anaphys-skeleton.is-done {
+    opacity: 0;
+    transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  @keyframes anaphys-skeleton-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .anaphys-skeleton__bar {
+    height: 13.6rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .anaphys-skeleton__band {
+    height: 5.6rem;
+    background: rgba(172, 191, 164, 0.35);
+  }
+  .anaphys-skeleton__page {
+    max-width: 140rem;
+    margin: 0 auto;
+    padding: 3.6rem 1.5rem;
+    display: grid;
+    gap: 4rem;
+  }
+  .anaphys-skeleton__col {
+    display: grid;
+    align-content: start;
+    gap: 1.4rem;
+  }
+  .anaphys-skeleton__box {
+    border-radius: 1.2rem;
+    background: linear-gradient(90deg, #f1f1f1 25%, #f8f8f8 37%, #f1f1f1 63%);
+    background-size: 400% 100%;
+    animation: anaphys-skeleton-shine 1.4s ease infinite;
+  }
+  @keyframes anaphys-skeleton-shine {
+    from { background-position: 100% 50%; }
+    to { background-position: 0 50%; }
+  }
+  .anaphys-skeleton__logo { width: 8rem; height: 8rem; border-radius: 50%; }
+  .anaphys-skeleton__media { aspect-ratio: 1; }
+  .anaphys-skeleton__hero { aspect-ratio: 16 / 9; }
+  .anaphys-skeleton__title { height: 4rem; width: 80%; }
+  .anaphys-skeleton__line { height: 1.6rem; width: 70%; }
+  .anaphys-skeleton__line--short { width: 45%; }
+  .anaphys-skeleton__card { height: 8rem; }
+  .anaphys-skeleton__button { height: 4.8rem; }
+  .anaphys-skeleton__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
+  .anaphys-skeleton__cards .anaphys-skeleton__box { aspect-ratio: 3 / 4; }
+  @media screen and (min-width: 750px) {
+    .anaphys-skeleton__page { padding: 3.6rem 5rem; }
+    .anaphys-skeleton__page--product { grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .anaphys-skeleton,
+    .anaphys-skeleton__box { animation: none; }
+  }
+</style>
+<noscript><style>.anaphys-skeleton { display: none; }</style></noscript>
+
+<div class="anaphys-skeleton" id="AnaphysSkeleton" aria-hidden="true">
+  <div class="anaphys-skeleton__bar"><div class="anaphys-skeleton__box anaphys-skeleton__logo"></div></div>
+  <div class="anaphys-skeleton__band"></div>
+  {%- if template.name == 'product' -%}
+    <div class="anaphys-skeleton__page anaphys-skeleton__page--product">
+      <div class="anaphys-skeleton__box anaphys-skeleton__media"></div>
+      <div class="anaphys-skeleton__col">
+        <div class="anaphys-skeleton__box anaphys-skeleton__title"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__line"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__line"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__line anaphys-skeleton__line--short"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__card"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__card"></div>
+        <div class="anaphys-skeleton__box anaphys-skeleton__button"></div>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="anaphys-skeleton__page">
+      <div class="anaphys-skeleton__box anaphys-skeleton__hero"></div>
+      <div class="anaphys-skeleton__cards">
+        <div class="anaphys-skeleton__box"></div>
+        <div class="anaphys-skeleton__box"></div>
+        <div class="anaphys-skeleton__box"></div>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+  (() => {
+    const skeleton = document.getElementById('AnaphysSkeleton');
+    if (!skeleton) return;
+    let done = false;
+    const hide = () => {
+      if (done) return;
+      done = true;
+      skeleton.classList.add('is-done');
+      setTimeout(() => skeleton.remove(), 300);
+    };
+    if (document.readyState === 'complete') hide();
+    window.addEventListener('load', hide, { once: true });
+    // Filet de sécurité : la page n'attend jamais plus de 4 secondes.
+    setTimeout(hide, 4000);
+  })();
+</script>

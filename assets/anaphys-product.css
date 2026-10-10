@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  margin: 0;
+  /* De l'air avant le choix de l'offre */
+  margin: 0 0 2.4rem;
   padding: 0;
 }
 .anaphys-benefits__item {
