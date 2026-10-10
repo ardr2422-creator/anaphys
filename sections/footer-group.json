@@ -2,27 +2,88 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
-      "blocks": {},
-      "block_order": [],
+    "reassurance": {
+      "type": "anaphys-reassurance",
+      "blocks": {
+        "paiement": {
+          "type": "item",
+          "settings": {
+            "icon": "credit_card",
+            "title": "Paiement sécurisé",
+            "text": "Transactions chiffrées, tes données restent protégées",
+            "link": ""
+          }
+        },
+        "livraison": {
+          "type": "item",
+          "settings": {
+            "icon": "local_shipping",
+            "title": "Livraison suivie",
+            "text": "Ton colis arrive chez toi en 8 à 10 jours ouvrés",
+            "link": ""
+          }
+        },
+        "nature": {
+          "type": "item",
+          "settings": {
+            "icon": "eco",
+            "title": "Produits issus de la nature",
+            "text": "Romarin, aloe vera, huile d'avocat...",
+            "link": ""
+          }
+        },
+        "service-client": {
+          "type": "item",
+          "settings": {
+            "icon": "support_agent",
+            "title": "Service client à l'écoute",
+            "text": "Peu importe ta préoccupation, qu'elle soit liée à Anaphys ou pas, on te prend en charge sous 24h",
+            "link": ""
+          }
+        }
+      },
+      "block_order": ["paiement", "livraison", "nature", "service-client"],
       "settings": {
+        "heading": "",
+        "heading_size": "h2",
+        "columns_desktop": 5,
+        "gap": 20,
+        "icon_size": 56,
+        "icon_size_mobile": 60,
         "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "footer": {
+      "type": "anaphys-footer",
+      "settings": {
+        "newsletter_heading": "Restons en contact",
+        "show_newsletter": true,
+        "email_placeholder": "Adresse mail",
+        "help_text": "<p>Besoin d'aide ? <a href=\"/pages/contact\" title=\"Contact\"><strong>Contacte notre équipe</strong></a></p>",
+        "menu": "main-menu",
         "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "logo": "shopify://shop_images/anaphys_1.png",
+        "logo_width": 70,
+        "logo_width_mobile": 100,
+        "heading_size": 20,
+        "heading_size_mobile": 16,
+        "text_size": 20,
+        "text_size_mobile": 16,
+        "link_size": 20,
+        "box_width": "two-thirds",
+        "color_scheme": "scheme-5",
+        "box_radius": 24,
+        "box_padding": 70,
+        "box_padding_inline": 60,
+        "box_padding_mobile": 52,
+        "box_padding_inline_mobile": 32,
+        "section_color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },
-  "order": [
-    "footer"
-  ]
+  "order": ["reassurance", "footer"]
 }

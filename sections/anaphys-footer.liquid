@@ -1,0 +1,376 @@
+{%- comment -%}
+  Pied de page ANAPHYS : bloc arrondi avec inscription à la newsletter,
+  texte d'aide, menu, réseaux sociaux (réglages du thème) et logo.
+{%- endcomment -%}
+
+{%- style -%}
+  #Footer-{{ section.id }} {
+    --footer-radius: {{ section.settings.box_radius }}px;
+    --footer-padding-block: {{ section.settings.box_padding_mobile }}px;
+    --footer-padding-inline: {{ section.settings.box_padding_inline_mobile }}px;
+    --footer-logo-width: {{ section.settings.logo_width_mobile }}%;
+    --footer-heading-size: {{ section.settings.heading_size_mobile | divided_by: 10.0 }}rem;
+    --footer-text-size: {{ section.settings.text_size_mobile | divided_by: 10.0 }}rem;
+    --footer-link-size: {{ section.settings.link_size | divided_by: 10.0 }}rem;
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 990px) {
+    #Footer-{{ section.id }} {
+      --footer-padding-block: {{ section.settings.box_padding }}px;
+      --footer-padding-inline: {{ section.settings.box_padding_inline }}px;
+      --footer-logo-width: {{ section.settings.logo_width }}%;
+      --footer-heading-size: {{ section.settings.heading_size | divided_by: 10.0 }}rem;
+      --footer-text-size: {{ section.settings.text_size | divided_by: 10.0 }}rem;
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<footer
+  id="Footer-{{ section.id }}"
+  class="anaphys-footer anaphys-footer--{{ section.settings.box_width }} color-{{ section.settings.section_color_scheme }} gradient"
+>
+  <div class="anaphys-footer__inner">
+    <div class="anaphys-footer__box color-{{ section.settings.color_scheme }} gradient">
+      <div class="anaphys-footer__top">
+        <div class="anaphys-footer__newsletter">
+          {%- if section.settings.newsletter_heading != blank -%}
+            <h2 class="anaphys-footer__heading">{{ section.settings.newsletter_heading | escape }}</h2>
+          {%- endif -%}
+
+          {%- if section.settings.show_newsletter -%}
+            {%- assign newsletter_form_id = 'FooterNewsletter-' | append: section.id -%}
+            {%- form 'customer', id: newsletter_form_id, class: 'anaphys-footer__form' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="anaphys-footer__field">
+                <label class="visually-hidden" for="FooterEmail-{{ section.id }}">
+                  {{- 'newsletter.label' | t -}}
+                </label>
+                <input
+                  id="FooterEmail-{{ section.id }}"
+                  class="anaphys-footer__input"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ section.settings.email_placeholder | escape }}"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  required
+                  {% if form.errors %}
+                    aria-invalid="true"
+                    aria-describedby="FooterNewsletterError-{{ section.id }}"
+                  {% elsif form.posted_successfully? %}
+                    aria-describedby="FooterNewsletterSuccess-{{ section.id }}"
+                  {% endif %}
+                >
+                <button type="submit" class="anaphys-footer__submit" name="commit">
+                  {%- render 'anaphys-icon', icon: 'arrow_forward' -%}
+                  <span class="visually-hidden">{{ 'newsletter.button_label' | t }}</span>
+                </button>
+              </div>
+              {%- if form.errors -%}
+                <p id="FooterNewsletterError-{{ section.id }}" class="anaphys-footer__message" role="alert">
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </p>
+              {%- elsif form.posted_successfully? -%}
+                <p id="FooterNewsletterSuccess-{{ section.id }}" class="anaphys-footer__message" tabindex="-1" autofocus>
+                  {{- 'newsletter.success' | t -}}
+                </p>
+              {%- endif -%}
+            {%- endform -%}
+          {%- endif -%}
+
+          {%- if section.settings.help_text != blank -%}
+            <div class="anaphys-footer__help rte">{{ section.settings.help_text }}</div>
+          {%- endif -%}
+        </div>
+
+        <div class="anaphys-footer__nav">
+          {%- if section.settings.menu.links.size > 0 -%}
+            <ul class="anaphys-footer__menu list-unstyled" role="list">
+              {%- for link in section.settings.menu.links -%}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    class="anaphys-footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{- link.title | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if section.settings.show_social -%}
+            {%- render 'social-icons', class: 'anaphys-footer__social' -%}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if section.settings.logo != blank -%}
+        <div class="anaphys-footer__logo">
+          {{
+            section.settings.logo
+            | image_url: width: 1500
+            | image_tag:
+              loading: 'lazy',
+              widths: '400, 750, 1100, 1500',
+              sizes: '(min-width: 990px) 60vw, 90vw',
+              alt: shop.name
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pied de page ANAPHYS",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Titre",
+      "default": "Restons en contact"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "default": true,
+      "label": "Afficher le champ d'inscription"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Texte du champ e-mail",
+      "default": "Adresse mail"
+    },
+    {
+      "type": "richtext",
+      "id": "help_text",
+      "label": "Texte d'aide"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "default": true,
+      "label": "Afficher les réseaux sociaux",
+      "info": "Les liens se règlent dans les paramètres du thème, rubrique Réseaux sociaux."
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Image du logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 70,
+      "label": "Largeur du logo (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "label": "Largeur du logo (mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Textes"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "label": "Taille du titre (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16,
+      "label": "Taille du titre (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "label": "Taille du texte d'aide (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16,
+      "label": "Taille du texte d'aide (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "label": "Taille des liens du menu"
+    },
+    {
+      "type": "header",
+      "content": "Bloc"
+    },
+    {
+      "type": "select",
+      "id": "box_width",
+      "label": "Largeur du bloc sur ordinateur",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Toute la largeur" },
+        { "value": "two-thirds", "label": "Deux tiers" }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Couleurs du bloc",
+      "default": "scheme-5"
+    },
+    {
+      "type": "range",
+      "id": "box_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24,
+      "label": "Arrondi du bloc"
+    },
+    {
+      "type": "range",
+      "id": "box_padding",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 70,
+      "label": "Marge intérieure verticale (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "box_padding_inline",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 60,
+      "label": "Marge intérieure horizontale (ordinateur)"
+    },
+    {
+      "type": "range",
+      "id": "box_padding_mobile",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 52,
+      "label": "Marge intérieure verticale (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "box_padding_inline_mobile",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32,
+      "label": "Marge intérieure horizontale (mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "Couleurs autour du bloc",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "presets": [
+    {
+      "name": "Pied de page ANAPHYS"
+    }
+  ]
+}
+{% endschema %}

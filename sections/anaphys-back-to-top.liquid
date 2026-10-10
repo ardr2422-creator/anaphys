@@ -1,0 +1,118 @@
+{%- comment -%}
+  Bouton flottant pour remonter en haut de la page.
+  Section statique rendue dans layout/theme.liquid.
+{%- endcomment -%}
+{%- if section.settings.enabled -%}
+  {%- style -%}
+    #BackToTop-{{ section.id }} {
+      --back-to-top-offset-x: {{ section.settings.offset_x | times: 0.75 | divided_by: 10.0 }}rem;
+      --back-to-top-offset-y: {{ section.settings.offset_y | times: 0.75 | divided_by: 10.0 }}rem;
+    }
+    @media screen and (min-width: 750px) {
+      #BackToTop-{{ section.id }} {
+        --back-to-top-offset-x: {{ section.settings.offset_x | divided_by: 10.0 }}rem;
+        --back-to-top-offset-y: {{ section.settings.offset_y | divided_by: 10.0 }}rem;
+      }
+    }
+  {%- endstyle -%}
+
+  <back-to-top
+    id="BackToTop-{{ section.id }}"
+    class="anaphys-back-to-top anaphys-back-to-top--{{ section.settings.position }}"
+    data-threshold="{{ section.settings.threshold }}"
+    hidden
+  >
+    <button type="button" class="anaphys-back-to-top__button color-{{ section.settings.color_scheme }}">
+      {%- render 'anaphys-icon', icon: 'keyboard_arrow_up' -%}
+      <span class="visually-hidden">Revenir en haut de la page</span>
+    </button>
+  </back-to-top>
+
+  <script>
+    if (!customElements.get('back-to-top')) {
+      customElements.define(
+        'back-to-top',
+        class BackToTop extends HTMLElement {
+          connectedCallback() {
+            this.threshold = Number(this.dataset.threshold) || 0;
+            this.onScroll = this.onScroll.bind(this);
+            this.querySelector('button').addEventListener('click', () => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.addEventListener('scroll', this.onScroll, { passive: true });
+            this.onScroll();
+          }
+
+          disconnectedCallback() {
+            window.removeEventListener('scroll', this.onScroll);
+          }
+
+          onScroll() {
+            this.hidden = window.scrollY <= this.threshold;
+          }
+        }
+      );
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bouton retour en haut",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "default": true,
+      "label": "Afficher le bouton"
+    },
+    {
+      "type": "range",
+      "id": "threshold",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 400,
+      "label": "Apparaît après un défilement de"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "default": "right",
+      "options": [
+        { "value": "left", "label": "En bas à gauche" },
+        { "value": "center", "label": "En bas au centre" },
+        { "value": "right", "label": "En bas à droite" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "offset_x",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20,
+      "label": "Écart avec le bord"
+    },
+    {
+      "type": "range",
+      "id": "offset_y",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20,
+      "label": "Écart avec le bas"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-4"
+    }
+  ]
+}
+{% endschema %}

@@ -187,6 +187,17 @@
         "settings": {
           "color_scheme": "scheme-1"
         }
+      },
+      "anaphys-back-to-top": {
+        "type": "anaphys-back-to-top",
+        "settings": {
+          "enabled": true,
+          "threshold": 400,
+          "position": "right",
+          "offset_x": 20,
+          "offset_y": 20,
+          "color_scheme": "scheme-4"
+        }
       }
     },
     "logo": "shopify://shop_images/Copie_de_Noir_Et_Blanc_Minimaliste_Logo.png",
