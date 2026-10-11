@@ -40,11 +40,11 @@
     "best-sellers": {
       "type": "featured-collection",
       "settings": {
-        "title": "",
+        "title": "Nos essentiels",
         "heading_size": "h2",
-        "description": "<p><strong>BEST-SELLER</strong></p>",
-        "show_description": false,
-        "description_style": "subtitle",
+        "description": "<p>Les soins que tu adoptes en premier.</p>",
+        "show_description": true,
+        "description_style": "body",
         "collection": "best-sellers",
         "products_to_show": 25,
         "columns_desktop": 3,
@@ -204,13 +204,418 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "signature": {
+      "type": "anaphys-marquee",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "text": "Le soin commence à la source"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "text": "Connaissance"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "text": "Renaissance"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "text": "Abondance"
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "text": "Inspiré de la nature"
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "text": "Du cuir chevelu aux longueurs"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ],
+      "settings": {
+        "color_scheme": "scheme-4"
+      }
+    },
+    "besoins": {
+      "type": "anaphys-concerns",
+      "blocks": {
+        "concern-1": {
+          "type": "concern",
+          "settings": {
+            "text": "Commence par purifier ton cuir chevelu.",
+            "product": "exfoliant-pour-cuir-chevelu-deep-cleanse-romarin-et-menthe"
+          }
+        },
+        "concern-2": {
+          "type": "concern",
+          "settings": {
+            "text": "Un lavage doux qui redonne de l'éclat.",
+            "product": "shampooing-smoky-green-vetiver"
+          }
+        },
+        "concern-3": {
+          "type": "concern",
+          "settings": {
+            "text": "Nourris et démêle sans alourdir.",
+            "product": "apres-shampooing-smoky-green-vetiver"
+          }
+        },
+        "concern-4": {
+          "type": "concern",
+          "settings": {
+            "text": "Un soin profond pour tes longueurs.",
+            "product": "masque-capillaire-reparateur-intensif-a-la-keratine"
+          }
+        },
+        "concern-5": {
+          "type": "concern",
+          "settings": {
+            "text": "Quelques gouttes, un massage, ton moment.",
+            "product": "huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin"
+          }
+        },
+        "quiz-6": {
+          "type": "quiz",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "concern-1",
+        "concern-2",
+        "concern-3",
+        "concern-4",
+        "concern-5",
+        "quiz-6"
+      ],
+      "settings": {}
+    },
+    "rituel-5": {
+      "type": "anaphys-ritual",
+      "blocks": {
+        "etape-1": {
+          "type": "step",
+          "settings": {
+            "step_name": "Purifier",
+            "product": "exfoliant-pour-cuir-chevelu-deep-cleanse-romarin-et-menthe",
+            "text": "Libère le cuir chevelu des résidus accumulés."
+          }
+        },
+        "etape-2": {
+          "type": "step",
+          "settings": {
+            "step_name": "Nettoyer",
+            "product": "shampooing-smoky-green-vetiver",
+            "text": "Un lavage doux, cuir chevelu compris."
+          }
+        },
+        "etape-3": {
+          "type": "step",
+          "settings": {
+            "step_name": "Nourrir",
+            "product": "apres-shampooing-smoky-green-vetiver",
+            "text": "Nourrit les longueurs et facilite le démêlage."
+          }
+        },
+        "etape-4": {
+          "type": "step",
+          "settings": {
+            "step_name": "Réparer",
+            "product": "masque-capillaire-reparateur-intensif-a-la-keratine",
+            "text": "Un soin profond pour les longueurs abîmées."
+          }
+        },
+        "etape-5": {
+          "type": "step",
+          "settings": {
+            "step_name": "Fortifier",
+            "product": "huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin",
+            "text": "Nourrit le cuir chevelu et les longueurs."
+          }
+        }
+      },
+      "block_order": [
+        "etape-1",
+        "etape-2",
+        "etape-3",
+        "etape-4",
+        "etape-5"
+      ],
+      "settings": {
+        "heading": "Ton rituel, <strong>geste par geste</strong>",
+        "text": "<p>Cinq soins qui se complètent, du cuir chevelu jusqu'aux pointes. Commence par un, ajoute les autres à ton rythme.</p>",
+        "current_label": "Tu es ici",
+        "show_add": true,
+        "add_label": "Ajouter",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "actifs": {
+      "type": "anaphys-ingredients",
+      "blocks": {
+        "point-1": {
+          "type": "point",
+          "settings": {
+            "title": "Romarin",
+            "text": "Une plante tonique, au cœur de notre huile et de notre exfoliant.",
+            "product": "huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin"
+          }
+        },
+        "point-2": {
+          "type": "point",
+          "settings": {
+            "title": "Menthe poivrée",
+            "text": "Pour une vraie sensation de fraîcheur sur le cuir chevelu.",
+            "product": "exfoliant-pour-cuir-chevelu-deep-cleanse-romarin-et-menthe"
+          }
+        },
+        "point-3": {
+          "type": "point",
+          "settings": {
+            "title": "Aloe vera",
+            "text": "Il aide à préserver l'hydratation de tes cheveux.",
+            "product": "shampooing-smoky-green-vetiver"
+          }
+        },
+        "point-4": {
+          "type": "point",
+          "settings": {
+            "title": "Kératine",
+            "text": "Elle aide à renforcer la fibre des longueurs abîmées.",
+            "product": "masque-capillaire-reparateur-intensif-a-la-keratine"
+          }
+        },
+        "point-5": {
+          "type": "point",
+          "settings": {
+            "title": "Huiles végétales",
+            "text": "Pour nourrir les longueurs et adoucir les pointes.",
+            "product": "apres-shampooing-smoky-green-vetiver"
+          }
+        }
+      },
+      "block_order": [
+        "point-1",
+        "point-2",
+        "point-3",
+        "point-4",
+        "point-5"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/anaphys.png",
+        "button_label": "Découvrir nos soins",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "focus": {
+      "type": "anaphys-spotlight",
+      "blocks": {
+        "fact-1": {
+          "type": "fact",
+          "settings": {
+            "big_text": "Romarin",
+            "caption": "au cœur de la formule"
+          }
+        },
+        "fact-2": {
+          "type": "fact",
+          "settings": {
+            "big_text": "Quelques gouttes",
+            "caption": "suffisent pour un massage"
+          }
+        },
+        "fact-3": {
+          "type": "fact",
+          "settings": {
+            "big_text": "Cuir chevelu",
+            "caption": "là où tout commence"
+          }
+        }
+      },
+      "block_order": [
+        "fact-1",
+        "fact-2",
+        "fact-3"
+      ],
+      "settings": {
+        "product": "huile-fortifiante-pour-cheveux-et-cuir-chevelu-au-romarin"
+      }
+    },
+    "diagnostic": {
+      "type": "anaphys-quiz-cta",
+      "settings": {}
+    },
+    "perso": {
+      "type": "anaphys-perso-promo",
+      "blocks": {
+        "step-1": {
+          "type": "step",
+          "settings": {
+            "title": "Choisis ton soin",
+            "text": "Celui qui répond à ton besoin."
+          }
+        },
+        "step-2": {
+          "type": "step",
+          "settings": {
+            "title": "Écris ton prénom",
+            "text": "Et une référence si tu veux."
+          }
+        },
+        "step-3": {
+          "type": "step",
+          "settings": {
+            "title": "Choisis ta couleur",
+            "text": "Sauge, sable, terre, nuit ou blanc."
+          }
+        }
+      },
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ],
+      "settings": {}
+    },
+    "questions": {
+      "type": "anaphys-faq",
+      "blocks": {
+        "theme": {
+          "type": "group",
+          "settings": {
+            "title": "Questions fréquentes",
+            "anchor": "questions"
+          }
+        },
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Est-ce que je peux utiliser un seul produit ?",
+            "answer": "<p>Oui. Chaque soin fonctionne seul et s'intègre sans problème à ta routine actuelle, y compris avec des produits d'autres marques.</p><p>Ils sont simplement pensés pour se compléter : chacun prépare le terrain pour le suivant.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Dans quel ordre utiliser les soins ?",
+            "answer": "<p>Le rituel complet se fait en cinq gestes :</p><ol><li><strong>Purifier</strong> avec l'exfoliant Deep Cleanse.</li><li><strong>Nettoyer</strong> avec le shampooing.</li><li><strong>Nourrir</strong> avec l'après-shampooing.</li><li><strong>Réparer</strong> avec le masque à la kératine.</li><li><strong>Fortifier</strong> avec l'huile au romarin.</li></ol><p>Tu n'as pas à tout faire à chaque lavage. Le shampooing et l'après-shampooing sont tes gestes de base, les trois autres viennent en renfort selon tes besoins.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "J'ai une allergie ou un cuir chevelu sensible, que dois-je savoir ?",
+            "answer": "<p>Vérifie toujours la liste des ingrédients sur la fiche produit avant d'acheter. À noter en particulier :</p><ul><li>le shampooing, l'après-shampooing et le masque contiennent des <strong>protéines de blé</strong> ;</li><li>l'huile fortifiante contient de l'<strong>huile d'amande douce</strong> (fruit à coque) ;</li><li>l'exfoliant et l'huile contiennent du <strong>romarin</strong> et de la <strong>menthe poivrée</strong>, qui procurent une sensation de fraîcheur.</li></ul><p>Pour une première utilisation, fais un test sur une petite zone et attends 24 heures. En cas de rougeur ou de démangeaison, rince abondamment et arrête le produit.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Quels sont les délais de livraison ?",
+            "answer": "<p>Ta commande est préparée sous 2 jours ouvrés, puis acheminée en 6 jours ouvrés environ. Compte <strong>8 à 10 jours ouvrés</strong> au total entre ta commande et la réception.</p><p>Les jours ouvrés vont du lundi au vendredi, hors jours fériés. Les délais peuvent s'allonger un peu pendant les périodes chargées (fêtes, soldes).</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Combien coûte la livraison ?",
+            "answer": "<p>Les frais de livraison sont calculés et affichés au moment du paiement, avant que tu valides ta commande.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "theme",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "show_page_title": false,
+        "eyebrow": "",
+        "intro": "",
+        "show_nav": false,
+        "cta_heading": "Tu n'as pas trouvé ta réponse ?",
+        "cta_text": "<p>Toutes les réponses sont dans notre FAQ, et on te répond si besoin.</p>",
+        "cta_label": "Voir la FAQ",
+        "cta_link": "/pages/faq",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "manifeste": {
+      "type": "anaphys-manifesto",
+      "blocks": {
+        "pillar-1": {
+          "type": "pillar",
+          "settings": {
+            "title": "Connaissance",
+            "text": "Savoir ce que tu mets sur tes cheveux."
+          }
+        },
+        "pillar-2": {
+          "type": "pillar",
+          "settings": {
+            "title": "Renaissance",
+            "text": "Revenir à des gestes simples et vrais."
+          }
+        },
+        "pillar-3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Abondance",
+            "text": "Laisser la nature faire ce qu'elle fait de mieux."
+          }
+        }
+      },
+      "block_order": [
+        "pillar-1",
+        "pillar-2",
+        "pillar-3"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Design_sans_titre.png"
+      }
     }
   },
   "order": [
     "hero",
+    "signature",
+    "besoins",
     "best-sellers",
     "source",
     "rituel",
-    "communaute"
+    "rituel-5",
+    "actifs",
+    "focus",
+    "diagnostic",
+    "perso",
+    "communaute",
+    "questions",
+    "manifeste"
   ]
 }

@@ -335,6 +335,10 @@
         "padding_top": 48,
         "padding_bottom": 64
       }
+    },
+    "diagnostic": {
+      "type": "anaphys-quiz-cta",
+      "settings": {}
     }
   },
   "order": [
@@ -343,6 +347,7 @@
     "actifs",
     "mode-emploi",
     "source",
+    "diagnostic",
     "faq",
     "related-products"
   ]
