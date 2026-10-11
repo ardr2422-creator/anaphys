@@ -539,3 +539,10 @@ h1,
     max-width: none;
   }
 }
+
+/* Galerie : sur grand écran, les images gardent une taille raisonnable */
+@media screen and (min-width: 990px) {
+  .anaphys-gallery__item {
+    max-width: 36rem;
+  }
+}

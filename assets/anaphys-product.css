@@ -820,6 +820,9 @@
   .product .product__info-container--sticky {
     position: static;
   }
+  .product .product__info-container {
+    max-width: none;
+  }
   .product__media-wrapper .product__media-list {
     max-width: 60rem;
     margin-inline: auto;
