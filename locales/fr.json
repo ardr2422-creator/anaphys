@@ -286,12 +286,12 @@
       }
     },
     "cart": {
-      "title": "Votre panier",
+      "title": "Ton panier",
       "caption": "Articles du panier",
       "remove_title": "Supprimer {{ title }}",
       "note": "Instructions spéciales concernant la commande",
       "checkout": "Procéder au paiement",
-      "empty": "Votre panier est vide",
+      "empty": "Ton panier est vide",
       "product_disclosure": "Information sur le produit",
       "product_disclosures": "Informations sur le produit",
       "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
