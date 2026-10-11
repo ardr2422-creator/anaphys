@@ -592,3 +592,9 @@
     transform: none;
   }
 }
+
+/* Titres de question : le focus est donné par le script (lecteurs d'écran), sans cadre visible */
+.anaphys-quiz [tabindex='-1']:focus {
+  outline: none;
+  box-shadow: none;
+}

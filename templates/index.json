@@ -308,7 +308,9 @@
         "concern-5",
         "quiz-6"
       ],
-      "settings": {}
+      "settings": {
+        "heading": "De quoi tes cheveux ont-ils <strong>besoin</strong> ?"
+      }
     },
     "rituel-5": {
       "type": "anaphys-ritual",
@@ -597,9 +599,7 @@
         "pillar-2",
         "pillar-3"
       ],
-      "settings": {
-        "image": "shopify://shop_images/Design_sans_titre.png"
-      }
+      "settings": {}
     }
   },
   "order": [
