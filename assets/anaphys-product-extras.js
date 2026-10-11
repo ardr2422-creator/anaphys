@@ -7,8 +7,10 @@
 if (!window.anaphysExtrasReady) {
   window.anaphysExtrasReady = true;
 
+  // getAttribute : form.id renverrait le champ nommé « id » du formulaire produit
+  const formId = (form) => form.getAttribute('id');
   const extrasFor = (form) =>
-    [...document.querySelectorAll(`[data-extra-item][form="${form.id}"]`)].filter((input) => !input.disabled);
+    [...document.querySelectorAll(`[data-extra-item][form="${formId(form)}"]`)].filter((input) => !input.disabled);
 
   // Phase de capture : passe avant le gestionnaire d'envoi de Dawn, qui lit ensuite le formulaire.
   document.addEventListener(
@@ -18,7 +20,7 @@ if (!window.anaphysExtrasReady) {
       if (!(form instanceof HTMLFormElement) || !form.closest('product-form')) return;
 
       // Personnalisation : prénom obligatoire quand l'option est cochée
-      const perso = document.querySelector(`anaphys-personalize[data-form-id="${form.id}"]`);
+      const perso = document.querySelector(`anaphys-personalize[data-form-id="${formId(form)}"]`);
       if (perso && !perso.validate()) {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -67,7 +69,7 @@ if (!window.anaphysExtrasReady) {
       // Les champs d'origine sont mis de côté le temps que Dawn lise le formulaire
       const originals = [
         ...form.querySelectorAll('[name="id"], [name="quantity"]'),
-        ...document.querySelectorAll(`[form="${form.id}"][name="quantity"], [form="${form.id}"][name^="properties["]`),
+        ...document.querySelectorAll(`[form="${formId(form)}"][name="quantity"], [form="${formId(form)}"][name^="properties["]`),
         ...extras,
       ].filter((input) => !input.disabled);
       originals.forEach((input) => (input.disabled = true));
