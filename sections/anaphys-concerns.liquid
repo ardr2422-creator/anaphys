@@ -1,0 +1,320 @@
+{%- comment -%}
+  « De quoi tes cheveux ont-ils besoin ? » : achat par besoin.
+  Chaque carte « Besoin » s'appuie sur un produit : le badge vient du métachamp
+  custom.badge_probleme, le titre de custom.etape_rituel + titre du produit,
+  l'image de l'image principale et le lien de la fiche produit (tout est remplaçable).
+  Un bloc « Diagnostic » ajoute une carte teintée qui renvoie vers le quiz.
+  Mobile : rangée défilante (scroll-snap) ou grille, au choix.
+{%- endcomment -%}
+{{ 'anaphys-home.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div
+    class="anaphys-concerns page-width section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    style="--anaphys-concerns-columns: {{ section.settings.columns_desktop }};"
+  >
+    {%- if section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="anaphys-concerns__intro">
+        {%- if section.settings.heading != blank -%}
+          <h2
+            id="ConcernsHeading-{{ section.id }}"
+            class="anaphys-concerns__heading h1 heading-highlight"
+            style="--highlight-color: rgb(var(--color-accent-anaphys));"
+          >
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="anaphys-concerns__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ul
+      class="anaphys-concerns__list anaphys-concerns__list--mobile-{{ section.settings.mobile_layout }} list-unstyled"
+      role="list"
+      {% if section.settings.heading != blank %}
+        aria-labelledby="ConcernsHeading-{{ section.id }}"
+      {% endif %}
+    >
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'concern' -%}
+            {%- liquid
+              assign concern_product = block.settings.product
+
+              assign concern_title = block.settings.title
+              if concern_title == blank and concern_product != blank
+                assign concern_step = concern_product.metafields.custom.etape_rituel.value | append: '' | strip
+                if concern_step != blank
+                  assign concern_title = concern_step | append: ' : ' | append: concern_product.title
+                else
+                  assign concern_title = concern_product.title
+                endif
+              endif
+
+              assign concern_link = block.settings.link
+              if concern_link == blank and concern_product != blank
+                assign concern_link = concern_product.url
+              endif
+
+              assign concern_image = block.settings.image
+              if concern_image == blank and concern_product != blank
+                assign concern_image = concern_product.featured_media.preview_image
+              endif
+
+              assign show_card = true
+              if concern_title == blank and request.design_mode == false
+                assign show_card = false
+              endif
+            -%}
+            {%- if show_card -%}
+              <li class="anaphys-concerns__item" {{ block.shopify_attributes }}>
+                <a
+                  {% if concern_link != blank %}
+                    href="{{ concern_link }}"
+                  {% else %}
+                    role="link" aria-disabled="true"
+                  {% endif %}
+                  class="anaphys-concerns__card"
+                >
+                  <div class="anaphys-concerns__media">
+                    {%- if concern_image != blank -%}
+                      {{
+                        concern_image
+                        | image_url: width: 1200
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '320, 480, 640, 800, 1000, 1200',
+                          sizes: '(min-width: 1200px) 400px, (min-width: 750px) 45vw, 78vw',
+                          alt: '',
+                          class: 'anaphys-concerns__image'
+                      }}
+                    {%- else -%}
+                      {{ 'product-apparel-1' | placeholder_svg_tag: 'anaphys-concerns__image anaphys-concerns__image--placeholder' }}
+                    {%- endif -%}
+
+                    {%- if block.settings.label != blank -%}
+                      <span class="anaphys-problem-badge anaphys-problem-badge--card">
+                        <span class="visually-hidden">Pour :</span>
+                        {{- block.settings.label | escape -}}
+                      </span>
+                    {%- elsif concern_product != blank -%}
+                      {%- render 'anaphys-problem-badge', product: concern_product, class: 'anaphys-problem-badge--card' -%}
+                    {%- endif -%}
+                  </div>
+
+                  <div class="anaphys-concerns__body">
+                    {%- if concern_title != blank -%}
+                      <h3 class="anaphys-concerns__title h4">{{ concern_title | escape }}</h3>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <p class="anaphys-concerns__desc">{{ block.settings.text | escape }}</p>
+                    {%- endif -%}
+                    {%- if concern_product == blank and request.design_mode -%}
+                      <p class="anaphys-concerns__hint">Choisis un produit pour ce besoin : badge, titre, image et lien se rempliront tout seuls.</p>
+                    {%- endif -%}
+                    <span class="anaphys-concerns__arrow" aria-hidden="true">
+                      {%- render 'anaphys-icon', icon: 'arrow_forward' -%}
+                    </span>
+                  </div>
+                </a>
+              </li>
+            {%- endif -%}
+
+          {%- when 'quiz' -%}
+            {%- liquid
+              assign quiz_link = block.settings.link
+              if quiz_link == blank
+                assign quiz_link = '/pages/trouve-ton-rituel'
+              endif
+            -%}
+            <li class="anaphys-concerns__item anaphys-concerns__item--quiz" {{ block.shopify_attributes }}>
+              <div class="anaphys-concerns__quiz">
+                {%- render 'anaphys-icon', icon: 'spa', class: 'anaphys-concerns__quiz-icon' -%}
+                {%- if block.settings.title != blank -%}
+                  <h3 class="anaphys-concerns__quiz-title h3">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="anaphys-concerns__quiz-text">{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.button_label != blank -%}
+                  <a href="{{ quiz_link }}" class="button anaphys-concerns__quiz-button">
+                    {{- block.settings.button_label | escape -}}
+                  </a>
+                {%- endif -%}
+              </div>
+            </li>
+        {%- endcase -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Besoins cheveux",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "info": "Mets un mot en gras pour le colorer.",
+      "default": "De quoi tes cheveux ont-ils <strong>besoin</strong> ?"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Choisis ce qui te ressemble, on te guide vers le bon soin."
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Colonnes sur ordinateur",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Disposition sur mobile",
+      "options": [
+        { "value": "carousel", "label": "Carrousel" },
+        { "value": "grid", "label": "Grille" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "Besoin",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Badge (optionnel)",
+          "info": "Vide : le badge « problème » du produit est utilisé."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre (optionnel)",
+          "info": "Vide : étape du rituel + nom du produit."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Phrase courte"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (optionnel)",
+          "info": "Vide : image principale du produit."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien (optionnel)",
+          "info": "Vide : fiche du produit."
+        }
+      ]
+    },
+    {
+      "type": "quiz",
+      "name": "Diagnostic",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Tu hésites ?"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Réponds à quelques questions, on compose ton rituel."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Texte du bouton",
+          "default": "Faire le diagnostic"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien",
+          "info": "Vide : /pages/trouve-ton-rituel"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Besoins cheveux",
+      "blocks": [
+        { "type": "concern", "settings": { "text": "Commence par purifier ton cuir chevelu." } },
+        { "type": "concern", "settings": { "text": "Un lavage doux qui redonne de l'éclat." } },
+        { "type": "concern", "settings": { "text": "Nourris et démêle sans alourdir." } },
+        { "type": "concern", "settings": { "text": "Un soin profond pour tes longueurs." } },
+        { "type": "concern", "settings": { "text": "Quelques gouttes, un massage, ton moment." } },
+        { "type": "quiz" }
+      ]
+    }
+  ]
+}
+{% endschema %}

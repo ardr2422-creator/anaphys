@@ -1,0 +1,559 @@
+/* ==========================================================================
+   ANAPHYS : sections de la page d'accueil
+   Chaque section a son propre bloc, préfixé par son nom de classe.
+   Mouvements : transform / opacity uniquement, courbe cubic-bezier(0.23, 1, 0.32, 1),
+   désactivés si prefers-reduced-motion.
+   ========================================================================== */
+
+/* ==========================================================================
+   anaphys-marquee : bandeau défilant
+   ========================================================================== */
+.anaphys-marquee {
+  --anaphys-marquee-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  align-items: center;
+  height: 4.4rem;
+  overflow: hidden;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-marquee--uppercase {
+  text-transform: uppercase;
+}
+.anaphys-marquee__track {
+  display: flex;
+  width: 100%;
+}
+.anaphys-marquee__group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  animation: anaphys-marquee-scroll var(--anaphys-marquee-duration, 40s) linear infinite;
+}
+.anaphys-marquee--reverse .anaphys-marquee__group {
+  animation-direction: reverse;
+}
+.anaphys-marquee:hover .anaphys-marquee__group,
+.anaphys-marquee:focus-within .anaphys-marquee__group {
+  animation-play-state: paused;
+}
+.anaphys-marquee__item {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  white-space: nowrap;
+}
+.anaphys-marquee__link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.3s var(--anaphys-marquee-ease);
+}
+.anaphys-marquee__link:hover {
+  opacity: 0.75;
+}
+.anaphys-marquee__link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.3rem;
+  border-radius: 0.2rem;
+  box-shadow: none;
+}
+.anaphys-marquee__separator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: 1.6rem;
+  opacity: 0.8;
+}
+.anaphys-marquee__dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.anaphys-marquee__icon {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+.anaphys-marquee__empty {
+  margin: 0;
+  padding: 1.2rem 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+@keyframes anaphys-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-marquee {
+    height: 5.2rem;
+    font-size: 1.3rem;
+  }
+  .anaphys-marquee__separator {
+    margin-inline: 2.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anaphys-marquee {
+    height: auto;
+    min-height: 4.4rem;
+    padding: 1rem 1.5rem;
+  }
+  .anaphys-marquee__group {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.8rem;
+    min-width: 0;
+    width: 100%;
+    animation: none;
+  }
+  .anaphys-marquee__group[aria-hidden='true'] {
+    display: none;
+  }
+  .anaphys-marquee__item:last-child .anaphys-marquee__separator {
+    display: none;
+  }
+  .anaphys-marquee__item {
+    white-space: normal;
+    text-align: center;
+  }
+  .anaphys-marquee__link {
+    transition: none;
+  }
+}
+@media screen and (min-width: 750px) and (prefers-reduced-motion: reduce) {
+  .anaphys-marquee {
+    min-height: 5.2rem;
+  }
+}
+
+/* ==========================================================================
+   anaphys-concerns : « De quoi tes cheveux ont-ils besoin ? »
+   ========================================================================== */
+.anaphys-concerns {
+  --anaphys-concerns-ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.anaphys-concerns__intro {
+  max-width: 64rem;
+  margin: 0 auto 2.8rem;
+  text-align: center;
+}
+.anaphys-concerns__heading {
+  margin: 0;
+}
+.anaphys-concerns__text {
+  margin: 1rem 0 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.75);
+}
+.anaphys-concerns__list {
+  display: grid;
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mobile : carrousel, la carte suivante dépasse */
+.anaphys-concerns__list--mobile-carousel {
+  grid-auto-flow: column;
+  grid-auto-columns: 78%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.5rem;
+  margin-inline: -1.5rem;
+  padding: 0.4rem 1.5rem 0.8rem;
+  scrollbar-width: none;
+}
+.anaphys-concerns__list--mobile-carousel::-webkit-scrollbar {
+  display: none;
+}
+.anaphys-concerns__list--mobile-carousel > .anaphys-concerns__item {
+  scroll-snap-align: start;
+}
+
+/* Mobile : grille de secours, 2 colonnes */
+.anaphys-concerns__list--mobile-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.2rem;
+}
+.anaphys-concerns__list--mobile-grid > .anaphys-concerns__item--quiz {
+  grid-column: 1 / -1;
+}
+
+.anaphys-concerns__item {
+  min-width: 0;
+}
+.anaphys-concerns__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  border-radius: 1.6rem;
+}
+.anaphys-concerns__card:focus-visible {
+  outline: 2px solid rgb(var(--color-accent-anaphys));
+  outline-offset: 0.3rem;
+  box-shadow: none;
+}
+.anaphys-concerns__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 1.6rem;
+  background: #f3f3f3;
+}
+.anaphys-concerns__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--anaphys-concerns-ease);
+}
+.anaphys-concerns__image--placeholder {
+  fill: rgba(var(--color-foreground), 0.25);
+}
+.anaphys-concerns__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1.2rem;
+  align-items: start;
+  padding: 1.4rem 0.2rem 0;
+}
+.anaphys-concerns__body > :not(.anaphys-concerns__arrow) {
+  grid-column: 1;
+}
+.anaphys-concerns__title {
+  margin: 0;
+  font-size: 1.7rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.anaphys-concerns__desc {
+  margin: 0.4rem 0 0;
+  font-size: 1.4rem;
+  line-height: 1.45;
+  color: rgba(var(--color-foreground), 0.7);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.anaphys-concerns__hint {
+  margin: 0.8rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px dashed rgba(var(--color-foreground), 0.3);
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.7);
+}
+.anaphys-concerns__arrow {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  color: rgb(var(--color-accent-anaphys));
+  transition: transform 0.4s var(--anaphys-concerns-ease);
+}
+.anaphys-concerns__arrow .anaphys-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+/* Carte « Diagnostic » teintée */
+.anaphys-concerns__quiz {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  min-height: 26rem;
+  padding: 2.4rem;
+  border-radius: 1.6rem;
+  background: rgba(var(--color-accent-anaphys), 0.18);
+}
+.anaphys-concerns__quiz-icon {
+  width: 3.2rem;
+  height: 3.2rem;
+  color: rgb(var(--color-accent-anaphys));
+}
+.anaphys-concerns__quiz-title {
+  margin: 1.2rem 0 0;
+}
+.anaphys-concerns__quiz-text {
+  margin: 0.6rem 0 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.8);
+}
+.anaphys-concerns__quiz-button {
+  --color-button: var(--color-accent-anaphys);
+  --color-button-text: 255, 255, 255;
+  margin-top: 2rem;
+  background-color: rgb(var(--color-accent-anaphys));
+  color: #fff;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.04rem;
+}
+.anaphys-concerns__list--mobile-grid .anaphys-concerns__quiz {
+  min-height: 0;
+}
+
+@media screen and (max-width: 749px) {
+  .anaphys-concerns__list--mobile-grid .anaphys-concerns__title {
+    font-size: 1.5rem;
+  }
+  .anaphys-concerns__list--mobile-grid .anaphys-concerns__desc {
+    font-size: 1.3rem;
+  }
+  .anaphys-concerns__list--mobile-grid .anaphys-concerns__arrow {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-concerns__intro {
+    margin-bottom: 4rem;
+  }
+  .anaphys-concerns__list,
+  .anaphys-concerns__list--mobile-carousel,
+  .anaphys-concerns__list--mobile-grid {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3.2rem 2rem;
+    overflow: visible;
+    margin-inline: 0;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+  .anaphys-concerns__list > .anaphys-concerns__item--quiz {
+    grid-column: auto;
+  }
+  .anaphys-concerns__title {
+    font-size: 1.8rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .anaphys-concerns__list,
+  .anaphys-concerns__list--mobile-carousel,
+  .anaphys-concerns__list--mobile-grid {
+    grid-template-columns: repeat(var(--anaphys-concerns-columns, 3), minmax(0, 1fr));
+    gap: 4rem 2.4rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .anaphys-concerns__card:hover .anaphys-concerns__image {
+    transform: scale(1.04);
+  }
+  .anaphys-concerns__card:hover .anaphys-concerns__arrow {
+    transform: translateX(0.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anaphys-concerns__image,
+  .anaphys-concerns__arrow {
+    transition: none;
+  }
+  .anaphys-concerns__card:hover .anaphys-concerns__image,
+  .anaphys-concerns__card:hover .anaphys-concerns__arrow {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   anaphys-manifesto : manifeste de marque
+   ========================================================================== */
+.anaphys-manifesto {
+  --anaphys-manifesto-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 52rem;
+  overflow: hidden;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-manifesto--has-image {
+  --color-foreground: 255, 255, 255;
+  color: #fff;
+}
+.anaphys-manifesto__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.anaphys-manifesto__media picture,
+.anaphys-manifesto__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.anaphys-manifesto__image {
+  object-fit: cover;
+}
+.anaphys-manifesto__overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--anaphys-manifesto-overlay, 0.45);
+}
+.anaphys-manifesto__inner {
+  position: relative;
+  width: 100%;
+}
+.anaphys-manifesto__content {
+  max-width: 76rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.anaphys-manifesto__logo {
+  width: var(--anaphys-manifesto-logo-width, 12rem);
+  max-width: 100%;
+  margin: 0 auto 2.4rem;
+}
+.anaphys-manifesto__logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.anaphys-manifesto__heading {
+  margin: 0;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-manifesto__pillars {
+  display: grid;
+  gap: 2.4rem;
+  margin: 3.2rem 0 0;
+  padding: 0;
+}
+.anaphys-manifesto__pillar {
+  position: relative;
+}
+.anaphys-manifesto__pillar + .anaphys-manifesto__pillar {
+  padding-top: 2.4rem;
+}
+.anaphys-manifesto__pillar + .anaphys-manifesto__pillar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4rem;
+  height: 1px;
+  background: rgba(var(--color-foreground), 0.35);
+  transform: translateX(-50%);
+}
+.anaphys-manifesto__pillar-title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-manifesto__pillar-text {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.85);
+}
+.anaphys-manifesto__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 3.2rem;
+  padding: 1.2rem 2.4rem;
+  border: 1px solid rgba(var(--color-foreground), 0.6);
+  border-radius: 10rem;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body-family);
+  font-size: 1.5rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.04rem;
+  text-decoration: none;
+}
+.anaphys-manifesto__link:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 0.3rem;
+  box-shadow: none;
+}
+.anaphys-manifesto__link-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  transition: transform 0.4s var(--anaphys-manifesto-ease);
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-manifesto--small {
+    min-height: 40rem;
+  }
+  .anaphys-manifesto--medium {
+    min-height: 52rem;
+  }
+  .anaphys-manifesto--large {
+    min-height: 64rem;
+  }
+  .anaphys-manifesto__pillars {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+  }
+  .anaphys-manifesto__pillar {
+    padding-inline: 2.4rem;
+  }
+  .anaphys-manifesto__pillar + .anaphys-manifesto__pillar {
+    padding-top: 0;
+    border-left: 1px solid rgba(var(--color-foreground), 0.35);
+  }
+  .anaphys-manifesto__pillar + .anaphys-manifesto__pillar::before {
+    content: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .anaphys-manifesto__link:hover .anaphys-manifesto__link-icon {
+    transform: translateX(0.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anaphys-manifesto__link-icon {
+    transition: none;
+  }
+  .anaphys-manifesto__link:hover .anaphys-manifesto__link-icon {
+    transform: none;
+  }
+}

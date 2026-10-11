@@ -1,0 +1,263 @@
+{%- comment -%}
+  Manifeste ANAPHYS : le moment de marque qui clôt la page.
+  Image pleine largeur (avec version mobile) assombrie par un voile, contenu centré :
+  logo optionnel, titre, 3 piliers séparés par de fins traits verticaux, lien optionnel.
+  Sans image, le fond du jeu de couleurs est utilisé.
+{%- endcomment -%}
+{{ 'anaphys-home.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign desktop_image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+  if desktop_image == blank
+    assign desktop_image = mobile_image
+  endif
+  assign has_image = false
+  if desktop_image != blank
+    assign has_image = true
+  endif
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div
+    class="anaphys-manifesto anaphys-manifesto--{{ section.settings.height }}{% if has_image %} anaphys-manifesto--has-image{% endif %}"
+    style="--anaphys-manifesto-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+  >
+    {%- if has_image -%}
+      <div class="anaphys-manifesto__media">
+        <picture>
+          {%- if mobile_image != blank and section.settings.image != blank -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ mobile_image | image_url: width: 375 }} 375w,
+                {{ mobile_image | image_url: width: 750 }} 750w,
+                {{ mobile_image | image_url: width: 1100 }} 1100w,
+                {{ mobile_image | image_url: width: 1500 }} 1500w
+              "
+              sizes="100vw"
+              width="{{ mobile_image.width }}"
+              height="{{ mobile_image.height }}"
+            >
+          {%- endif -%}
+          {{
+            desktop_image
+            | image_url: width: 3000
+            | image_tag:
+              loading: 'lazy',
+              widths: '375, 750, 1100, 1500, 1780, 2000, 3000',
+              sizes: '100vw',
+              alt: '',
+              class: 'anaphys-manifesto__image'
+          }}
+        </picture>
+        <span class="anaphys-manifesto__overlay" aria-hidden="true"></span>
+      </div>
+    {%- endif -%}
+
+    <div class="anaphys-manifesto__inner page-width section-{{ section.id }}-padding">
+      <div class="anaphys-manifesto__content{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_sizes = section.settings.logo_width | append: 'px' -%}
+          <div class="anaphys-manifesto__logo" style="--anaphys-manifesto-logo-width: {{ section.settings.logo_width }}px;">
+            {{
+              section.settings.logo
+              | image_url: width: 600
+              | image_tag:
+                loading: 'lazy',
+                widths: '150, 300, 450, 600',
+                sizes: logo_sizes,
+                alt: shop.name
+            }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="anaphys-manifesto__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="anaphys-manifesto__pillars list-unstyled" role="list">
+            {%- for block in section.blocks -%}
+              <li class="anaphys-manifesto__pillar" {{ block.shopify_attributes }}>
+                {%- if block.settings.title != blank -%}
+                  <h3 class="anaphys-manifesto__pillar-title">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="anaphys-manifesto__pillar-text">{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.link_label != blank and section.settings.link_url != blank -%}
+          <a href="{{ section.settings.link_url }}" class="anaphys-manifesto__link">
+            <span>{{ section.settings.link_label | escape }}</span>
+            {%- render 'anaphys-icon', icon: 'arrow_forward', class: 'anaphys-manifesto__link-icon' -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Manifeste",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image de fond"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Image de fond sur mobile (optionnel)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Voile sombre sur l'image",
+      "default": 45
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Hauteur",
+      "options": [
+        { "value": "small", "label": "Petite" },
+        { "value": "medium", "label": "Moyenne" },
+        { "value": "large", "label": "Grande" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (optionnel)",
+      "info": "Idéalement un logo blanc sur fond transparent."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 40,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Largeur du logo",
+      "default": 120
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "info": "Mets un mot en gras pour le colorer.",
+      "default": "Le soin commence à la source"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Texte du lien (optionnel)"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Lien"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "Utilisé comme fond quand aucune image n'est choisie.",
+      "default": "scheme-5"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pilier",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Connaissance"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Savoir ce que tu mets sur tes cheveux."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Manifeste",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": { "title": "Connaissance", "text": "Savoir ce que tu mets sur tes cheveux." }
+        },
+        {
+          "type": "pillar",
+          "settings": { "title": "Renaissance", "text": "Revenir à des gestes simples et vrais." }
+        },
+        {
+          "type": "pillar",
+          "settings": { "title": "Abondance", "text": "Laisser la nature faire ce qu'elle fait de mieux." }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
