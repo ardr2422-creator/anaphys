@@ -91,7 +91,7 @@
 
 /* Bande de réassurance */
 .anaphys-reassurance {
-  max-width: 150rem;
+  max-width: var(--page-width);
   margin: 0 auto;
   padding-inline: 1.5rem;
 }
@@ -177,7 +177,7 @@
 
 /* Pied de page */
 .anaphys-footer__inner {
-  max-width: 150rem;
+  max-width: var(--page-width);
   margin: 0 auto;
   padding-inline: 1.5rem;
 }
@@ -328,10 +328,12 @@
   width: 100%;
   height: auto;
 }
-@media screen and (min-width: 990px) {
+@media screen and (min-width: 750px) {
   .anaphys-footer__inner {
-    padding-inline: 1rem;
+    padding-inline: 5rem;
   }
+}
+@media screen and (min-width: 990px) {
   .anaphys-footer--two-thirds .anaphys-footer__inner {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -510,5 +512,30 @@ h1,
 @media screen and (max-width: 749px) {
   .image-with-text .image-with-text__content {
     padding-inline: 0;
+  }
+}
+
+/* En-tête ordinateur : logo à gauche, menu centré, icônes à droite */
+@media screen and (min-width: 990px) {
+  .header--middle-left:not(.drawer-menu) {
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .header--middle-left .header__heading,
+  .header--middle-left > .header__heading-link {
+    justify-self: start;
+  }
+  .header--middle-left .header__inline-menu {
+    justify-self: center;
+  }
+  .header__inline-menu .list-menu__item {
+    white-space: nowrap;
+  }
+}
+
+/* Tablette : deux produits par vue dans les carrousels de produits */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .product-grid.slider--tablet.grid--1-col-tablet-down .grid__item {
+    width: calc(50% - 2.5rem);
+    max-width: none;
   }
 }

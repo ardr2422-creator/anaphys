@@ -723,6 +723,9 @@
   display: block;
   width: 100%;
   height: auto;
+  /* Les photos très hautes sont recadrées en 4:5 */
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
   border-radius: var(--anaphys-radius);
 }
 .anaphys-howto__content {
@@ -801,4 +804,24 @@
 .product__media-item .product-media-container,
 .product__media-item .product__media {
   background-color: rgba(var(--color-foreground), 0.04);
+}
+
+/* Tablette : fiche produit sur une colonne (deux colonnes trop étroites) */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .product.grid--2-col-tablet {
+    flex-direction: column;
+  }
+  .product .product__media-wrapper,
+  .product .product__info-wrapper {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+  }
+  .product .product__info-container--sticky {
+    position: static;
+  }
+  .product__media-wrapper .product__media-list {
+    max-width: 60rem;
+    margin-inline: auto;
+  }
 }
