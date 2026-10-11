@@ -44,6 +44,285 @@
     ]
   },
   {
+    "name": "Panier ANAPHYS",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Panier réservé"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_timer_enable",
+        "default": true,
+        "label": "Afficher le compte à rebours"
+      },
+      {
+        "type": "range",
+        "id": "cart_timer_minutes",
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "unit": "min",
+        "default": 5,
+        "label": "Durée de réservation"
+      },
+      {
+        "type": "range",
+        "id": "cart_timer_extend",
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "unit": "min",
+        "default": 10,
+        "label": "Durée ajoutée quand le client garde son panier"
+      },
+      {
+        "type": "range",
+        "id": "cart_timer_warning",
+        "min": 5,
+        "max": 30,
+        "step": 1,
+        "unit": "s",
+        "default": 10,
+        "label": "Durée de la pop-up avant de vider le panier"
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_text",
+        "default": "Ton panier est réservé pendant",
+        "label": "Texte du compte à rebours"
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_popup_heading",
+        "default": "Ton panier va être vidé",
+        "label": "Titre de la pop-up"
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_popup_text",
+        "default": "Ta réservation est terminée. Tu veux garder tes soins ?",
+        "label": "Texte de la pop-up"
+      },
+      {
+        "type": "text",
+        "id": "cart_timer_popup_button",
+        "default": "Garder mon panier",
+        "label": "Bouton de la pop-up"
+      },
+      {
+        "type": "header",
+        "content": "Bas du panier"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_payment_icons",
+        "default": true,
+        "label": "Afficher les moyens de paiement"
+      },
+      {
+        "type": "select",
+        "id": "cart_trust_icon_1",
+        "label": "Réassurance 1 : icône",
+        "default": "lock",
+        "options": [
+          {
+            "value": "lock",
+            "label": "lock"
+          },
+          {
+            "value": "local_shipping",
+            "label": "local_shipping"
+          },
+          {
+            "value": "support_agent",
+            "label": "support_agent"
+          },
+          {
+            "value": "verified",
+            "label": "verified"
+          },
+          {
+            "value": "eco",
+            "label": "eco"
+          },
+          {
+            "value": "autorenew",
+            "label": "autorenew"
+          },
+          {
+            "value": "credit_card",
+            "label": "credit_card"
+          },
+          {
+            "value": "redeem",
+            "label": "redeem"
+          },
+          {
+            "value": "schedule",
+            "label": "schedule"
+          },
+          {
+            "value": "favorite",
+            "label": "favorite"
+          },
+          {
+            "value": "package_2",
+            "label": "package_2"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "cart_trust_text_1",
+        "label": "Réassurance 1 : texte",
+        "default": "Paiement sécurisé"
+      },
+      {
+        "type": "select",
+        "id": "cart_trust_icon_2",
+        "label": "Réassurance 2 : icône",
+        "default": "local_shipping",
+        "options": [
+          {
+            "value": "lock",
+            "label": "lock"
+          },
+          {
+            "value": "local_shipping",
+            "label": "local_shipping"
+          },
+          {
+            "value": "support_agent",
+            "label": "support_agent"
+          },
+          {
+            "value": "verified",
+            "label": "verified"
+          },
+          {
+            "value": "eco",
+            "label": "eco"
+          },
+          {
+            "value": "autorenew",
+            "label": "autorenew"
+          },
+          {
+            "value": "credit_card",
+            "label": "credit_card"
+          },
+          {
+            "value": "redeem",
+            "label": "redeem"
+          },
+          {
+            "value": "schedule",
+            "label": "schedule"
+          },
+          {
+            "value": "favorite",
+            "label": "favorite"
+          },
+          {
+            "value": "package_2",
+            "label": "package_2"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "cart_trust_text_2",
+        "label": "Réassurance 2 : texte",
+        "default": "Livraison suivie"
+      },
+      {
+        "type": "select",
+        "id": "cart_trust_icon_3",
+        "label": "Réassurance 3 : icône",
+        "default": "support_agent",
+        "options": [
+          {
+            "value": "lock",
+            "label": "lock"
+          },
+          {
+            "value": "local_shipping",
+            "label": "local_shipping"
+          },
+          {
+            "value": "support_agent",
+            "label": "support_agent"
+          },
+          {
+            "value": "verified",
+            "label": "verified"
+          },
+          {
+            "value": "eco",
+            "label": "eco"
+          },
+          {
+            "value": "autorenew",
+            "label": "autorenew"
+          },
+          {
+            "value": "credit_card",
+            "label": "credit_card"
+          },
+          {
+            "value": "redeem",
+            "label": "redeem"
+          },
+          {
+            "value": "schedule",
+            "label": "schedule"
+          },
+          {
+            "value": "favorite",
+            "label": "favorite"
+          },
+          {
+            "value": "package_2",
+            "label": "package_2"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "cart_trust_text_3",
+        "label": "Réassurance 3 : texte",
+        "default": "Service client à l'écoute"
+      },
+      {
+        "type": "header",
+        "content": "Pop-up « Complète ton rituel »"
+      },
+      {
+        "type": "checkbox",
+        "id": "upsell_enable",
+        "default": true,
+        "label": "Proposer des produits complémentaires après un ajout au panier",
+        "info": "Produits choisis dans le métachamp produit « Produits complémentaires »."
+      },
+      {
+        "type": "text",
+        "id": "upsell_heading",
+        "default": "Complète ton rituel",
+        "label": "Titre"
+      },
+      {
+        "type": "range",
+        "id": "upsell_count",
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "default": 2,
+        "label": "Nombre de produits proposés"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.colors.name",
     "settings": [
       {

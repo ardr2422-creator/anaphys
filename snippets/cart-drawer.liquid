@@ -74,6 +74,7 @@
           </span>
         </button>
       </div>
+      {%- render 'anaphys-cart-timer' -%}
       <cart-drawer-items
         view-event-payload="{{ cart | standard_event_data: 'view', context: 'dialog' | escape }}"
         view-event-trigger="manual"
@@ -588,6 +589,7 @@
             {{ 'sections.cart.checkout' | t }}
           </button>
         </div>
+        {%- render 'anaphys-cart-badges' -%}
       </div>
     </div>
   </div>

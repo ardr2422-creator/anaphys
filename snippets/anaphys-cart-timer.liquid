@@ -1,0 +1,14 @@
+{%- comment -%}
+  Bandeau « panier réservé » avec compte à rebours.
+  Le temps restant est géré par assets/anaphys-cart.js (stocké dans le navigateur) ;
+  le bandeau reste caché tant que le script ne l'a pas mis à jour.
+{%- endcomment -%}
+{%- if settings.cart_timer_enable and cart.item_count > 0 -%}
+  <p class="anaphys-cart-timer" data-cart-timer hidden>
+    {%- render 'anaphys-icon', icon: 'schedule', class: 'anaphys-cart-timer__icon' -%}
+    <span>
+      {{- settings.cart_timer_text | escape }}
+      <strong class="anaphys-cart-timer__time" data-cart-timer-time>{{ settings.cart_timer_minutes }}:00</strong>
+    </span>
+  </p>
+{%- endif -%}

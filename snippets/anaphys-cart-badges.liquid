@@ -1,0 +1,35 @@
+{%- comment -%}
+  Bas du panier : moyens de paiement acceptés, trait, puis réassurance (réglages du thème › Panier ANAPHYS).
+{%- endcomment -%}
+<div class="anaphys-cart-badges">
+  {%- if settings.cart_payment_icons and shop.enabled_payment_types.size > 0 -%}
+    <h3 class="visually-hidden">{{ 'sections.footer.payment' | t }}</h3>
+    <ul class="anaphys-cart-badges__payment list-unstyled" role="list">
+      {%- for type in shop.enabled_payment_types -%}
+        <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- capture trust_items -%}
+    {%- for i in (1..3) -%}
+      {%- liquid
+        assign icon_key = 'cart_trust_icon_' | append: i
+        assign text_key = 'cart_trust_text_' | append: i
+      -%}
+      {%- if settings[text_key] != blank -%}
+        <li class="anaphys-cart-badges__trust-item">
+          {%- render 'anaphys-icon', icon: settings[icon_key], class: 'anaphys-cart-badges__icon' -%}
+          <span>{{ settings[text_key] | escape }}</span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if trust_items != blank -%}
+    <hr class="anaphys-cart-badges__separator">
+    <ul class="anaphys-cart-badges__trust list-unstyled" role="list">
+      {{- trust_items -}}
+    </ul>
+  {%- endif -%}
+</div>

@@ -281,6 +281,7 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'anaphys.css' | asset_url | stylesheet_tag }}
+    {{ 'anaphys-cart.css' | asset_url | stylesheet_tag }}
     {%- if template.name == 'product' -%}
       {%- comment -%} Styles de la fiche produit dès le head : la galerie s'affiche directement à la bonne taille {%- endcomment -%}
       {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
@@ -341,6 +342,7 @@
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}
     {%- endif -%}
+    {%- render 'anaphys-cart-global' -%}
 
     {% sections 'header-group' %}
 
