@@ -1,0 +1,136 @@
+/* ANAPHYS : bannière vers le diagnostic capillaire */
+
+.anaphys-quiz-cta {
+  --cta-accent: var(--color-accent-anaphys, 172, 191, 164);
+  --cta-radius: calc(var(--anaphys-radius, 1.2rem) * 1.6);
+  display: grid;
+  align-items: center;
+  gap: 2.4rem;
+  overflow: hidden;
+  padding: 2.4rem;
+  border-radius: var(--cta-radius);
+  background: rgba(var(--cta-accent), 0.18);
+}
+.anaphys-quiz-cta--none {
+  justify-items: center;
+  padding: 4rem 2.4rem;
+  text-align: center;
+}
+.anaphys-quiz-cta__media {
+  overflow: hidden;
+  border-radius: calc(var(--cta-radius) - 0.8rem);
+  aspect-ratio: 4 / 3;
+  background: rgba(var(--cta-accent), 0.3);
+}
+.anaphys-quiz-cta__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anaphys-quiz-cta__content {
+  max-width: 56rem;
+}
+.anaphys-quiz-cta__eyebrow {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.75);
+}
+.anaphys-quiz-cta__heading {
+  margin: 0;
+  text-wrap: balance;
+}
+.anaphys-quiz-cta__heading strong {
+  font-weight: inherit;
+  background: linear-gradient(transparent 62%, rgba(var(--cta-accent), 0.75) 62%);
+}
+.anaphys-quiz-cta__text {
+  margin-top: 1.2rem;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  color: rgba(var(--color-foreground), 0.8);
+}
+.anaphys-quiz-cta__text > :first-child {
+  margin-top: 0;
+}
+.anaphys-quiz-cta__text > :last-child {
+  margin-bottom: 0;
+}
+.anaphys-quiz-cta__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 2rem 0 2.4rem;
+  padding: 0;
+}
+.anaphys-quiz-cta--none .anaphys-quiz-cta__points {
+  justify-content: center;
+}
+.anaphys-quiz-cta__points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem 0.6rem 0.6rem;
+  border-radius: 10rem;
+  background: rgba(var(--color-background), 0.75);
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+.anaphys-quiz-cta__point-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: rgba(var(--cta-accent), 0.45);
+}
+.anaphys-quiz-cta__point-icon .anaphys-icon {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+.anaphys-quiz-cta__button {
+  gap: 0.8rem;
+}
+.anaphys-quiz-cta__arrow {
+  width: 2rem;
+  height: 2rem;
+  transition: transform 200ms var(--anaphys-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+@media (hover: hover) {
+  .anaphys-quiz-cta__button:hover .anaphys-quiz-cta__arrow {
+    transform: translateX(0.3rem);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-quiz-cta {
+    gap: 4.8rem;
+    padding: 3.2rem;
+  }
+  .anaphys-quiz-cta--image_left,
+  .anaphys-quiz-cta--image_right {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .anaphys-quiz-cta--image_right .anaphys-quiz-cta__media {
+    order: 2;
+  }
+  .anaphys-quiz-cta--image_left .anaphys-quiz-cta__content {
+    padding-right: 2.4rem;
+  }
+  .anaphys-quiz-cta--image_right .anaphys-quiz-cta__content {
+    padding-left: 2.4rem;
+  }
+  .anaphys-quiz-cta--none {
+    padding: 5.6rem 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anaphys-quiz-cta__arrow {
+    transition: none;
+  }
+}

@@ -1,0 +1,204 @@
+{%- comment -%}
+  Bannière « Tu n'arrives pas à choisir ? » : renvoie vers le diagnostic capillaire.
+  Utilisable sur l'accueil comme sur les fiches produit.
+{%- endcomment -%}
+{{ 'anaphys-quiz-cta.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign layout = section.settings.layout
+  assign image = section.settings.image
+  if image == blank
+    assign layout = 'none'
+  endif
+
+  assign quiz_url = section.settings.button_link
+  if quiz_url == blank
+    if routes.root_url == '/'
+      assign quiz_url = '/pages/trouve-ton-rituel'
+    else
+      assign quiz_url = routes.root_url | append: '/pages/trouve-ton-rituel'
+    endif
+  endif
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="anaphys-quiz-cta anaphys-quiz-cta--{{ layout }}">
+      {%- if layout != 'none' -%}
+        <div class="anaphys-quiz-cta__media">
+          {{
+            image
+            | image_url: width: 1200
+            | image_tag:
+              loading: 'lazy',
+              widths: '375, 550, 750, 900, 1200',
+              sizes: '(min-width: 990px) 40vw, (min-width: 750px) 45vw, calc(100vw - 3rem)',
+              alt: image.alt
+          }}
+        </div>
+      {%- endif -%}
+
+      <div class="anaphys-quiz-cta__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="anaphys-quiz-cta__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="anaphys-quiz-cta__heading h2">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="anaphys-quiz-cta__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        <ul class="anaphys-quiz-cta__points list-unstyled" role="list">
+          {%- if section.settings.point_1 != blank -%}
+            <li>
+              <span class="anaphys-quiz-cta__point-icon">{%- render 'anaphys-icon', icon: 'spa' -%}</span>
+              {{- section.settings.point_1 | escape -}}
+            </li>
+          {%- endif -%}
+          {%- if section.settings.point_2 != blank -%}
+            <li>
+              <span class="anaphys-quiz-cta__point-icon">{%- render 'anaphys-icon', icon: 'schedule' -%}</span>
+              {{- section.settings.point_2 | escape -}}
+            </li>
+          {%- endif -%}
+          {%- if section.settings.point_3 != blank -%}
+            <li>
+              <span class="anaphys-quiz-cta__point-icon">{%- render 'anaphys-icon', icon: 'favorite' -%}</span>
+              {{- section.settings.point_3 | escape -}}
+            </li>
+          {%- endif -%}
+        </ul>
+
+        {%- if section.settings.button_label != blank -%}
+          <a class="button anaphys-quiz-cta__button" href="{{ quiz_url }}">
+            {{- section.settings.button_label | escape -}}
+            {%- render 'anaphys-icon', icon: 'arrow_forward', class: 'anaphys-quiz-cta__arrow' -%}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Bannière diagnostic",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Diagnostic capillaire"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Tu n'arrives pas à <strong>choisir</strong> ?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Réponds à quelques questions sur tes cheveux et ton cuir chevelu : on te compose le rituel qui te ressemble.</p>"
+    },
+    {
+      "type": "text",
+      "id": "point_1",
+      "label": "Point 1",
+      "default": "Questions sur tes cheveux"
+    },
+    {
+      "type": "text",
+      "id": "point_2",
+      "label": "Point 2",
+      "default": "Résultat immédiat"
+    },
+    {
+      "type": "text",
+      "id": "point_3",
+      "label": "Point 3",
+      "default": "Rituel sur mesure"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton",
+      "default": "Trouver mon rituel"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton",
+      "info": "Laisse vide pour pointer vers /pages/trouve-ton-rituel."
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (facultative)"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Position de l'image",
+      "options": [
+        { "value": "image_left", "label": "Image à gauche" },
+        { "value": "image_right", "label": "Image à droite" },
+        { "value": "none", "label": "Sans image" }
+      ],
+      "default": "image_right"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière diagnostic"
+    }
+  ]
+}
+{% endschema %}

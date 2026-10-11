@@ -1,0 +1,275 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "quiz": {
+      "type": "anaphys-quiz",
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "kind": "name",
+            "question": "Pour commencer, comment tu t'appelles ?",
+            "help": "Ton prénom nous sert seulement à personnaliser ton rituel. Tu peux passer cette étape."
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Quelle est la nature de tes cheveux ?",
+            "help": "Choisis celle qui leur ressemble le plus au naturel, sans coiffage.",
+            "option_1_label": "Lisses",
+            "option_1_icon": "air",
+            "option_1_points": "Nettoyer:1,Fortifier:1",
+            "option_1_reason": "Tes cheveux lisses aiment un lavage doux qui ne les alourdit pas.",
+            "option_2_label": "Ondulés",
+            "option_2_icon": "waves",
+            "option_2_points": "Nourrir:1,Fortifier:1",
+            "option_2_reason": "Tes ondulations ont besoin de souplesse pour rester légères.",
+            "option_3_label": "Bouclés",
+            "option_3_icon": "autorenew",
+            "option_3_points": "Nourrir:2,Réparer:1",
+            "option_3_reason": "Tes boucles aiment être nourries pour rester bien dessinées.",
+            "option_4_label": "Frisés ou crépus",
+            "option_4_icon": "spa",
+            "option_4_points": "Nourrir:3,Réparer:1",
+            "option_4_reason": "Tes cheveux frisés ou crépus réclament beaucoup de douceur."
+          }
+        },
+        "question-3": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Et leur épaisseur ?",
+            "help": "Prends une mèche entre tes doigts : tu la sens à peine, bien, ou très nettement ?",
+            "option_1_label": "Fins",
+            "option_1_icon": "air",
+            "option_1_points": "Fortifier:2,Purifier:1",
+            "option_1_reason": "Tes cheveux fins gagnent à être fortifiés dès la racine.",
+            "option_2_label": "Moyens",
+            "option_2_icon": "balance",
+            "option_2_points": "Nourrir:1",
+            "option_2_reason": "Tes cheveux aiment un soin équilibré, ni trop léger ni trop riche.",
+            "option_3_label": "Épais",
+            "option_3_icon": "potted_plant",
+            "option_3_points": "Nourrir:2,Réparer:1",
+            "option_3_reason": "Tes cheveux épais ont besoin d'un soin riche jusqu'aux pointes."
+          }
+        },
+        "question-4": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Comment se comporte ton cuir chevelu ?",
+            "help": "Pense à ce que tu ressens un ou deux jours après ton shampooing.",
+            "option_1_label": "Il regraisse vite",
+            "option_1_icon": "water_drop",
+            "option_1_points": "Purifier:3",
+            "option_1_reason": "Ton cuir chevelu regraisse vite : il a besoin d'être purifié en douceur.",
+            "option_2_label": "Il tiraille, il est sec",
+            "option_2_icon": "spa",
+            "option_2_points": "Fortifier:2,Nourrir:1",
+            "option_2_reason": "Ton cuir chevelu tiraille : un massage à l'huile lui apporte du confort.",
+            "option_3_label": "Il est souvent inconfortable",
+            "option_3_icon": "flare",
+            "option_3_points": "Purifier:2,Fortifier:1",
+            "option_3_reason": "Ton cuir chevelu est parfois inconfortable : on le libère en douceur.",
+            "option_4_label": "Il est équilibré",
+            "option_4_icon": "balance",
+            "option_4_points": "Nettoyer:1",
+            "option_4_reason": "Ton cuir chevelu est équilibré : un lavage doux suffit à le garder ainsi."
+          }
+        },
+        "question-5": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Sens-tu des résidus sur ton cuir chevelu ?",
+            "help": "Produits coiffants, shampooing sec, calcaire : ils s'accumulent à la racine.",
+            "option_1_label": "Oui, souvent",
+            "option_1_icon": "bubbles",
+            "option_1_points": "Purifier:3",
+            "option_1_reason": "Tu sens des résidus : une exfoliation douce libère ton cuir chevelu.",
+            "option_2_label": "De temps en temps",
+            "option_2_icon": "waves",
+            "option_2_points": "Purifier:2",
+            "option_2_reason": "Les résidus s'installent parfois : une exfoliation régulière remet à zéro.",
+            "option_3_label": "Rarement",
+            "option_3_icon": "check_circle",
+            "option_4_label": "Je ne sais pas",
+            "option_4_icon": "info",
+            "option_4_points": "Purifier:1",
+            "option_4_reason": "Une exfoliation de temps en temps garde ton cuir chevelu net."
+          }
+        },
+        "question-6": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Dans quel état sont tes longueurs ?",
+            "help": "Regarde surtout tes pointes, c'est là que tout se voit.",
+            "option_1_label": "Souples et en forme",
+            "option_1_icon": "favorite",
+            "option_1_points": "Nourrir:1",
+            "option_1_reason": "Tes longueurs vont bien : on entretient leur douceur.",
+            "option_2_label": "Sèches et rêches",
+            "option_2_icon": "air",
+            "option_2_points": "Nourrir:3",
+            "option_2_reason": "Tes longueurs sont sèches : elles ont besoin d'être nourries.",
+            "option_3_label": "Abîmées ou cassantes",
+            "option_3_icon": "shield",
+            "option_3_points": "Réparer:3,Nourrir:1",
+            "option_3_reason": "Tes longueurs sont abîmées : elles ont besoin de retrouver de la tenue.",
+            "option_4_label": "Pointes fourchues",
+            "option_4_icon": "flare",
+            "option_4_points": "Réparer:2,Nourrir:1",
+            "option_4_reason": "Tes pointes sont fragilisées : un soin réparateur les aide à tenir.",
+            "option_5_label": "Colorées ou décolorées",
+            "option_5_icon": "spa",
+            "option_5_points": "Réparer:2,Nourrir:2",
+            "option_5_reason": "Tes cheveux colorés demandent un soin réparateur régulier."
+          }
+        },
+        "question-7": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Ta priorité en ce moment ?",
+            "help": "Si tu hésites, choisis ce qui te gêne le plus au quotidien.",
+            "option_1_label": "Un cuir chevelu plus léger",
+            "option_1_icon": "eco",
+            "option_1_points": "Purifier:2,Fortifier:1",
+            "option_1_reason": "Ta priorité, c'est ton cuir chevelu : tout commence par lui.",
+            "option_2_label": "De la douceur et de l'éclat",
+            "option_2_icon": "favorite",
+            "option_2_points": "Nourrir:2",
+            "option_2_reason": "Tu cherches de la douceur et de l'éclat.",
+            "option_3_label": "Des longueurs réparées",
+            "option_3_icon": "shield",
+            "option_3_points": "Réparer:3",
+            "option_3_reason": "Tu veux réparer tes longueurs en priorité.",
+            "option_4_label": "Des cheveux plus forts",
+            "option_4_icon": "potted_plant",
+            "option_4_points": "Fortifier:3",
+            "option_4_reason": "Tu veux des cheveux plus forts : on en prend soin dès la racine.",
+            "option_5_label": "Moins de frisottis",
+            "option_5_icon": "air",
+            "option_5_points": "Nourrir:2,Réparer:1",
+            "option_5_reason": "Tu veux discipliner tes frisottis : tes longueurs ont besoin d'être nourries."
+          }
+        },
+        "question-8": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Tu te laves les cheveux…",
+            "help": "En moyenne, sur une semaine classique.",
+            "option_1_label": "Tous les jours ou presque",
+            "option_1_icon": "soap",
+            "option_1_points": "Nettoyer:2,Purifier:1",
+            "option_1_reason": "Tu les laves souvent : il te faut un shampooing assez doux pour chaque jour.",
+            "option_2_label": "Deux ou trois fois par semaine",
+            "option_2_icon": "schedule",
+            "option_2_points": "Nettoyer:1",
+            "option_2_reason": "Un lavage doux et régulier, c'est la base de ton rituel.",
+            "option_3_label": "Une fois par semaine",
+            "option_3_icon": "water_drop",
+            "option_3_points": "Purifier:1,Nourrir:1",
+            "option_3_reason": "Tu espaces tes lavages : chacun compte pour libérer ton cuir chevelu.",
+            "option_4_label": "Moins souvent",
+            "option_4_icon": "timer",
+            "option_4_points": "Purifier:2,Nourrir:1",
+            "option_4_reason": "Avec des lavages espacés, ton cuir chevelu a besoin d'être bien purifié."
+          }
+        },
+        "question-9": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Tu utilises des outils chauffants ?",
+            "help": "Sèche-cheveux, lisseur, fer à boucler…",
+            "option_1_label": "Jamais",
+            "option_1_icon": "check_circle",
+            "option_2_label": "Le sèche-cheveux seulement",
+            "option_2_icon": "air",
+            "option_2_points": "Nourrir:1",
+            "option_2_reason": "Le sèche-cheveux dessèche un peu : tes longueurs aiment être nourries.",
+            "option_3_label": "Lisseur ou fer, de temps en temps",
+            "option_3_icon": "flare",
+            "option_3_points": "Réparer:2",
+            "option_3_reason": "Tu utilises parfois lisseur ou fer : ta fibre aime être réparée.",
+            "option_4_label": "Lisseur ou fer, souvent",
+            "option_4_icon": "shield",
+            "option_4_points": "Réparer:3,Nourrir:1",
+            "option_4_reason": "Lisseur ou fer souvent : ta fibre a besoin d'un vrai soin réparateur."
+          }
+        },
+        "question-10": {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Et ta routine idéale, elle ressemble à quoi ?",
+            "help": "On adapte le nombre de soins à ton rythme.",
+            "option_1_label": "Simple et rapide, l'essentiel",
+            "option_1_icon": "timer",
+            "option_1_points": "Max:2",
+            "option_2_label": "Un bon équilibre",
+            "option_2_icon": "balance",
+            "option_2_points": "Min:3,Max:3",
+            "option_3_label": "Le rituel complet, j'aime prendre mon temps",
+            "option_3_icon": "spa",
+            "option_3_points": "Min:5,Max:5"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2",
+        "question-3",
+        "question-4",
+        "question-5",
+        "question-6",
+        "question-7",
+        "question-8",
+        "question-9",
+        "question-10"
+      ],
+      "settings": {
+        "intro_eyebrow": "Diagnostic capillaire",
+        "intro_heading": "Trouve ton <strong>rituel</strong>",
+        "intro_text": "<p>Quelques questions sur tes cheveux et ton cuir chevelu, et on te compose le rituel qui te ressemble, étape par étape.</p>",
+        "intro_point_1": "Questions sur tes cheveux",
+        "intro_point_2": "Résultat immédiat",
+        "intro_point_3": "Rituel sur mesure",
+        "intro_button": "Commencer",
+        "back_label": "Retour",
+        "next_label": "Continuer",
+        "skip_label": "Passer",
+        "name_placeholder": "Ton prénom",
+        "result_heading": "Ton rituel",
+        "returning_label": "Ton dernier diagnostic",
+        "add_label": "Ajouter mon rituel au panier",
+        "restart_label": "Recommencer le diagnostic",
+        "threshold": 3,
+        "focus_purifier": "un cuir chevelu à purifier en douceur",
+        "focus_nourrir": "des longueurs qui ont soif de douceur",
+        "focus_reparer": "une fibre qui demande à être réparée",
+        "focus_fortifier": "des racines à fortifier",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main",
+    "quiz"
+  ]
+}

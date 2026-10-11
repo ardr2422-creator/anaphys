@@ -1,0 +1,1296 @@
+{%- comment -%}
+  Diagnostic capillaire ANAPHYS : une question par écran, puis un rituel sur mesure.
+  - Chaque question est un bloc « Question » : texte, aide et jusqu'à 5 réponses
+    (libellé, icône, points par étape du rituel, raison affichée sous le produit).
+  - Les produits sont retrouvés automatiquement via le métachamp custom.etape_rituel
+    (Purifier, Nettoyer, Nourrir, Réparer, Fortifier) : aucun handle n'est écrit en dur.
+  - Le calcul, l'affichage du résultat et l'ajout au panier sont dans anaphys-quiz.js.
+{%- endcomment -%}
+{{ 'anaphys-quiz.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'anaphys-quiz.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign questions = section.blocks | where: 'type', 'question'
+  assign question_count = questions.size
+  assign found_steps = ''
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <anaphys-quiz
+    class="anaphys-quiz page-width section-{{ section.id }}-padding"
+    data-section-id="{{ section.id }}"
+  >
+    <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-quiz-live></p>
+
+    <div class="anaphys-quiz__top" data-quiz-top hidden>
+      <button type="button" class="anaphys-quiz__back" data-quiz-back>
+        <svg class="anaphys-quiz__back-icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="m313-457 228 228-33 33-284-284 284-284 33 33-228 228h503v46H313Z"/>
+        </svg>
+        <span>{{ section.settings.back_label | escape }}</span>
+      </button>
+      <div
+        class="anaphys-quiz__progress"
+        role="progressbar"
+        aria-label="Progression du diagnostic"
+        aria-valuemin="0"
+        aria-valuemax="{{ question_count }}"
+        aria-valuenow="1"
+        data-quiz-progress
+      >
+        <span class="anaphys-quiz__progress-bar" data-quiz-bar></span>
+      </div>
+      <p class="anaphys-quiz__count" aria-hidden="true">
+        <span data-quiz-index>1</span>/{{ question_count }}
+      </p>
+    </div>
+
+    {%- comment -%} Écran d'accueil {%- endcomment -%}
+    <section class="anaphys-quiz__screen anaphys-quiz__intro is-active" data-quiz-screen="intro" aria-labelledby="QuizIntro-{{ section.id }}">
+      {%- if section.settings.intro_eyebrow != blank -%}
+        <p class="anaphys-quiz__eyebrow">{{ section.settings.intro_eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="anaphys-quiz__intro-heading h1" id="QuizIntro-{{ section.id }}" tabindex="-1" data-quiz-heading>
+        {{- section.settings.intro_heading -}}
+      </h1>
+      {%- if section.settings.intro_text != blank -%}
+        <div class="anaphys-quiz__intro-text rte">{{ section.settings.intro_text }}</div>
+      {%- endif -%}
+      <ul class="anaphys-quiz__perks list-unstyled" role="list">
+        {%- if section.settings.intro_point_1 != blank -%}
+          <li>{%- render 'anaphys-icon', icon: 'spa', class: 'anaphys-quiz__perk-icon' -%}{{ section.settings.intro_point_1 | escape }}</li>
+        {%- endif -%}
+        {%- if section.settings.intro_point_2 != blank -%}
+          <li>{%- render 'anaphys-icon', icon: 'schedule', class: 'anaphys-quiz__perk-icon' -%}{{ section.settings.intro_point_2 | escape }}</li>
+        {%- endif -%}
+        {%- if section.settings.intro_point_3 != blank -%}
+          <li>{%- render 'anaphys-icon', icon: 'favorite', class: 'anaphys-quiz__perk-icon' -%}{{ section.settings.intro_point_3 | escape }}</li>
+        {%- endif -%}
+      </ul>
+      {%- if question_count > 0 -%}
+        <button type="button" class="button anaphys-quiz__start" data-quiz-start>
+          {{- section.settings.intro_button | escape -}}
+        </button>
+      {%- elsif request.design_mode -%}
+        <p class="anaphys-quiz__help">Ajoute des blocs « Question » pour construire le diagnostic.</p>
+      {%- endif -%}
+    </section>
+
+    {%- comment -%} Questions : un bloc = un écran {%- endcomment -%}
+    {%- for block in questions -%}
+      {%- assign heading_id = 'QuizQuestion-' | append: block.id -%}
+      {%- assign help_id = 'QuizHelp-' | append: block.id -%}
+      <section
+        class="anaphys-quiz__screen anaphys-quiz__question"
+        data-quiz-screen="question"
+        data-question-id="{{ block.id }}"
+        data-kind="{{ block.settings.kind }}"
+        aria-labelledby="{{ heading_id }}"
+        hidden
+        {{ block.shopify_attributes }}
+      >
+        {%- if block.settings.kind == 'name' -%}
+          <form class="anaphys-quiz__name" data-quiz-name-form novalidate>
+            <h2 class="anaphys-quiz__heading h2" id="{{ heading_id }}" tabindex="-1" data-quiz-heading>
+              {{- block.settings.question | escape -}}
+            </h2>
+            {%- if block.settings.help != blank -%}
+              <p class="anaphys-quiz__help" id="{{ help_id }}">{{ block.settings.help | escape }}</p>
+            {%- endif -%}
+            <div class="anaphys-quiz__field field">
+              <input
+                class="field__input"
+                type="text"
+                id="QuizName-{{ block.id }}"
+                name="prenom"
+                autocomplete="given-name"
+                autocapitalize="words"
+                maxlength="40"
+                placeholder="{{ section.settings.name_placeholder | escape }}"
+                {% if block.settings.help != blank %}
+                  aria-describedby="{{ help_id }}"
+                {% endif %}
+                data-quiz-name
+              >
+              <label class="field__label" for="QuizName-{{ block.id }}">
+                {{- section.settings.name_placeholder | escape -}}
+              </label>
+            </div>
+            <div class="anaphys-quiz__actions">
+              <button type="submit" class="button anaphys-quiz__next">
+                {{- section.settings.next_label | escape -}}
+              </button>
+              <button type="button" class="anaphys-quiz__link" data-quiz-skip>
+                {{- section.settings.skip_label | escape -}}
+              </button>
+            </div>
+          </form>
+        {%- else -%}
+          <fieldset
+            class="anaphys-quiz__fieldset"
+            {% if block.settings.help != blank %}
+              aria-describedby="{{ help_id }}"
+            {% endif %}
+          >
+            <legend class="anaphys-quiz__legend">
+              <h2 class="anaphys-quiz__heading h2" id="{{ heading_id }}" tabindex="-1" data-quiz-heading>
+                {{- block.settings.question | escape -}}
+              </h2>
+            </legend>
+            {%- if block.settings.help != blank -%}
+              <p class="anaphys-quiz__help" id="{{ help_id }}">{{ block.settings.help | escape }}</p>
+            {%- endif -%}
+            <div class="anaphys-quiz__options" data-quiz-options>
+              {%- for i in (1..5) -%}
+                {%- liquid
+                  assign label_key = 'option_' | append: i | append: '_label'
+                  assign icon_key = 'option_' | append: i | append: '_icon'
+                  assign points_key = 'option_' | append: i | append: '_points'
+                  assign reason_key = 'option_' | append: i | append: '_reason'
+                  assign option_label = block.settings[label_key]
+                  assign option_icon = block.settings[icon_key]
+                -%}
+                {%- if option_label != blank -%}
+                  <button
+                    type="button"
+                    class="anaphys-quiz__option"
+                    aria-pressed="false"
+                    data-quiz-option
+                    data-label="{{ option_label | escape }}"
+                    data-points="{{ block.settings[points_key] | escape }}"
+                    data-reason="{{ block.settings[reason_key] | escape }}"
+                  >
+                    {%- if option_icon != blank and option_icon != 'none' -%}
+                      <span class="anaphys-quiz__option-icon">
+                        {%- render 'anaphys-icon', icon: option_icon -%}
+                      </span>
+                    {%- endif -%}
+                    <span class="anaphys-quiz__option-label">{{ option_label | escape }}</span>
+                    <span class="anaphys-quiz__option-check" aria-hidden="true"></span>
+                  </button>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endif -%}
+      </section>
+    {%- endfor -%}
+
+    {%- comment -%} Résultat (rempli par anaphys-quiz.js) {%- endcomment -%}
+    <section
+      class="anaphys-quiz__screen anaphys-quiz__result"
+      data-quiz-screen="result"
+      aria-labelledby="QuizResult-{{ section.id }}"
+      hidden
+    >
+      <div class="anaphys-quiz__result-head">
+        <p class="anaphys-quiz__eyebrow" data-quiz-returning hidden>{{ section.settings.returning_label | escape }}</p>
+        <h2 class="anaphys-quiz__result-title h1" id="QuizResult-{{ section.id }}" tabindex="-1" data-quiz-heading data-quiz-result-title>
+          {{- section.settings.result_heading | escape -}}
+        </h2>
+        <p class="anaphys-quiz__summary" data-quiz-summary></p>
+      </div>
+
+      <ol class="anaphys-quiz__products list-unstyled" role="list" data-quiz-products></ol>
+      <p class="anaphys-quiz__empty" data-quiz-empty hidden>
+        Les soins du rituel ne sont pas disponibles pour le moment. Reviens très vite.
+      </p>
+
+      <div class="anaphys-quiz__result-actions">
+        <button type="button" class="button anaphys-quiz__add" data-quiz-add>
+          <span data-quiz-add-label>{{ section.settings.add_label | escape }}</span>
+          <span class="anaphys-quiz__total" data-quiz-total></span>
+        </button>
+        <p class="anaphys-quiz__status" role="status" data-quiz-status></p>
+        <button type="button" class="anaphys-quiz__link" data-quiz-restart>
+          {{- section.settings.restart_label | escape -}}
+        </button>
+      </div>
+    </section>
+
+    <script type="application/json" data-quiz-settings>
+      {
+        "threshold": {{ section.settings.threshold | default: 3 }},
+        "resultHeading": {{ section.settings.result_heading | json }},
+        "addLabel": {{ section.settings.add_label | json }},
+        "focus": {
+          "purifier": {{ section.settings.focus_purifier | json }},
+          "nourrir": {{ section.settings.focus_nourrir | json }},
+          "reparer": {{ section.settings.focus_reparer | json }},
+          "fortifier": {{ section.settings.focus_fortifier | json }}
+        },
+        "moneyFormat": {{ shop.money_format | json }}
+      }
+    </script>
+
+    {%- comment -%}
+      Les 5 produits du rituel, repérés par leur métachamp custom.etape_rituel.
+      Le premier produit trouvé pour chaque étape est retenu.
+    {%- endcomment -%}
+    <script type="application/json" data-quiz-products-data>
+      [
+        {%- assign first_entry = true -%}
+        {%- for p in collections.all.products limit: 250 -%}
+          {%- liquid
+            assign etape_label = p.metafields.custom.etape_rituel.value | append: '' | strip
+            assign etape = etape_label | downcase
+            assign step_key = ''
+            if etape contains 'purif'
+              assign step_key = 'purifier'
+            elsif etape contains 'nettoy'
+              assign step_key = 'nettoyer'
+            elsif etape contains 'nourri'
+              assign step_key = 'nourrir'
+            elsif etape contains 'parer'
+              assign step_key = 'reparer'
+            elsif etape contains 'fortif'
+              assign step_key = 'fortifier'
+            endif
+            assign step_marker = '|' | append: step_key | append: '|'
+          -%}
+          {%- if step_key != blank -%}
+            {%- unless found_steps contains step_marker -%}
+              {%- assign found_steps = found_steps | append: step_marker -%}
+              {%- unless first_entry -%},{%- endunless -%}
+              {%- assign first_entry = false -%}
+              {%- assign variant = p.selected_or_first_available_variant -%}
+              {
+                "step": {{ step_key | json }},
+                "stepLabel": {{ etape_label | json }},
+                "id": {{ p.id }},
+                "variant": {{ variant.id | json }},
+                "available": {{ p.available | json }},
+                "title": {{ p.title | json }},
+                "url": {{ p.url | json }},
+                "image": {% if p.featured_image %}{{ p.featured_image | image_url: width: 600 | json }}{% else %}null{% endif %},
+                "imageAlt": {{ p.featured_image.alt | default: p.title | json }},
+                "price": {{ variant.price | default: p.price | json }},
+                "priceFormatted": {{ variant.price | default: p.price | money | json }},
+                "hook": {{ p.metafields.custom.accroche.value | json }}
+              }
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    </script>
+  </anaphys-quiz>
+</div>
+
+{% schema %}
+{
+  "name": "Diagnostic capillaire",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Accueil"
+    },
+    {
+      "type": "text",
+      "id": "intro_eyebrow",
+      "label": "Surtitre",
+      "default": "Diagnostic capillaire"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "intro_heading",
+      "label": "Titre",
+      "default": "Trouve ton <strong>rituel</strong>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Texte",
+      "default": "<p>Quelques questions sur tes cheveux et ton cuir chevelu, et on te compose le rituel qui te ressemble, étape par étape.</p>"
+    },
+    {
+      "type": "text",
+      "id": "intro_point_1",
+      "label": "Point 1",
+      "default": "Questions sur tes cheveux"
+    },
+    {
+      "type": "text",
+      "id": "intro_point_2",
+      "label": "Point 2",
+      "default": "Résultat immédiat"
+    },
+    {
+      "type": "text",
+      "id": "intro_point_3",
+      "label": "Point 3",
+      "default": "Rituel sur mesure"
+    },
+    {
+      "type": "text",
+      "id": "intro_button",
+      "label": "Texte du bouton",
+      "default": "Commencer"
+    },
+    {
+      "type": "header",
+      "content": "Questions"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Bouton retour",
+      "default": "Retour"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Bouton continuer",
+      "default": "Continuer"
+    },
+    {
+      "type": "text",
+      "id": "skip_label",
+      "label": "Lien pour passer le prénom",
+      "default": "Passer"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Champ prénom",
+      "default": "Ton prénom"
+    },
+    {
+      "type": "header",
+      "content": "Résultat"
+    },
+    {
+      "type": "text",
+      "id": "result_heading",
+      "label": "Titre",
+      "default": "Ton rituel",
+      "info": "Le prénom est ajouté automatiquement : « Ton rituel, Léa »."
+    },
+    {
+      "type": "text",
+      "id": "returning_label",
+      "label": "Surtitre au retour d'un visiteur",
+      "default": "Ton dernier diagnostic"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Bouton d'ajout au panier",
+      "default": "Ajouter mon rituel au panier"
+    },
+    {
+      "type": "text",
+      "id": "restart_label",
+      "label": "Lien pour recommencer",
+      "default": "Recommencer le diagnostic"
+    },
+    {
+      "type": "range",
+      "id": "threshold",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "label": "Points minimum pour proposer une étape",
+      "info": "Le shampooing (Nettoyer) est toujours proposé. Les autres étapes le sont à partir de ce score.",
+      "default": 3
+    },
+    {
+      "type": "paragraph",
+      "content": "Résumé personnalisé : ces expressions décrivent les besoins mis en avant par le diagnostic."
+    },
+    {
+      "type": "text",
+      "id": "focus_purifier",
+      "label": "Besoin Purifier",
+      "default": "un cuir chevelu à purifier en douceur"
+    },
+    {
+      "type": "text",
+      "id": "focus_nourrir",
+      "label": "Besoin Nourrir",
+      "default": "des longueurs qui ont soif de douceur"
+    },
+    {
+      "type": "text",
+      "id": "focus_reparer",
+      "label": "Besoin Réparer",
+      "default": "une fibre qui demande à être réparée"
+    },
+    {
+      "type": "text",
+      "id": "focus_fortifier",
+      "label": "Besoin Fortifier",
+      "default": "des racines à fortifier"
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "select",
+          "id": "kind",
+          "label": "Type",
+          "options": [
+            {
+              "value": "choice",
+              "label": "Choix parmi des réponses"
+            },
+            {
+              "value": "name",
+              "label": "Prénom (champ texte facultatif)"
+            }
+          ],
+          "default": "choice"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Ta question ici ?"
+        },
+        {
+          "type": "text",
+          "id": "help",
+          "label": "Aide"
+        },
+        {
+          "type": "header",
+          "content": "Réponse 1"
+        },
+        {
+          "type": "text",
+          "id": "option_1_label",
+          "label": "Libellé"
+        },
+        {
+          "type": "select",
+          "id": "option_1_icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            },
+            {
+              "value": "soap",
+              "label": "Savon"
+            },
+            {
+              "value": "bubbles",
+              "label": "Bulles"
+            },
+            {
+              "value": "flare",
+              "label": "Éclat"
+            },
+            {
+              "value": "air",
+              "label": "Air"
+            },
+            {
+              "value": "waves",
+              "label": "Vagues"
+            },
+            {
+              "value": "shield",
+              "label": "Bouclier"
+            },
+            {
+              "value": "balance",
+              "label": "Équilibre"
+            },
+            {
+              "value": "science",
+              "label": "Fiole"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "timer",
+              "label": "Minuteur"
+            },
+            {
+              "value": "autorenew",
+              "label": "Boucle"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "recycling",
+              "label": "Cycle"
+            },
+            {
+              "value": "info",
+              "label": "Info"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "option_1_points",
+          "label": "Points",
+          "info": "Format Étape:points, séparés par des virgules. Étapes : Purifier, Nettoyer, Nourrir, Réparer, Fortifier. Ex. Purifier:2,Nourrir:1. Max:N (2 à 5) limite le nombre de soins proposés, Min:N en impose un minimum."
+        },
+        {
+          "type": "text",
+          "id": "option_1_reason",
+          "label": "Raison",
+          "info": "Phrase « pourquoi pour toi » affichée sous le produit de la première étape listée dans les points."
+        },
+        {
+          "type": "header",
+          "content": "Réponse 2"
+        },
+        {
+          "type": "text",
+          "id": "option_2_label",
+          "label": "Libellé"
+        },
+        {
+          "type": "select",
+          "id": "option_2_icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            },
+            {
+              "value": "soap",
+              "label": "Savon"
+            },
+            {
+              "value": "bubbles",
+              "label": "Bulles"
+            },
+            {
+              "value": "flare",
+              "label": "Éclat"
+            },
+            {
+              "value": "air",
+              "label": "Air"
+            },
+            {
+              "value": "waves",
+              "label": "Vagues"
+            },
+            {
+              "value": "shield",
+              "label": "Bouclier"
+            },
+            {
+              "value": "balance",
+              "label": "Équilibre"
+            },
+            {
+              "value": "science",
+              "label": "Fiole"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "timer",
+              "label": "Minuteur"
+            },
+            {
+              "value": "autorenew",
+              "label": "Boucle"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "recycling",
+              "label": "Cycle"
+            },
+            {
+              "value": "info",
+              "label": "Info"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "option_2_points",
+          "label": "Points",
+          "info": "Format Étape:points, séparés par des virgules. Étapes : Purifier, Nettoyer, Nourrir, Réparer, Fortifier. Ex. Purifier:2,Nourrir:1. Max:N (2 à 5) limite le nombre de soins proposés, Min:N en impose un minimum."
+        },
+        {
+          "type": "text",
+          "id": "option_2_reason",
+          "label": "Raison",
+          "info": "Phrase « pourquoi pour toi » affichée sous le produit de la première étape listée dans les points."
+        },
+        {
+          "type": "header",
+          "content": "Réponse 3"
+        },
+        {
+          "type": "text",
+          "id": "option_3_label",
+          "label": "Libellé"
+        },
+        {
+          "type": "select",
+          "id": "option_3_icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            },
+            {
+              "value": "soap",
+              "label": "Savon"
+            },
+            {
+              "value": "bubbles",
+              "label": "Bulles"
+            },
+            {
+              "value": "flare",
+              "label": "Éclat"
+            },
+            {
+              "value": "air",
+              "label": "Air"
+            },
+            {
+              "value": "waves",
+              "label": "Vagues"
+            },
+            {
+              "value": "shield",
+              "label": "Bouclier"
+            },
+            {
+              "value": "balance",
+              "label": "Équilibre"
+            },
+            {
+              "value": "science",
+              "label": "Fiole"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "timer",
+              "label": "Minuteur"
+            },
+            {
+              "value": "autorenew",
+              "label": "Boucle"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "recycling",
+              "label": "Cycle"
+            },
+            {
+              "value": "info",
+              "label": "Info"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "option_3_points",
+          "label": "Points",
+          "info": "Format Étape:points, séparés par des virgules. Étapes : Purifier, Nettoyer, Nourrir, Réparer, Fortifier. Ex. Purifier:2,Nourrir:1. Max:N (2 à 5) limite le nombre de soins proposés, Min:N en impose un minimum."
+        },
+        {
+          "type": "text",
+          "id": "option_3_reason",
+          "label": "Raison",
+          "info": "Phrase « pourquoi pour toi » affichée sous le produit de la première étape listée dans les points."
+        },
+        {
+          "type": "header",
+          "content": "Réponse 4"
+        },
+        {
+          "type": "text",
+          "id": "option_4_label",
+          "label": "Libellé"
+        },
+        {
+          "type": "select",
+          "id": "option_4_icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            },
+            {
+              "value": "soap",
+              "label": "Savon"
+            },
+            {
+              "value": "bubbles",
+              "label": "Bulles"
+            },
+            {
+              "value": "flare",
+              "label": "Éclat"
+            },
+            {
+              "value": "air",
+              "label": "Air"
+            },
+            {
+              "value": "waves",
+              "label": "Vagues"
+            },
+            {
+              "value": "shield",
+              "label": "Bouclier"
+            },
+            {
+              "value": "balance",
+              "label": "Équilibre"
+            },
+            {
+              "value": "science",
+              "label": "Fiole"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "timer",
+              "label": "Minuteur"
+            },
+            {
+              "value": "autorenew",
+              "label": "Boucle"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "recycling",
+              "label": "Cycle"
+            },
+            {
+              "value": "info",
+              "label": "Info"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "option_4_points",
+          "label": "Points",
+          "info": "Format Étape:points, séparés par des virgules. Étapes : Purifier, Nettoyer, Nourrir, Réparer, Fortifier. Ex. Purifier:2,Nourrir:1. Max:N (2 à 5) limite le nombre de soins proposés, Min:N en impose un minimum."
+        },
+        {
+          "type": "text",
+          "id": "option_4_reason",
+          "label": "Raison",
+          "info": "Phrase « pourquoi pour toi » affichée sous le produit de la première étape listée dans les points."
+        },
+        {
+          "type": "header",
+          "content": "Réponse 5"
+        },
+        {
+          "type": "text",
+          "id": "option_5_label",
+          "label": "Libellé"
+        },
+        {
+          "type": "select",
+          "id": "option_5_icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "none",
+              "label": "Aucune"
+            },
+            {
+              "value": "water_drop",
+              "label": "Goutte"
+            },
+            {
+              "value": "spa",
+              "label": "Fleur"
+            },
+            {
+              "value": "eco",
+              "label": "Feuille"
+            },
+            {
+              "value": "potted_plant",
+              "label": "Plante"
+            },
+            {
+              "value": "soap",
+              "label": "Savon"
+            },
+            {
+              "value": "bubbles",
+              "label": "Bulles"
+            },
+            {
+              "value": "flare",
+              "label": "Éclat"
+            },
+            {
+              "value": "air",
+              "label": "Air"
+            },
+            {
+              "value": "waves",
+              "label": "Vagues"
+            },
+            {
+              "value": "shield",
+              "label": "Bouclier"
+            },
+            {
+              "value": "balance",
+              "label": "Équilibre"
+            },
+            {
+              "value": "science",
+              "label": "Fiole"
+            },
+            {
+              "value": "schedule",
+              "label": "Horloge"
+            },
+            {
+              "value": "timer",
+              "label": "Minuteur"
+            },
+            {
+              "value": "autorenew",
+              "label": "Boucle"
+            },
+            {
+              "value": "favorite",
+              "label": "Cœur"
+            },
+            {
+              "value": "check_circle",
+              "label": "Coche"
+            },
+            {
+              "value": "verified",
+              "label": "Badge"
+            },
+            {
+              "value": "recycling",
+              "label": "Cycle"
+            },
+            {
+              "value": "info",
+              "label": "Info"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "option_5_points",
+          "label": "Points",
+          "info": "Format Étape:points, séparés par des virgules. Étapes : Purifier, Nettoyer, Nourrir, Réparer, Fortifier. Ex. Purifier:2,Nourrir:1. Max:N (2 à 5) limite le nombre de soins proposés, Min:N en impose un minimum."
+        },
+        {
+          "type": "text",
+          "id": "option_5_reason",
+          "label": "Raison",
+          "info": "Phrase « pourquoi pour toi » affichée sous le produit de la première étape listée dans les points."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Diagnostic capillaire",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "kind": "name",
+            "question": "Pour commencer, comment tu t'appelles ?",
+            "help": "Ton prénom nous sert seulement à personnaliser ton rituel. Tu peux passer cette étape."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Quelle est la nature de tes cheveux ?",
+            "help": "Choisis celle qui leur ressemble le plus au naturel, sans coiffage.",
+            "option_1_label": "Lisses",
+            "option_1_icon": "air",
+            "option_1_points": "Nettoyer:1,Fortifier:1",
+            "option_1_reason": "Tes cheveux lisses aiment un lavage doux qui ne les alourdit pas.",
+            "option_2_label": "Ondulés",
+            "option_2_icon": "waves",
+            "option_2_points": "Nourrir:1,Fortifier:1",
+            "option_2_reason": "Tes ondulations ont besoin de souplesse pour rester légères.",
+            "option_3_label": "Bouclés",
+            "option_3_icon": "autorenew",
+            "option_3_points": "Nourrir:2,Réparer:1",
+            "option_3_reason": "Tes boucles aiment être nourries pour rester bien dessinées.",
+            "option_4_label": "Frisés ou crépus",
+            "option_4_icon": "spa",
+            "option_4_points": "Nourrir:3,Réparer:1",
+            "option_4_reason": "Tes cheveux frisés ou crépus réclament beaucoup de douceur."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Et leur épaisseur ?",
+            "help": "Prends une mèche entre tes doigts : tu la sens à peine, bien, ou très nettement ?",
+            "option_1_label": "Fins",
+            "option_1_icon": "air",
+            "option_1_points": "Fortifier:2,Purifier:1",
+            "option_1_reason": "Tes cheveux fins gagnent à être fortifiés dès la racine.",
+            "option_2_label": "Moyens",
+            "option_2_icon": "balance",
+            "option_2_points": "Nourrir:1",
+            "option_2_reason": "Tes cheveux aiment un soin équilibré, ni trop léger ni trop riche.",
+            "option_3_label": "Épais",
+            "option_3_icon": "potted_plant",
+            "option_3_points": "Nourrir:2,Réparer:1",
+            "option_3_reason": "Tes cheveux épais ont besoin d'un soin riche jusqu'aux pointes."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Comment se comporte ton cuir chevelu ?",
+            "help": "Pense à ce que tu ressens un ou deux jours après ton shampooing.",
+            "option_1_label": "Il regraisse vite",
+            "option_1_icon": "water_drop",
+            "option_1_points": "Purifier:3",
+            "option_1_reason": "Ton cuir chevelu regraisse vite : il a besoin d'être purifié en douceur.",
+            "option_2_label": "Il tiraille, il est sec",
+            "option_2_icon": "spa",
+            "option_2_points": "Fortifier:2,Nourrir:1",
+            "option_2_reason": "Ton cuir chevelu tiraille : un massage à l'huile lui apporte du confort.",
+            "option_3_label": "Il est souvent inconfortable",
+            "option_3_icon": "flare",
+            "option_3_points": "Purifier:2,Fortifier:1",
+            "option_3_reason": "Ton cuir chevelu est parfois inconfortable : on le libère en douceur.",
+            "option_4_label": "Il est équilibré",
+            "option_4_icon": "balance",
+            "option_4_points": "Nettoyer:1",
+            "option_4_reason": "Ton cuir chevelu est équilibré : un lavage doux suffit à le garder ainsi."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Sens-tu des résidus sur ton cuir chevelu ?",
+            "help": "Produits coiffants, shampooing sec, calcaire : ils s'accumulent à la racine.",
+            "option_1_label": "Oui, souvent",
+            "option_1_icon": "bubbles",
+            "option_1_points": "Purifier:3",
+            "option_1_reason": "Tu sens des résidus : une exfoliation douce libère ton cuir chevelu.",
+            "option_2_label": "De temps en temps",
+            "option_2_icon": "waves",
+            "option_2_points": "Purifier:2",
+            "option_2_reason": "Les résidus s'installent parfois : une exfoliation régulière remet à zéro.",
+            "option_3_label": "Rarement",
+            "option_3_icon": "check_circle",
+            "option_4_label": "Je ne sais pas",
+            "option_4_icon": "info",
+            "option_4_points": "Purifier:1",
+            "option_4_reason": "Une exfoliation de temps en temps garde ton cuir chevelu net."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Dans quel état sont tes longueurs ?",
+            "help": "Regarde surtout tes pointes, c'est là que tout se voit.",
+            "option_1_label": "Souples et en forme",
+            "option_1_icon": "favorite",
+            "option_1_points": "Nourrir:1",
+            "option_1_reason": "Tes longueurs vont bien : on entretient leur douceur.",
+            "option_2_label": "Sèches et rêches",
+            "option_2_icon": "air",
+            "option_2_points": "Nourrir:3",
+            "option_2_reason": "Tes longueurs sont sèches : elles ont besoin d'être nourries.",
+            "option_3_label": "Abîmées ou cassantes",
+            "option_3_icon": "shield",
+            "option_3_points": "Réparer:3,Nourrir:1",
+            "option_3_reason": "Tes longueurs sont abîmées : elles ont besoin de retrouver de la tenue.",
+            "option_4_label": "Pointes fourchues",
+            "option_4_icon": "flare",
+            "option_4_points": "Réparer:2,Nourrir:1",
+            "option_4_reason": "Tes pointes sont fragilisées : un soin réparateur les aide à tenir.",
+            "option_5_label": "Colorées ou décolorées",
+            "option_5_icon": "spa",
+            "option_5_points": "Réparer:2,Nourrir:2",
+            "option_5_reason": "Tes cheveux colorés demandent un soin réparateur régulier."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Ta priorité en ce moment ?",
+            "help": "Si tu hésites, choisis ce qui te gêne le plus au quotidien.",
+            "option_1_label": "Un cuir chevelu plus léger",
+            "option_1_icon": "eco",
+            "option_1_points": "Purifier:2,Fortifier:1",
+            "option_1_reason": "Ta priorité, c'est ton cuir chevelu : tout commence par lui.",
+            "option_2_label": "De la douceur et de l'éclat",
+            "option_2_icon": "favorite",
+            "option_2_points": "Nourrir:2",
+            "option_2_reason": "Tu cherches de la douceur et de l'éclat.",
+            "option_3_label": "Des longueurs réparées",
+            "option_3_icon": "shield",
+            "option_3_points": "Réparer:3",
+            "option_3_reason": "Tu veux réparer tes longueurs en priorité.",
+            "option_4_label": "Des cheveux plus forts",
+            "option_4_icon": "potted_plant",
+            "option_4_points": "Fortifier:3",
+            "option_4_reason": "Tu veux des cheveux plus forts : on en prend soin dès la racine.",
+            "option_5_label": "Moins de frisottis",
+            "option_5_icon": "air",
+            "option_5_points": "Nourrir:2,Réparer:1",
+            "option_5_reason": "Tu veux discipliner tes frisottis : tes longueurs ont besoin d'être nourries."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Tu te laves les cheveux…",
+            "help": "En moyenne, sur une semaine classique.",
+            "option_1_label": "Tous les jours ou presque",
+            "option_1_icon": "soap",
+            "option_1_points": "Nettoyer:2,Purifier:1",
+            "option_1_reason": "Tu les laves souvent : il te faut un shampooing assez doux pour chaque jour.",
+            "option_2_label": "Deux ou trois fois par semaine",
+            "option_2_icon": "schedule",
+            "option_2_points": "Nettoyer:1",
+            "option_2_reason": "Un lavage doux et régulier, c'est la base de ton rituel.",
+            "option_3_label": "Une fois par semaine",
+            "option_3_icon": "water_drop",
+            "option_3_points": "Purifier:1,Nourrir:1",
+            "option_3_reason": "Tu espaces tes lavages : chacun compte pour libérer ton cuir chevelu.",
+            "option_4_label": "Moins souvent",
+            "option_4_icon": "timer",
+            "option_4_points": "Purifier:2,Nourrir:1",
+            "option_4_reason": "Avec des lavages espacés, ton cuir chevelu a besoin d'être bien purifié."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Tu utilises des outils chauffants ?",
+            "help": "Sèche-cheveux, lisseur, fer à boucler…",
+            "option_1_label": "Jamais",
+            "option_1_icon": "check_circle",
+            "option_2_label": "Le sèche-cheveux seulement",
+            "option_2_icon": "air",
+            "option_2_points": "Nourrir:1",
+            "option_2_reason": "Le sèche-cheveux dessèche un peu : tes longueurs aiment être nourries.",
+            "option_3_label": "Lisseur ou fer, de temps en temps",
+            "option_3_icon": "flare",
+            "option_3_points": "Réparer:2",
+            "option_3_reason": "Tu utilises parfois lisseur ou fer : ta fibre aime être réparée.",
+            "option_4_label": "Lisseur ou fer, souvent",
+            "option_4_icon": "shield",
+            "option_4_points": "Réparer:3,Nourrir:1",
+            "option_4_reason": "Lisseur ou fer souvent : ta fibre a besoin d'un vrai soin réparateur."
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "kind": "choice",
+            "question": "Et ta routine idéale, elle ressemble à quoi ?",
+            "help": "On adapte le nombre de soins à ton rythme.",
+            "option_1_label": "Simple et rapide, l'essentiel",
+            "option_1_icon": "timer",
+            "option_1_points": "Max:2",
+            "option_2_label": "Un bon équilibre",
+            "option_2_icon": "balance",
+            "option_2_points": "Min:3,Max:3",
+            "option_3_label": "Le rituel complet, j'aime prendre mon temps",
+            "option_3_icon": "spa",
+            "option_3_points": "Min:5,Max:5"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
