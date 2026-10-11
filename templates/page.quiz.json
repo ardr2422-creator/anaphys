@@ -257,6 +257,8 @@
         "returning_label": "Ton dernier diagnostic",
         "add_label": "Ajouter mon rituel au panier",
         "restart_label": "Recommencer le diagnostic",
+        "show_ranking": true,
+        "ranking_heading": "Ton classement",
         "threshold": 3,
         "focus_purifier": "un cuir chevelu à purifier en douceur",
         "focus_nourrir": "des longueurs qui ont soif de douceur",

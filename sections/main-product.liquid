@@ -2586,38 +2586,22 @@
           "type": "text",
           "id": "subtitle",
           "label": "Sous-titre",
-          "default": "Ton prénom sur l'étiquette : ça devient ton soin."
+          "default": "Donne-nous tes envies, on crée un design rien qu'à toi."
+        },
+        {
+          "type": "textarea",
+          "id": "intro",
+          "label": "Texte d'introduction",
+          "default": "Pas de modèle tout fait : on part de ce que tu nous confies (ton prénom, tes références, tes couleurs, une image) pour imaginer une étiquette unique."
         },
         {
           "type": "header",
-          "content": "Aperçu"
-        },
-        {
-          "type": "text",
-          "id": "preview_prefix",
-          "label": "Texte au-dessus du prénom",
-          "default": "Le soin de"
-        },
-        {
-          "type": "text",
-          "id": "preview_caption",
-          "label": "Légende de l'aperçu",
-          "default": "Aperçu de ton étiquette"
-        },
-        {
-          "type": "header",
-          "content": "Champs"
+          "content": "Prénom"
         },
         {
           "type": "text",
           "id": "name_label",
-          "label": "Prénom : libellé",
-          "default": "Ton prénom"
-        },
-        {
-          "type": "text",
-          "id": "name_placeholder",
-          "label": "Prénom affiché par défaut dans l'aperçu",
+          "label": "Libellé",
           "default": "Ton prénom"
         },
         {
@@ -2626,8 +2610,8 @@
           "min": 8,
           "max": 30,
           "step": 1,
-          "default": 15,
-          "label": "Prénom : nombre de caractères max"
+          "default": 20,
+          "label": "Nombre de caractères max"
         },
         {
           "type": "text",
@@ -2636,44 +2620,90 @@
           "default": "Ajoute ton prénom pour personnaliser ton soin."
         },
         {
-          "type": "text",
-          "id": "color_label",
-          "label": "Couleur : libellé",
-          "default": "Couleur de ton étiquette"
-        },
-        {
-          "type": "textarea",
-          "id": "colors",
-          "label": "Couleurs proposées",
-          "info": "Une par ligne, au format Nom:#code couleur",
-          "default": "Sauge:#ACBFA4\nSable:#E8DCC8\nTerre:#B9785C\nNuit:#404E5C\nBlanc:#FFFFFF"
+          "type": "header",
+          "content": "Références"
         },
         {
           "type": "text",
-          "id": "ref_label",
-          "label": "Référence : libellé",
-          "default": "Ta référence (optionnel)"
+          "id": "refs_label",
+          "label": "Libellé",
+          "default": "Tes références"
+        },
+        {
+          "type": "text",
+          "id": "refs_help",
+          "label": "Aide",
+          "default": "Culturelles ou personnelles : un film, une musique, un lieu, un souvenir, une date…"
+        },
+        {
+          "type": "text",
+          "id": "refs_placeholder",
+          "label": "Exemple dans le champ",
+          "default": "Ex. : les couchers de soleil à Marseille, Miyazaki, la date de mon mariage"
+        },
+        {
+          "type": "header",
+          "content": "Couleurs"
+        },
+        {
+          "type": "text",
+          "id": "colors_label",
+          "label": "Libellé",
+          "default": "Tes couleurs"
+        },
+        {
+          "type": "text",
+          "id": "colors_help",
+          "label": "Aide",
+          "default": "Décris-les avec tes mots, et ajoute des teintes si tu veux."
+        },
+        {
+          "type": "text",
+          "id": "colors_placeholder",
+          "label": "Exemple dans le champ",
+          "default": "Ex. : vert sauge, terracotta, un bleu nuit profond"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_image",
+          "default": true,
+          "label": "Permettre de joindre une image"
+        },
+        {
+          "type": "text",
+          "id": "image_label",
+          "label": "Libellé",
+          "default": "Une image qui t'inspire (optionnel)"
+        },
+        {
+          "type": "text",
+          "id": "image_help",
+          "label": "Aide",
+          "default": "Une photo, un dessin, une ambiance : on s'en inspire."
         },
         {
           "type": "range",
-          "id": "ref_max",
-          "min": 8,
-          "max": 40,
+          "id": "image_max_mb",
+          "min": 2,
+          "max": 20,
           "step": 1,
-          "default": 24,
-          "label": "Référence : nombre de caractères max"
+          "unit": "Mo",
+          "default": 10,
+          "label": "Taille max de l'image"
         },
         {
-          "type": "text",
-          "id": "ref_help",
-          "label": "Référence : aide",
-          "default": "Une date, une initiale, un mot qui compte pour toi."
+          "type": "header",
+          "content": "Note"
         },
         {
           "type": "text",
           "id": "note",
           "label": "Note",
-          "default": "Ton étiquette est préparée rien que pour toi. La préparation peut prendre un peu plus de temps."
+          "default": "Ton étiquette est imaginée rien que pour toi. La préparation peut prendre un peu plus de temps."
         }
       ]
     },

@@ -1,7 +1,7 @@
 /*
  * Diagnostic capillaire ANAPHYS
  * 1. Logique (sans DOM) : lecture des points, score par étape du rituel, choix des soins,
- *    raisons « pourquoi pour toi » et résumé. Testable seule (module.exports).
+ *    raisons « pourquoi pour toi », résumé et classement des 5 soins. Testable seule (module.exports).
  * 2. Interface : un écran par question, progression, retour, transitions,
  *    mémorisation du résultat (localStorage) et ajout du rituel au panier en un appel.
  */
@@ -184,7 +184,44 @@
     return sentences.join(' ');
   }
 
-  const logic = { STEPS, STEP_LABELS, parsePoints, stepKey, computeResult, buildSummary };
+  /*
+   * Classement des 5 étapes, par score réel (Nettoyer compris : il est toujours dans
+   * le rituel, mais classé selon ses vrais points). Égalité : ordre du rituel.
+   * - fill : longueur de la jauge, relative au n°1 (1 = pleine), minimum 0,15.
+   * - level : mot affiché à la place d'un chiffre, selon la part du score du n°1.
+   */
+  const RANK_MIN_FILL = 0.15;
+  const RANK_LEVELS = [
+    { min: 0.75, label: 'Indispensable' },
+    { min: 0.45, label: 'Très adapté' },
+    { min: 0.2, label: 'Adapté' },
+    { min: -Infinity, label: 'En bonus' },
+  ];
+
+  function computeRanking(result) {
+    const threshold = result.threshold || 3;
+    const scores = result.scores || {};
+    const ordered = STEPS.slice().sort((a, b) => (scores[b] || 0) - (scores[a] || 0) || byRitualOrder(a, b));
+    const top = Math.max(0, scores[ordered[0]] || 0);
+
+    return ordered.map((step, index) => {
+      const score = scores[step] || 0;
+      const ratio = top > 0 ? Math.max(0, score) / top : 0;
+      let level = score > 0 ? RANK_LEVELS.find((item) => ratio >= item.min).label : 'En bonus';
+      // « Indispensable » seulement si le besoin est vraiment marqué
+      if (level === 'Indispensable' && score < threshold) level = 'Très adapté';
+      return {
+        step,
+        rank: index + 1,
+        score,
+        fill: Math.max(RANK_MIN_FILL, Math.min(1, ratio)),
+        level,
+        inRitual: (result.steps || []).includes(step),
+      };
+    });
+  }
+
+  const logic = { STEPS, STEP_LABELS, parsePoints, stepKey, computeResult, buildSummary, computeRanking };
   root.AnaphysQuizLogic = logic;
   if (typeof module !== 'undefined' && module.exports) module.exports = logic;
 
@@ -478,6 +515,7 @@
       if (returningLabel) returningLabel.hidden = !returning;
 
       this.renderProducts(result);
+      this.renderRanking(result);
       this.resetAddButton();
 
       storage.set({
@@ -556,6 +594,148 @@
       if (empty) empty.hidden = cards.length > 0;
     }
 
+    renderRanking(result) {
+      const wrapper = this.querySelector('[data-quiz-ranking]');
+      const list = this.querySelector('[data-quiz-ranking-list]');
+      if (!wrapper || !list) return;
+      if (this.rankingObserver) this.rankingObserver.disconnect();
+      list.classList.remove('is-revealed');
+
+      const rows = computeRanking(result)
+        .map((entry) => ({ entry, product: this.productFor(entry.step) }))
+        .filter(({ product }) => product)
+        .map(({ entry, product }, index) => {
+          const item = element('li', 'anaphys-quiz__rank');
+          item.classList.toggle('is-top', index === 0);
+          item.classList.toggle('is-in-ritual', entry.inRitual);
+          item.style.setProperty('--rank-fill', entry.fill.toFixed(3));
+          item.style.setProperty('--rank-delay', `${index * 60}ms`);
+
+          item.append(element('span', 'anaphys-quiz__rank-number', String(index + 1)));
+          item.lastChild.setAttribute('aria-hidden', 'true');
+
+          const thumb = element('span', 'anaphys-quiz__rank-thumb');
+          if (product.image) {
+            const image = document.createElement('img');
+            image.src = product.image.replace(/([?&])width=\d+/, '$1width=160');
+            image.alt = '';
+            image.width = 80;
+            image.height = 80;
+            image.loading = 'lazy';
+            thumb.append(image);
+          }
+          item.append(thumb);
+
+          const main = element('div', 'anaphys-quiz__rank-main');
+          const name = element('p', 'anaphys-quiz__rank-name');
+          const link = element('a', 'anaphys-quiz__rank-title', product.title);
+          link.href = product.url;
+          name.append(link);
+          name.append(element('span', 'anaphys-quiz__rank-step', product.stepLabel || STEP_LABELS[entry.step]));
+          if (index === 0) name.append(element('span', 'anaphys-quiz__rank-pill', 'Ton n°1'));
+          main.append(name);
+
+          const meter = element('div', 'anaphys-quiz__rank-meter');
+          const track = element('span', 'anaphys-quiz__rank-track');
+          track.setAttribute('aria-hidden', 'true');
+          track.append(element('span', 'anaphys-quiz__rank-bar'));
+          const level = element('span', 'anaphys-quiz__rank-level');
+          level.append(element('span', 'visually-hidden', 'Compatibilité : '));
+          level.append(document.createTextNode(entry.level));
+          meter.append(track, level);
+          main.append(meter);
+          item.append(main);
+
+          const aside = element('div', 'anaphys-quiz__rank-aside');
+          if (entry.inRitual) {
+            aside.append(element('span', 'anaphys-quiz__rank-tag', 'Dans ton rituel'));
+          } else if (product.available && product.variant) {
+            const add = element('button', 'anaphys-quiz__rank-add', 'Ajouter');
+            add.type = 'button';
+            add.append(element('span', 'visually-hidden', ` ${product.title} au panier`));
+            add.addEventListener('click', () => this.addSingle(product, add));
+            aside.append(add);
+          }
+          item.append(aside);
+          return item;
+        });
+
+      list.replaceChildren(...rows);
+      wrapper.hidden = rows.length === 0;
+      if (rows.length === 0) return;
+
+      // Les jauges se remplissent quand le classement apparaît à l'écran
+      const reveal = () => requestAnimationFrame(() => requestAnimationFrame(() => list.classList.add('is-revealed')));
+      if (reducedMotion() || typeof IntersectionObserver === 'undefined') {
+        list.classList.add('is-revealed');
+        return;
+      }
+      this.rankingObserver = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          this.rankingObserver.disconnect();
+          reveal();
+        },
+        { threshold: 0.25 }
+      );
+      this.rankingObserver.observe(list);
+    }
+
+    async addSingle(product, button) {
+      if (button.disabled) return;
+      const label = button.firstChild;
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+      try {
+        const opened = await this.postToCart([{ id: product.variant, quantity: 1 }]);
+        if (!opened) return;
+        button.removeAttribute('aria-busy');
+        button.classList.add('is-added');
+        label.textContent = 'Ajouté';
+        if (this.status) this.status.textContent = `${product.title} est dans ton panier.`;
+      } catch (error) {
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+        if (this.status) this.status.textContent = this.errorMessage(error);
+      }
+    }
+
+    // Ajout au panier en un appel ; ouvre le tiroir s'il existe, sinon va au panier.
+    // Retourne true si le tiroir a été ouvert (on reste sur la page).
+    async postToCart(items) {
+      const routes = window.routes || {};
+      const response = await fetch(`${routes.cart_add_url || '/cart/add'}.js`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          items,
+          sections: ['cart-drawer', 'cart-icon-bubble'],
+          sections_url: window.location.pathname,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.status) throw new Error(data.description || data.message || 'cart');
+
+      if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+        publish(PUB_SUB_EVENTS.cartUpdate, { source: 'anaphys-quiz', cartData: data });
+      }
+
+      const drawer = document.querySelector('cart-drawer');
+      if (drawer && typeof drawer.renderContents === 'function' && data.sections) {
+        drawer.classList.remove('is-empty');
+        drawer.renderContents(data);
+        return true;
+      }
+      window.location.href = routes.cart_url || '/cart';
+      return false;
+    }
+
+    errorMessage(error) {
+      return error && error.message && error.message !== 'cart'
+        ? error.message
+        : 'Oups, l’ajout n’a pas fonctionné. Tu peux réessayer.';
+    }
+
     resetAddButton() {
       if (!this.addButton) return;
       const addable = this.recommended.filter((product) => product.available && product.variant);
@@ -583,46 +763,19 @@
       this.addButton.setAttribute('aria-busy', 'true');
       if (this.status) this.status.textContent = 'Ajout de ton rituel en cours…';
 
-      const routes = window.routes || {};
-      const drawer = document.querySelector('cart-drawer');
       try {
-        const response = await fetch(`${routes.cart_add_url || '/cart/add'}.js`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            items,
-            sections: ['cart-drawer', 'cart-icon-bubble'],
-            sections_url: window.location.pathname,
-          }),
-        });
-        const data = await response.json();
-        if (!response.ok || data.status) throw new Error(data.description || data.message || 'cart');
-
-        if (typeof publish === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-          publish(PUB_SUB_EVENTS.cartUpdate, { source: 'anaphys-quiz', cartData: data });
-        }
-
-        if (drawer && typeof drawer.renderContents === 'function' && data.sections) {
-          drawer.classList.remove('is-empty');
-          drawer.renderContents(data);
-          this.addButton.removeAttribute('aria-busy');
-          this.addButton.classList.add('is-added');
-          const label = this.addButton.querySelector('[data-quiz-add-label]');
-          if (label) label.textContent = 'Rituel ajouté';
-          if (this.status) this.status.textContent = 'Ton rituel est dans ton panier.';
-          this.addButton.disabled = false;
-        } else {
-          window.location.href = routes.cart_url || '/cart';
-        }
+        const opened = await this.postToCart(items);
+        if (!opened) return;
+        this.addButton.removeAttribute('aria-busy');
+        this.addButton.classList.add('is-added');
+        const label = this.addButton.querySelector('[data-quiz-add-label]');
+        if (label) label.textContent = 'Rituel ajouté';
+        if (this.status) this.status.textContent = 'Ton rituel est dans ton panier.';
+        this.addButton.disabled = false;
       } catch (error) {
         this.addButton.disabled = false;
         this.addButton.removeAttribute('aria-busy');
-        if (this.status) {
-          this.status.textContent =
-            error && error.message && error.message !== 'cart'
-              ? error.message
-              : 'Oups, l’ajout n’a pas fonctionné. Tu peux réessayer.';
-        }
+        if (this.status) this.status.textContent = this.errorMessage(error);
       }
     }
 

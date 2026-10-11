@@ -1,7 +1,9 @@
 {%- comment -%}
   Bloc « Personnalise ton soin » de la fiche produit.
+  On ne propose pas de design tout fait : le client nous donne ses infos
+  (prénom, références, couleurs, image) et l'équipe crée un design sur mesure.
   Activé, il ajoute au panier :
-  - sur le soin : les propriétés Prénom, Couleur de l'étiquette, Référence ;
+  - sur le soin : les propriétés Prénom, Références, Couleurs, Image ;
   - le produit « option » choisi dans le bloc (le supplément), une fois par soin ajouté.
   L'envoi groupé est fait par assets/anaphys-product-extras.js.
   Accepts:
@@ -12,7 +14,6 @@
 {%- liquid
   assign option_product = block.settings.option_product
   assign option_variant = option_product.selected_or_first_available_variant
-  assign colors = block.settings.colors | newline_to_br | split: '<br />'
 -%}
 
 {%- if option_variant and option_variant.available -%}
@@ -20,6 +21,7 @@
     class="anaphys-perso"
     data-form-id="{{ product_form_id }}"
     data-product-title="{{ product.title | escape }}"
+    data-max-size="{{ block.settings.image_max_mb }}"
     {{ block.shopify_attributes }}
   >
     <label class="anaphys-perso__toggle">
@@ -35,21 +37,12 @@
     </label>
 
     <div class="anaphys-perso__panel" data-perso-panel hidden>
-      <div class="anaphys-perso__preview" aria-hidden="true" data-perso-preview>
-        <div class="anaphys-perso__label" data-perso-label>
-          <span class="anaphys-perso__label-brand">ANAPHYS</span>
-          <span class="anaphys-perso__label-for">{{ block.settings.preview_prefix | escape }}</span>
-          <span class="anaphys-perso__label-name" data-perso-preview-name>{{ block.settings.name_placeholder | escape }}</span>
-          <span class="anaphys-perso__label-ref" data-perso-preview-ref></span>
-          {%- assign step = product.metafields.custom.etape_rituel.value -%}
-          {%- if step != blank -%}
-            <span class="anaphys-perso__label-step">{{ step | escape }}</span>
-          {%- endif -%}
-        </div>
-        <p class="anaphys-perso__preview-caption">{{ block.settings.preview_caption | escape }}</p>
-      </div>
+      {%- if block.settings.intro != blank -%}
+        <p class="anaphys-perso__intro">{{ block.settings.intro | escape }}</p>
+      {%- endif -%}
 
       <div class="anaphys-perso__fields">
+        {%- comment -%} Prénom (obligatoire) {%- endcomment -%}
         <div class="field">
           <input
             class="field__input"
@@ -69,57 +62,93 @@
           {{ block.settings.name_error | escape }}
         </p>
 
-        {%- if colors.size > 0 and block.settings.colors != blank -%}
-          <fieldset class="anaphys-perso__colors">
-            <legend class="anaphys-perso__legend">{{ block.settings.color_label | escape }}</legend>
-            <div class="anaphys-perso__swatches">
-              {%- for line in colors -%}
-                {%- liquid
-                  assign parts = line | strip | split: ':'
-                  assign color_name = parts | first | strip
-                  assign color_value = parts | last | strip
-                -%}
-                {%- if color_name != blank -%}
-                  <label class="anaphys-perso__swatch" style="--swatch: {{ color_value }};">
-                    <input
-                      type="radio"
-                      class="visually-hidden"
-                      name="properties[Couleur de l'étiquette]"
-                      value="{{ color_name | escape }}"
-                      form="{{ product_form_id }}"
-                      data-color="{{ color_value }}"
-                      data-perso-color
-                      disabled
-                      {% if forloop.first %}
-                        checked
-                      {% endif %}
-                    >
-                    <span class="anaphys-perso__swatch-dot" aria-hidden="true"></span>
-                    <span class="anaphys-perso__swatch-name">{{ color_name | escape }}</span>
-                  </label>
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-          </fieldset>
-        {%- endif -%}
-
-        <div class="field">
-          <input
-            class="field__input"
-            type="text"
-            id="Perso-Ref-{{ block.id }}"
-            name="properties[Référence]"
+        {%- comment -%} Références culturelles ou personnelles {%- endcomment -%}
+        <div class="anaphys-perso__group">
+          <label class="anaphys-perso__label" for="Perso-Refs-{{ block.id }}">{{ block.settings.refs_label | escape }}</label>
+          {%- if block.settings.refs_help != blank -%}
+            <p class="anaphys-perso__help" id="Perso-Refs-Help-{{ block.id }}">{{ block.settings.refs_help | escape }}</p>
+          {%- endif -%}
+          <textarea
+            class="anaphys-perso__textarea"
+            id="Perso-Refs-{{ block.id }}"
+            name="properties[Références]"
             form="{{ product_form_id }}"
-            maxlength="{{ block.settings.ref_max }}"
-            placeholder="{{ block.settings.ref_label | escape }}"
-            data-perso-ref
+            rows="3"
+            maxlength="400"
+            placeholder="{{ block.settings.refs_placeholder | escape }}"
+            aria-describedby="Perso-Refs-Help-{{ block.id }}"
+            data-perso-field
+            disabled
+          ></textarea>
+        </div>
+
+        {%- comment -%} Couleurs : en mots, et jusqu'à trois teintes choisies au nuancier {%- endcomment -%}
+        <div class="anaphys-perso__group">
+          <label class="anaphys-perso__label" for="Perso-Colors-{{ block.id }}">{{ block.settings.colors_label | escape }}</label>
+          {%- if block.settings.colors_help != blank -%}
+            <p class="anaphys-perso__help">{{ block.settings.colors_help | escape }}</p>
+          {%- endif -%}
+          <input
+            class="anaphys-perso__input"
+            type="text"
+            id="Perso-Colors-{{ block.id }}"
+            name="properties[Couleurs]"
+            form="{{ product_form_id }}"
+            maxlength="200"
+            placeholder="{{ block.settings.colors_placeholder | escape }}"
+            data-perso-field
             disabled
           >
-          <label class="field__label" for="Perso-Ref-{{ block.id }}">{{ block.settings.ref_label | escape }}</label>
+          <div class="anaphys-perso__picks" data-perso-picks>
+            {%- for i in (1..3) -%}
+              <label class="anaphys-perso__pick" hidden data-perso-pick>
+                <input
+                  type="color"
+                  value="#acbfa4"
+                  name="properties[Teinte {{ i }}]"
+                  form="{{ product_form_id }}"
+                  aria-label="Teinte {{ i }}"
+                  data-perso-color
+                  disabled
+                >
+                <button type="button" class="anaphys-perso__pick-remove" data-perso-pick-remove aria-label="Retirer la teinte {{ i }}">
+                  {%- render 'anaphys-icon', icon: 'close' -%}
+                </button>
+              </label>
+            {%- endfor -%}
+            <button type="button" class="anaphys-perso__add-color" data-perso-add-color>
+              + Choisir une teinte
+            </button>
+          </div>
         </div>
-        {%- if block.settings.ref_help != blank -%}
-          <p class="anaphys-perso__help">{{ block.settings.ref_help | escape }}</p>
+
+        {%- comment -%} Image d'inspiration (facultative) {%- endcomment -%}
+        {%- if block.settings.show_image -%}
+          <div class="anaphys-perso__group">
+            <span class="anaphys-perso__label" id="Perso-Image-Label-{{ block.id }}">{{ block.settings.image_label | escape }}</span>
+            {%- if block.settings.image_help != blank -%}
+              <p class="anaphys-perso__help">{{ block.settings.image_help | escape }}</p>
+            {%- endif -%}
+            <label class="anaphys-perso__file" for="Perso-Image-{{ block.id }}">
+              <input
+                type="file"
+                id="Perso-Image-{{ block.id }}"
+                class="anaphys-perso__file-input"
+                name="properties[Image]"
+                form="{{ product_form_id }}"
+                accept="image/jpeg,image/png,image/webp,image/heic"
+                aria-labelledby="Perso-Image-Label-{{ block.id }}"
+                data-perso-file
+                disabled
+              >
+              {%- render 'anaphys-icon', icon: 'add_photo_alternate', class: 'anaphys-perso__file-icon' -%}
+              <span data-perso-file-name>Ajouter une image</span>
+            </label>
+            <button type="button" class="anaphys-perso__file-remove" data-perso-file-remove hidden>Retirer l'image</button>
+            <p class="anaphys-perso__error" data-perso-file-error hidden></p>
+          </div>
         {%- endif -%}
+
         {%- if block.settings.note != blank -%}
           <p class="anaphys-perso__note">{{ block.settings.note | escape }}</p>
         {%- endif -%}

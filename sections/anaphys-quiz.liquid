@@ -204,6 +204,24 @@
         <p class="anaphys-quiz__summary" data-quiz-summary></p>
       </div>
 
+      {%- if section.settings.show_ranking -%}
+        <div class="anaphys-quiz__ranking" data-quiz-ranking>
+          {%- if section.settings.ranking_heading != blank -%}
+            <h3 class="anaphys-quiz__ranking-title" id="QuizRanking-{{ section.id }}">
+              {{- section.settings.ranking_heading | escape -}}
+            </h3>
+          {%- endif -%}
+          <ol
+            class="anaphys-quiz__ranking-list list-unstyled"
+            role="list"
+            {% if section.settings.ranking_heading != blank %}
+              aria-labelledby="QuizRanking-{{ section.id }}"
+            {% endif %}
+            data-quiz-ranking-list
+          ></ol>
+        </div>
+      {%- endif -%}
+
       <ol class="anaphys-quiz__products list-unstyled" role="list" data-quiz-products></ol>
       <p class="anaphys-quiz__empty" data-quiz-empty hidden>
         Les soins du rituel ne sont pas disponibles pour le moment. Reviens très vite.
@@ -398,6 +416,19 @@
       "id": "restart_label",
       "label": "Lien pour recommencer",
       "default": "Recommencer le diagnostic"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ranking",
+      "label": "Afficher le classement des soins",
+      "info": "Les 5 soins du rituel, classés selon les réponses, avec une jauge de compatibilité.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ranking_heading",
+      "label": "Titre du classement",
+      "default": "Ton classement"
     },
     {
       "type": "range",

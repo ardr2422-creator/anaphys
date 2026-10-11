@@ -49,8 +49,16 @@ if (!window.anaphysExtrasReady) {
       add('items[0][quantity]', quantity);
       for (const [name, value] of data.entries()) {
         const match = name.match(/^properties\[(.+)\]$/);
-        if (match && value !== '') add(`items[0][properties][${match[1]}]`, value);
+        // Les fichiers ne se recopient pas dans un champ caché : on renomme le champ fichier plus bas
+        if (match && typeof value === 'string' && value !== '') add(`items[0][properties][${match[1]}]`, value);
       }
+      const files = [...document.querySelectorAll(`input[type="file"][form="${formId(form)}"][name^="properties["]`)].filter(
+        (input) => !input.disabled && input.files.length > 0
+      );
+      files.forEach((input) => {
+        input.dataset.originalName = input.name;
+        input.name = input.name.replace(/^properties\[/, 'items[0][properties][');
+      });
       extras.forEach((extra, index) => {
         const n = index + 1;
         add(`items[${n}][id]`, extra.dataset.variant);
@@ -71,11 +79,12 @@ if (!window.anaphysExtrasReady) {
         ...form.querySelectorAll('[name="id"], [name="quantity"]'),
         ...document.querySelectorAll(`[form="${formId(form)}"][name="quantity"], [form="${formId(form)}"][name^="properties["]`),
         ...extras,
-      ].filter((input) => !input.disabled);
+      ].filter((input) => !input.disabled && !files.includes(input));
       originals.forEach((input) => (input.disabled = true));
       setTimeout(() => {
         added.forEach((input) => input.remove());
         originals.forEach((input) => (input.disabled = false));
+        files.forEach((input) => (input.name = input.dataset.originalName));
       });
     },
     true
@@ -90,24 +99,53 @@ if (!customElements.get('anaphys-personalize')) {
         this.toggle = this.querySelector('[data-perso-toggle]');
         this.panel = this.querySelector('[data-perso-panel]');
         this.name = this.querySelector('[data-perso-name]');
-        this.ref = this.querySelector('[data-perso-ref]');
-        this.colors = [...this.querySelectorAll('[data-perso-color]')];
-        this.extra = this.querySelector('[data-extra-item]');
         this.error = this.querySelector('[data-perso-error]');
-        this.label = this.querySelector('[data-perso-label]');
-        this.previewName = this.querySelector('[data-perso-preview-name]');
-        this.previewRef = this.querySelector('[data-perso-preview-ref]');
-        this.placeholderName = this.previewName.textContent;
+        this.fields = [...this.querySelectorAll('[data-perso-field]')];
+        this.picks = [...this.querySelectorAll('[data-perso-pick]')];
+        this.addColor = this.querySelector('[data-perso-add-color]');
+        this.file = this.querySelector('[data-perso-file]');
+        this.fileName = this.querySelector('[data-perso-file-name]');
+        this.fileRemove = this.querySelector('[data-perso-file-remove]');
+        this.fileError = this.querySelector('[data-perso-file-error]');
+        this.extra = this.querySelector('[data-extra-item]');
+        this.maxBytes = (Number(this.dataset.maxSize) || 10) * 1024 * 1024;
 
         this.toggle.addEventListener('change', () => this.setActive(this.toggle.checked));
         this.name.addEventListener('input', () => {
           this.error.hidden = true;
           this.name.removeAttribute('aria-invalid');
-          this.render();
+          this.updateExtra();
         });
-        this.ref.addEventListener('input', () => this.render());
-        this.colors.forEach((radio) => radio.addEventListener('change', () => this.render()));
-        this.render();
+
+        // Teintes : jusqu'à trois, ajoutées à la demande
+        this.addColor?.addEventListener('click', () => {
+          const next = this.picks.find((pick) => pick.hidden);
+          if (!next) return;
+          next.hidden = false;
+          const input = next.querySelector('[data-perso-color]');
+          input.disabled = false;
+          input.focus();
+          this.updateAddColor();
+        });
+        this.picks.forEach((pick) =>
+          pick.querySelector('[data-perso-pick-remove]').addEventListener('click', (event) => {
+            event.preventDefault();
+            pick.hidden = true;
+            pick.querySelector('[data-perso-color]').disabled = true;
+            this.updateAddColor();
+            this.addColor?.focus();
+          })
+        );
+
+        // Image d'inspiration
+        this.file?.addEventListener('change', () => this.onFile());
+        this.fileRemove?.addEventListener('click', () => {
+          this.file.value = '';
+          this.onFile();
+          this.file.focus();
+        });
+
+        this.updateExtra();
       }
 
       get section() {
@@ -116,12 +154,30 @@ if (!customElements.get('anaphys-personalize')) {
 
       setActive(active) {
         this.panel.hidden = !active;
-        [this.name, this.ref, this.extra, ...this.colors].forEach((input) => (input.disabled = !active));
+        [this.name, this.extra, this.file, ...this.fields].filter(Boolean).forEach((input) => (input.disabled = !active));
+        this.picks.forEach((pick) => (pick.querySelector('[data-perso-color]').disabled = !active || pick.hidden));
         this.classList.toggle('is-active', active);
         // Le paiement express ne sait pas ajouter le supplément : on le cache pendant la personnalisation
         this.section.querySelectorAll('.shopify-payment-button').forEach((button) => (button.hidden = active));
         if (active) this.name.focus({ preventScroll: true });
-        this.render();
+      }
+
+      updateAddColor() {
+        if (this.addColor) this.addColor.hidden = this.picks.every((pick) => !pick.hidden);
+      }
+
+      onFile() {
+        const file = this.file.files[0];
+        this.fileError.hidden = true;
+        if (file && file.size > this.maxBytes) {
+          this.file.value = '';
+          this.fileError.textContent = `Cette image est trop lourde (${this.dataset.maxSize || 10} Mo maximum).`;
+          this.fileError.hidden = false;
+        }
+        const current = this.file.files[0];
+        this.fileName.textContent = current ? current.name : 'Ajouter une image';
+        this.fileRemove.hidden = !current;
+        this.classList.toggle('has-file', Boolean(current));
       }
 
       validate() {
@@ -134,32 +190,13 @@ if (!customElements.get('anaphys-personalize')) {
         return false;
       }
 
-      render() {
-        const name = this.name.value.trim();
-        const ref = this.ref.value.trim();
-        const color = this.colors.find((radio) => radio.checked);
-        this.previewName.textContent = name || this.placeholderName;
-        this.previewName.classList.toggle('is-placeholder', !name);
-        this.previewRef.textContent = ref;
-        this.previewRef.hidden = !ref;
-        if (color) {
-          const value = color.dataset.color;
-          this.label.style.setProperty('--label-bg', value);
-          this.label.classList.toggle('is-dark', this.isDark(value));
-        }
+      updateExtra() {
         // Le supplément garde la trace du soin et du prénom (visible dans la commande)
+        const name = this.name.value.trim();
         this.extra.dataset.properties = JSON.stringify({
           Soin: this.dataset.productTitle,
           ...(name ? { Prénom: name } : {}),
         });
-      }
-
-      isDark(hex) {
-        const match = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
-        if (!match) return false;
-        const n = parseInt(match[1], 16);
-        const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-        return 0.299 * r + 0.587 * g + 0.114 * b < 140;
       }
     }
   );
