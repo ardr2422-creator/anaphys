@@ -1,0 +1,267 @@
+{%- comment -%}
+  Ingrédients ANAPHYS : une grande image arrondie et une frise verticale des actifs.
+  Chaque point peut renvoyer vers un produit. Les points apparaissent un à un au défilement.
+{%- endcomment -%}
+{{ 'anaphys-home-b.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div
+    id="AnaphysIngredients-{{ section.id }}"
+    class="anaphys-hb anaphys-ingr page-width section-{{ section.id }}-padding{% if has_image %} anaphys-ingr--image anaphys-ingr--image-{{ section.settings.image_position }}{% else %} anaphys-ingr--no-image{% endif %}"
+  >
+    {%- if has_image -%}
+      <figure class="anaphys-ingr__media">
+        {{
+          section.settings.image
+          | image_url: width: 1400
+          | image_tag:
+            loading: 'lazy',
+            widths: '400, 600, 800, 1000, 1400',
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            alt: section.settings.image.alt
+        }}
+      </figure>
+    {%- endif -%}
+
+    <div class="anaphys-ingr__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="anaphys-hb__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="anaphys-hb__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+          {{- section.settings.heading -}}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="anaphys-hb__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ol class="anaphys-ingr__timeline" role="list">
+          {%- for block in section.blocks -%}
+            {%- assign point_product = block.settings.product -%}
+            <li class="anaphys-ingr__point" data-hb-reveal {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="anaphys-ingr__name">
+                  {%- if point_product != blank -%}
+                    <a href="{{ point_product.url }}">{{ block.settings.title | escape }}</a>
+                  {%- else -%}
+                    {{ block.settings.title | escape }}
+                  {%- endif -%}
+                </h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="anaphys-ingr__desc">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <div class="anaphys-hb__actions">
+          <a class="button anaphys-hb-btn anaphys-hb-btn--primary" href="{{ section.settings.button_link }}">
+            {{- section.settings.button_label | escape -}}
+            {%- render 'anaphys-icon', icon: 'arrow_forward', class: 'anaphys-hb-btn__arrow' -%}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('AnaphysIngredients-{{ section.id }}');
+    if (!root || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var items = root.querySelectorAll('[data-hb-reveal]');
+    if (!items.length) return;
+    root.classList.add('is-armed');
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var n = 0;
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.style.transitionDelay = n * 60 + 'ms';
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+          n++;
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.15 }
+    );
+    items.forEach(function (item) {
+      observer.observe(item);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Ingrédients ANAPHYS",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Connaissance"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Ce que la nature apporte à tes <strong>cheveux</strong>"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Introduction",
+      "default": "Des actifs choisis pour ce qu'ils font de mieux. Rien de plus, rien de moins."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Sans image, la frise prend toute la largeur."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Position de l'image",
+      "options": [
+        { "value": "left", "label": "À gauche" },
+        { "value": "right", "label": "À droite" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Ingrédient",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Nom",
+          "default": "Romarin"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Phrase courte",
+          "default": "Une plante tonique, au cœur de notre huile et de notre exfoliant."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit (facultatif)",
+          "info": "Si un produit est choisi, le nom renvoie vers sa fiche."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingrédients ANAPHYS",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "title": "Romarin",
+            "text": "Une plante tonique, au cœur de notre huile et de notre exfoliant."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Menthe poivrée",
+            "text": "Pour une vraie sensation de fraîcheur sur le cuir chevelu."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Aloe vera",
+            "text": "Il aide à préserver l'hydratation de tes cheveux."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Kératine",
+            "text": "Elle aide à renforcer la fibre des longueurs abîmées."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Huiles végétales",
+            "text": "Pour nourrir les longueurs et adoucir les pointes."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

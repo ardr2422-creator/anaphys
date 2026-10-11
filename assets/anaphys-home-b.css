@@ -1,0 +1,544 @@
+/* ANAPHYS : sections d'accueil (ingrédients, produit à la une, personnalisation) */
+
+.anaphys-hb {
+  --hb-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --hb-radius: 1.6rem;
+  --hb-radius-sm: 1.2rem;
+  --hb-accent: var(--color-accent-anaphys);
+}
+
+/* Apparition au défilement : le contenu reste visible sans JavaScript.
+   Le script n'ajoute .is-armed que si IntersectionObserver existe et que le mouvement est autorisé. */
+.anaphys-hb.is-armed [data-hb-reveal] {
+  opacity: 0;
+  transform: translateY(1.2rem);
+  transition: opacity 600ms var(--hb-ease), transform 600ms var(--hb-ease);
+}
+.anaphys-hb.is-armed [data-hb-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Éléments communs */
+.anaphys-hb__eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--font-body-family);
+  font-size: 1.25rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.75);
+}
+.anaphys-hb__heading {
+  margin: 0;
+}
+.anaphys-hb__text {
+  margin: 1.2rem 0 0;
+  font-size: 1.6rem;
+  line-height: 1.55;
+  color: rgba(var(--color-foreground), 0.8);
+}
+.anaphys-hb__text p {
+  margin: 0;
+}
+.anaphys-hb__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2.8rem;
+}
+.anaphys-hb__actions > * {
+  margin: 0;
+}
+
+/* Boutons : principal vert / texte blanc, secondaire blanc / texte foncé */
+.button.anaphys-hb-btn {
+  gap: 0.8rem;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.04rem;
+}
+.button.anaphys-hb-btn--primary {
+  --color-button: var(--color-accent-anaphys);
+  --color-button-text: 255, 255, 255;
+  background-color: rgb(var(--color-accent-anaphys));
+  color: #fff;
+}
+.button.anaphys-hb-btn--primary::after {
+  box-shadow: none;
+}
+.button.anaphys-hb-btn--light {
+  --color-button: 255, 255, 255;
+  --color-button-text: var(--color-foreground);
+  background-color: #fff;
+  color: rgb(var(--color-foreground));
+}
+.button.anaphys-hb-btn--light::after {
+  box-shadow: 0 0 0 1px rgba(var(--color-foreground), 0.12);
+}
+.button.anaphys-hb-btn:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 3px;
+}
+.anaphys-hb-btn__arrow {
+  width: 2rem;
+  height: 2rem;
+  transition: transform 200ms var(--hb-ease);
+}
+@media (hover: hover) {
+  .button.anaphys-hb-btn:hover .anaphys-hb-btn__arrow {
+    transform: translateX(0.3rem);
+  }
+}
+.button.anaphys-hb-btn:active {
+  transform: scale(0.98);
+  transition: transform 120ms var(--hb-ease);
+}
+
+/* =========================================================
+   1. Ingrédients : « Ce que la nature apporte à tes cheveux »
+   ========================================================= */
+.anaphys-ingr {
+  display: grid;
+  gap: 3.2rem;
+}
+.anaphys-ingr__media {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--hb-radius);
+  overflow: hidden;
+  background: rgba(var(--hb-accent), 0.12);
+}
+.anaphys-ingr__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anaphys-ingr__content {
+  min-width: 0;
+}
+.anaphys-ingr--no-image .anaphys-ingr__content {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.anaphys-ingr__timeline {
+  position: relative;
+  display: grid;
+  gap: 2.4rem;
+  margin: 3.2rem 0 0;
+  padding: 0 0 0 2.8rem;
+  list-style: none;
+}
+/* Ligne fine : du centre du premier point au centre du dernier */
+.anaphys-ingr__timeline::before {
+  content: '';
+  position: absolute;
+  top: 0.9rem;
+  bottom: 0.9rem;
+  left: 0.45rem;
+  width: 1px;
+  background: rgba(var(--hb-accent), 0.6);
+}
+.anaphys-ingr__point {
+  position: relative;
+}
+.anaphys-ingr__point::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: -2.8rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(var(--hb-accent));
+  box-shadow: 0 0 0 4px rgb(var(--color-background));
+}
+.anaphys-ingr__name {
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-size: 1.7rem;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1.3;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-ingr__name a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--hb-accent), 0.8);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3rem;
+  border-radius: 0.2rem;
+}
+@media (hover: hover) {
+  .anaphys-ingr__name a:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+.anaphys-ingr__name a:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 3px;
+}
+.anaphys-ingr__desc {
+  margin: 0.4rem 0 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-ingr--image {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 6.4rem;
+  }
+  .anaphys-ingr--image-right .anaphys-ingr__media {
+    order: 2;
+  }
+  .anaphys-ingr__media {
+    aspect-ratio: 3 / 4;
+  }
+  .anaphys-ingr__timeline {
+    gap: 2.8rem;
+    margin-top: 4rem;
+  }
+}
+
+/* =========================================================
+   2. Produit à la une
+   ========================================================= */
+.anaphys-spot {
+  display: grid;
+  max-width: 110rem;
+  margin-inline: auto;
+  border-radius: var(--hb-radius);
+  background: rgba(var(--hb-accent), 0.12);
+  overflow: hidden;
+}
+.anaphys-spot__media {
+  display: block;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  background: rgba(var(--hb-accent), 0.18);
+}
+.anaphys-spot__media img,
+.anaphys-spot__media svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anaphys-spot__content {
+  min-width: 0;
+  padding: 2.8rem 2rem 3.2rem;
+}
+.anaphys-spot__facts {
+  display: grid;
+  margin: 2.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.anaphys-spot__fact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid rgba(var(--color-foreground), 0.12);
+}
+.anaphys-spot__fact:last-child {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.12);
+}
+.anaphys-spot__big {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: clamp(2.8rem, 2.2rem + 0.8vw, 3.2rem);
+  line-height: 1.1;
+  color: rgb(var(--color-foreground));
+}
+.anaphys-spot__caption {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.7);
+}
+.anaphys-spot__buy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  margin-top: 2.4rem;
+}
+.anaphys-spot__price {
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-size: 2rem;
+  font-weight: var(--font-body-weight-bold);
+  color: rgb(var(--color-foreground));
+}
+.anaphys-spot__price s {
+  margin-left: 0.6rem;
+  font-size: 1.5rem;
+  font-weight: var(--font-body-weight);
+  color: rgba(var(--color-foreground), 0.6);
+}
+.anaphys-spot .anaphys-hb__actions {
+  margin-top: 2rem;
+}
+.anaphys-spot__form {
+  display: contents;
+}
+.anaphys-spot__add-form {
+  margin: 0;
+}
+.anaphys-spot__add .loading__spinner {
+  position: absolute;
+}
+.anaphys-spot__add.loading > span {
+  opacity: 0;
+}
+.anaphys-spot__hint {
+  margin: 2rem 0 0;
+  padding: 1.2rem 1.6rem;
+  border: 1px dashed rgba(var(--color-foreground), 0.3);
+  border-radius: var(--hb-radius-sm);
+  font-size: 1.4rem;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+@media screen and (max-width: 749px) {
+  .anaphys-spot .anaphys-hb__actions > .button,
+  .anaphys-spot__add-form {
+    flex: 1 1 100%;
+  }
+  .anaphys-spot__add-form .button {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 750px) {
+  .anaphys-spot {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .anaphys-spot--image-right .anaphys-spot__media {
+    order: 2;
+  }
+  .anaphys-spot__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+  .anaphys-spot__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5.6rem 5.6rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  .anaphys-spot__content {
+    padding: 6.4rem 7.2rem;
+  }
+}
+
+/* =========================================================
+   3. Personnalisation de l'étiquette
+   ========================================================= */
+.anaphys-promo {
+  display: grid;
+  gap: 3.2rem;
+  padding: 2.4rem 2rem 3.2rem;
+  border-radius: var(--hb-radius);
+  background: rgba(var(--hb-accent), 0.12);
+}
+.anaphys-promo__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  min-width: 0;
+}
+
+/* Étiquette : reprend l'aspect de .anaphys-perso__label (fiche produit) */
+.anaphys-promo__label {
+  --label-bg: #acbfa4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: min(100%, 40rem);
+  aspect-ratio: 1.6;
+  padding: 2rem;
+  border-radius: 1.4rem;
+  background: var(--label-bg);
+  color: #121212;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1.2rem 3.2rem rgba(0, 0, 0, 0.1);
+  transition: background-color 200ms var(--hb-ease), color 200ms var(--hb-ease);
+}
+.anaphys-promo__label.is-dark {
+  color: #fff;
+}
+.anaphys-promo__label-brand {
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.3em;
+  opacity: 0.8;
+}
+.anaphys-promo__label-for {
+  margin-top: 0.8rem;
+  font-size: 1.4rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+.anaphys-promo__label-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-heading-family);
+  font-size: clamp(2.6rem, 2rem + 2vw, 3.6rem);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.anaphys-promo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.anaphys-promo__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 4.4rem;
+  padding: 0.6rem 1.4rem 0.6rem 0.6rem;
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  border-radius: 10rem;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body-family);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 160ms ease, transform 160ms var(--hb-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.anaphys-promo__chip-dot {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+.anaphys-promo__chip[aria-pressed='true'] {
+  border-color: rgb(var(--color-foreground));
+  box-shadow: inset 0 0 0 1px rgb(var(--color-foreground));
+  font-weight: var(--font-body-weight-bold);
+}
+.anaphys-promo__chip:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 3px;
+}
+.anaphys-promo__chip:active {
+  transform: scale(0.96);
+}
+@media (hover: hover) {
+  .anaphys-promo__chip:hover {
+    border-color: rgba(var(--color-foreground), 0.45);
+  }
+}
+
+.anaphys-promo__content {
+  min-width: 0;
+}
+.anaphys-promo__steps {
+  display: grid;
+  gap: 2rem;
+  margin: 2.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.anaphys-promo__step {
+  display: grid;
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: start;
+}
+.anaphys-promo__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: rgb(var(--hb-accent));
+  color: #fff;
+  font-family: var(--font-body-family);
+  font-size: 1.5rem;
+  font-weight: var(--font-body-weight-bold);
+}
+.anaphys-promo__step-title {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-body-family);
+  font-size: 1.7rem;
+  font-weight: var(--font-body-weight-bold);
+  line-height: 1.3;
+}
+.anaphys-promo__step-text {
+  margin: 0.3rem 0 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.75);
+}
+.anaphys-promo__note {
+  margin: 1.2rem 0 0;
+  font-size: 1.3rem;
+  color: rgba(var(--color-foreground), 0.65);
+}
+
+@media screen and (min-width: 750px) {
+  .anaphys-promo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 5.6rem;
+    padding: 5.6rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  .anaphys-promo {
+    gap: 8rem;
+    padding: 7.2rem;
+  }
+}
+
+/* Mouvement réduit : pas de déplacement, contenu visible */
+@media (prefers-reduced-motion: reduce) {
+  .anaphys-hb.is-armed [data-hb-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .anaphys-hb-btn__arrow,
+  .button.anaphys-hb-btn:active,
+  .anaphys-promo__label,
+  .anaphys-promo__chip {
+    transition: none;
+  }
+  .button.anaphys-hb-btn:active,
+  .anaphys-promo__chip:active {
+    transform: none;
+  }
+  @media (hover: hover) {
+    .button.anaphys-hb-btn:hover .anaphys-hb-btn__arrow {
+      transform: none;
+    }
+  }
+}

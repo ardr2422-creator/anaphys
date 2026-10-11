@@ -1,0 +1,333 @@
+{%- comment -%}
+  Mise en avant de l'étiquette personnalisée sur l'accueil.
+  Aperçu d'étiquette (même rendu que le bloc « Personnalise ton soin » de la fiche produit),
+  pastilles de couleur cliquables, trois étapes et un bouton.
+  Couleurs : une par ligne, au format « Nom:#hex ».
+{%- endcomment -%}
+{{ 'anaphys-home-b.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign color_lines = section.settings.colors | newline_to_br | split: '<br />'
+  assign first_color = ''
+  for line in color_lines
+    assign parts = line | strip | split: ':'
+    assign c_name = parts | first | strip
+    assign c_value = parts | last | strip
+    if c_name != blank and c_value contains '#'
+      assign first_color = c_value
+      break
+    endif
+  endfor
+  assign label_dark = false
+  if first_color != blank
+    assign first_brightness = first_color | color_brightness
+    if first_brightness < 128
+      assign label_dark = true
+    endif
+  endif
+-%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div id="AnaphysPersoPromo-{{ section.id }}" class="anaphys-hb anaphys-promo">
+      <div class="anaphys-promo__preview">
+        <div
+          class="anaphys-promo__label{% if label_dark %} is-dark{% endif %}"
+          {% if first_color != blank %}
+            style="--label-bg: {{ first_color | escape }};"
+          {% endif %}
+          data-promo-label
+        >
+          <span class="anaphys-promo__label-brand">ANAPHYS</span>
+          {%- if section.settings.preview_prefix != blank -%}
+            <span class="anaphys-promo__label-for">{{ section.settings.preview_prefix | escape }}</span>
+          {%- endif -%}
+          <span class="anaphys-promo__label-name">{{ section.settings.preview_name | escape }}</span>
+        </div>
+
+        {%- if first_color != blank -%}
+          <ul class="anaphys-promo__chips" role="list" aria-label="Couleur de l'étiquette">
+            {%- assign chip_index = 0 -%}
+            {%- for line in color_lines -%}
+              {%- liquid
+                assign parts = line | strip | split: ':'
+                assign c_name = parts | first | strip
+                assign c_value = parts | last | strip
+              -%}
+              {%- if c_name != blank and c_value contains '#' -%}
+                <li>
+                  <button
+                    type="button"
+                    class="anaphys-promo__chip"
+                    style="--swatch: {{ c_value | escape }};"
+                    data-color="{{ c_value | escape }}"
+                    aria-pressed="{% if chip_index == 0 %}true{% else %}false{% endif %}"
+                  >
+                    <span class="anaphys-promo__chip-dot" aria-hidden="true"></span>
+                    <span>{{ c_name | escape }}</span>
+                  </button>
+                </li>
+                {%- assign chip_index = chip_index | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="anaphys-promo__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="anaphys-hb__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="anaphys-hb__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+            {{- section.settings.heading -}}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="anaphys-hb__text">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <ol class="anaphys-promo__steps" role="list">
+            {%- for block in section.blocks -%}
+              <li class="anaphys-promo__step" data-hb-reveal {{ block.shopify_attributes }}>
+                <span class="anaphys-promo__index" aria-hidden="true">{{ forloop.index }}</span>
+                <div>
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="anaphys-promo__step-title">
+                      <span class="visually-hidden">Étape {{ forloop.index }} : </span>
+                      {{- block.settings.title | escape -}}
+                    </h3>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <p class="anaphys-promo__step-text">{{ block.settings.text | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ol>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank -%}
+          <div class="anaphys-hb__actions">
+            <a class="button anaphys-hb-btn anaphys-hb-btn--primary" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+              {{- section.settings.button_label | escape -}}
+              {%- render 'anaphys-icon', icon: 'arrow_forward', class: 'anaphys-hb-btn__arrow' -%}
+            </a>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.note != blank -%}
+          <p class="anaphys-promo__note">{{ section.settings.note | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('AnaphysPersoPromo-{{ section.id }}');
+    if (!root) return;
+
+    /* Pastilles : recolorent l'étiquette, texte blanc sur les couleurs foncées */
+    var label = root.querySelector('[data-promo-label]');
+    var chips = root.querySelectorAll('.anaphys-promo__chip');
+    function luminance(hex) {
+      var h = String(hex).replace('#', '').trim();
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      if (!/^[0-9a-fA-F]{6}$/.test(h)) return 1;
+      var rgb = [0, 2, 4].map(function (i) {
+        var c = parseInt(h.substr(i, 2), 16) / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+    }
+    function isDark(hex) {
+      var l = luminance(hex);
+      /* Contraste avec le blanc contre contraste avec le texte foncé (#121212) */
+      return 1.05 / (l + 0.05) > (l + 0.05) / 0.056;
+    }
+    function apply(chip) {
+      var color = chip.getAttribute('data-color');
+      label.style.setProperty('--label-bg', color);
+      label.classList.toggle('is-dark', isDark(color));
+      chips.forEach(function (other) {
+        other.setAttribute('aria-pressed', other === chip ? 'true' : 'false');
+      });
+    }
+    if (label && chips.length) {
+      apply(chips[0]);
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          apply(chip);
+        });
+      });
+    }
+
+    /* Apparition des étapes au défilement */
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var items = root.querySelectorAll('[data-hb-reveal]');
+    if (!items.length) return;
+    root.classList.add('is-armed');
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var n = 0;
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.style.transitionDelay = n * 60 + 'ms';
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+          n++;
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.15 }
+    );
+    items.forEach(function (item) {
+      observer.observe(item);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Étiquette personnalisée",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Rien qu'à toi"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Personnalise ton <strong>soin</strong>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte",
+      "default": "Ton prénom sur l'étiquette, la couleur de ton choix, une date qui compte. Un soin qui te ressemble, ou une attention à offrir."
+    },
+    {
+      "type": "header",
+      "content": "Aperçu de l'étiquette"
+    },
+    {
+      "type": "text",
+      "id": "preview_prefix",
+      "label": "Texte au-dessus du prénom",
+      "default": "Le soin de"
+    },
+    {
+      "type": "text",
+      "id": "preview_name",
+      "label": "Prénom affiché",
+      "default": "Ton prénom"
+    },
+    {
+      "type": "textarea",
+      "id": "colors",
+      "label": "Couleurs",
+      "info": "Une couleur par ligne, au format Nom:#code. La première est sélectionnée par défaut.",
+      "default": "Sauge:#ACBFA4\nSable:#E8DCC8\nTerre:#B9785C\nNuit:#404E5C\nBlanc:#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton",
+      "default": "Je personnalise mon soin"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Petite note",
+      "default": "Option disponible sur chaque fiche produit."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Choisis ton soin"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Celui qui répond à ton besoin."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Étiquette personnalisée",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Choisis ton soin", "text": "Celui qui répond à ton besoin." } },
+        { "type": "step", "settings": { "title": "Écris ton prénom", "text": "Et une référence si tu veux." } },
+        { "type": "step", "settings": { "title": "Choisis ta couleur", "text": "Sauge, sable, terre, nuit ou blanc." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

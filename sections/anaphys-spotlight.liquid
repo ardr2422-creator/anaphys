@@ -1,0 +1,295 @@
+{%- comment -%}
+  Produit à la une : une carte arrondie sur fond sauge léger, l'image d'un côté,
+  quelques mots-clés, le prix et les boutons de l'autre.
+{%- endcomment -%}
+{%- liquid
+  assign spot_product = section.settings.product
+  assign spot_variant = spot_product.selected_or_first_available_variant
+  assign can_add = false
+  if section.settings.show_add and spot_product != blank and spot_product.available
+    assign can_add = true
+  endif
+-%}
+
+{%- if spot_product != blank or request.design_mode -%}
+  {{ 'anaphys-home-b.css' | asset_url | stylesheet_tag }}
+  {%- if can_add -%}
+    <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width section-{{ section.id }}-padding">
+      <div
+        id="AnaphysSpotlight-{{ section.id }}"
+        class="anaphys-hb anaphys-spot anaphys-spot--image-{{ section.settings.image_position }}"
+      >
+        <figure class="anaphys-spot__media">
+          {%- if section.settings.image != blank -%}
+            {{
+              section.settings.image
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'lazy',
+                widths: '400, 600, 800, 1000, 1400',
+                sizes: '(min-width: 1100px) 550px, (min-width: 750px) 50vw, 100vw',
+                alt: section.settings.image.alt
+            }}
+          {%- elsif spot_product.featured_media -%}
+            {{
+              spot_product.featured_media
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'lazy',
+                widths: '400, 600, 800, 1000, 1400',
+                sizes: '(min-width: 1100px) 550px, (min-width: 750px) 50vw, 100vw',
+                alt: spot_product.featured_media.alt
+            }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </figure>
+
+        <div class="anaphys-spot__content">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="anaphys-hb__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="anaphys-hb__heading h1 heading-highlight" style="--highlight-color: rgb(var(--color-accent-anaphys));">
+              {{- section.settings.heading -}}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <p class="anaphys-hb__text">{{ section.settings.text | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.blocks.size > 0 -%}
+            <ul class="anaphys-spot__facts" role="list">
+              {%- for block in section.blocks -%}
+                <li class="anaphys-spot__fact" data-hb-reveal {{ block.shopify_attributes }}>
+                  {%- if block.settings.big_text != blank -%}
+                    <span class="anaphys-spot__big">{{ block.settings.big_text | escape }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.caption != blank -%}
+                    <span class="anaphys-spot__caption">{{ block.settings.caption | escape }}</span>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          {%- if spot_product != blank -%}
+            {%- if section.settings.show_price -%}
+              <div class="anaphys-spot__buy">
+                <p class="anaphys-spot__price">
+                  {%- if spot_product.price_varies -%}
+                    <span class="visually-hidden">Prix : </span>À partir de {{ spot_product.price_min | money }}
+                  {%- else -%}
+                    <span class="visually-hidden">Prix : </span>{{ spot_variant.price | money }}
+                    {%- if spot_variant.compare_at_price > spot_variant.price -%}
+                      <s><span class="visually-hidden">Prix habituel : </span>{{ spot_variant.compare_at_price | money }}</s>
+                    {%- endif -%}
+                  {%- endif -%}
+                </p>
+                {%- render 'anaphys-problem-badge', product: spot_product -%}
+              </div>
+            {%- endif -%}
+
+            <div class="anaphys-hb__actions">
+              {%- if can_add -%}
+                <product-form class="anaphys-spot__form" data-hide-errors="true" data-section-id="{{ section.id }}">
+                  {%- form 'product', spot_product, class: 'anaphys-spot__add-form', novalidate: 'novalidate' -%}
+                    <input type="hidden" name="id" value="{{ spot_variant.id }}">
+                    <button type="submit" name="add" class="button anaphys-hb-btn anaphys-hb-btn--primary anaphys-spot__add">
+                      <span>Ajouter au panier<span class="visually-hidden"> : {{ spot_product.title | escape }}</span></span>
+                      <div class="loading__spinner hidden">
+                        <svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                          <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                        </svg>
+                      </div>
+                    </button>
+                  {%- endform -%}
+                </product-form>
+              {%- endif -%}
+              {%- if section.settings.button_label != blank -%}
+                <a
+                  class="button anaphys-hb-btn {% if can_add %}anaphys-hb-btn--light{% else %}anaphys-hb-btn--primary{% endif %}"
+                  href="{{ spot_product.url }}"
+                >
+                  {{- section.settings.button_label | escape -}}
+                  <span class="visually-hidden"> : {{ spot_product.title | escape }}</span>
+                  {%- render 'anaphys-icon', icon: 'arrow_forward', class: 'anaphys-hb-btn__arrow' -%}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <p class="anaphys-spot__hint">Choisis un produit dans les réglages de la section pour afficher son prix et ses boutons.</p>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('AnaphysSpotlight-{{ section.id }}');
+      if (!root || !('IntersectionObserver' in window)) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var items = root.querySelectorAll('[data-hb-reveal]');
+      if (!items.length) return;
+      root.classList.add('is-armed');
+      var observer = new IntersectionObserver(
+        function (entries) {
+          var n = 0;
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.style.transitionDelay = n * 60 + 'ms';
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+            n++;
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.15 }
+      );
+      items.forEach(function (item) {
+        observer.observe(item);
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Produit à la une",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Produit"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Facultatif. Par défaut, l'image principale du produit."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Position de l'image",
+      "options": [
+        { "value": "left", "label": "À gauche" },
+        { "value": "right", "label": "À droite" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Le geste qui fait la différence"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Fortifier, l'huile au <strong>romarin</strong>"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Un moment pour toi, du bout des doigts. Quelques gouttes, un massage doux, et ça devient ton rendez-vous du soir."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton vers la fiche produit",
+      "default": "Découvrir"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Afficher le prix",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add",
+      "label": "Bouton « Ajouter au panier »",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "Mot-clé",
+      "settings": [
+        {
+          "type": "text",
+          "id": "big_text",
+          "label": "Mot en grand",
+          "default": "Romarin"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Légende",
+          "default": "au cœur de la formule"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Produit à la une",
+      "blocks": [
+        { "type": "fact", "settings": { "big_text": "Romarin", "caption": "au cœur de la formule" } },
+        { "type": "fact", "settings": { "big_text": "Quelques gouttes", "caption": "suffisent pour un massage" } },
+        { "type": "fact", "settings": { "big_text": "Cuir chevelu", "caption": "là où tout commence" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
