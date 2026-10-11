@@ -91,6 +91,12 @@
             "returns_title": "Retours",
             "returns_text": ""
           }
+        },
+        "personalize": {
+          "type": "personalize",
+          "settings": {
+            "option_product": "personnalisation-soin"
+          }
         }
       },
       "block_order": [
@@ -98,6 +104,7 @@
         "benefits",
         "variant_picker",
         "offers",
+        "personalize",
         "buy_buttons",
         "trust",
         "description",

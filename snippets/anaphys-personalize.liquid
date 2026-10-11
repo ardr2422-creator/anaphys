@@ -1,0 +1,143 @@
+{%- comment -%}
+  Bloc « Personnalise ton soin » de la fiche produit.
+  Activé, il ajoute au panier :
+  - sur le soin : les propriétés Prénom, Couleur de l'étiquette, Référence ;
+  - le produit « option » choisi dans le bloc (le supplément), une fois par soin ajouté.
+  L'envoi groupé est fait par assets/anaphys-product-extras.js.
+  Accepts:
+  - block: {Object} bloc « Personnalisation »
+  - product: {Object}
+  - product_form_id: {String}
+{%- endcomment -%}
+{%- liquid
+  assign option_product = block.settings.option_product
+  assign option_variant = option_product.selected_or_first_available_variant
+  assign colors = block.settings.colors | newline_to_br | split: '<br />'
+-%}
+
+{%- if option_variant and option_variant.available -%}
+  <anaphys-personalize
+    class="anaphys-perso"
+    data-form-id="{{ product_form_id }}"
+    data-product-title="{{ product.title | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <label class="anaphys-perso__toggle">
+      <input type="checkbox" class="anaphys-perso__checkbox" role="switch" data-perso-toggle>
+      <span class="anaphys-perso__switch" aria-hidden="true"></span>
+      <span class="anaphys-perso__titles">
+        <span class="anaphys-perso__heading">{{ block.settings.heading | escape }}</span>
+        {%- if block.settings.subtitle != blank -%}
+          <span class="anaphys-perso__subtitle">{{ block.settings.subtitle | escape }}</span>
+        {%- endif -%}
+      </span>
+      <span class="anaphys-perso__price">+{{ option_variant.price | money }}</span>
+    </label>
+
+    <div class="anaphys-perso__panel" data-perso-panel hidden>
+      <div class="anaphys-perso__preview" aria-hidden="true" data-perso-preview>
+        <div class="anaphys-perso__label" data-perso-label>
+          <span class="anaphys-perso__label-brand">ANAPHYS</span>
+          <span class="anaphys-perso__label-for">{{ block.settings.preview_prefix | escape }}</span>
+          <span class="anaphys-perso__label-name" data-perso-preview-name>{{ block.settings.name_placeholder | escape }}</span>
+          <span class="anaphys-perso__label-ref" data-perso-preview-ref></span>
+          {%- assign step = product.metafields.custom.etape_rituel.value -%}
+          {%- if step != blank -%}
+            <span class="anaphys-perso__label-step">{{ step | escape }}</span>
+          {%- endif -%}
+        </div>
+        <p class="anaphys-perso__preview-caption">{{ block.settings.preview_caption | escape }}</p>
+      </div>
+
+      <div class="anaphys-perso__fields">
+        <div class="field">
+          <input
+            class="field__input"
+            type="text"
+            id="Perso-Name-{{ block.id }}"
+            name="properties[Prénom]"
+            form="{{ product_form_id }}"
+            maxlength="{{ block.settings.name_max }}"
+            autocomplete="given-name"
+            placeholder="{{ block.settings.name_label | escape }}"
+            data-perso-name
+            disabled
+          >
+          <label class="field__label" for="Perso-Name-{{ block.id }}">{{ block.settings.name_label | escape }}</label>
+        </div>
+        <p class="anaphys-perso__error" id="Perso-Error-{{ block.id }}" data-perso-error hidden>
+          {{ block.settings.name_error | escape }}
+        </p>
+
+        {%- if colors.size > 0 and block.settings.colors != blank -%}
+          <fieldset class="anaphys-perso__colors">
+            <legend class="anaphys-perso__legend">{{ block.settings.color_label | escape }}</legend>
+            <div class="anaphys-perso__swatches">
+              {%- for line in colors -%}
+                {%- liquid
+                  assign parts = line | strip | split: ':'
+                  assign color_name = parts | first | strip
+                  assign color_value = parts | last | strip
+                -%}
+                {%- if color_name != blank -%}
+                  <label class="anaphys-perso__swatch" style="--swatch: {{ color_value }};">
+                    <input
+                      type="radio"
+                      class="visually-hidden"
+                      name="properties[Couleur de l'étiquette]"
+                      value="{{ color_name | escape }}"
+                      form="{{ product_form_id }}"
+                      data-color="{{ color_value }}"
+                      data-perso-color
+                      disabled
+                      {% if forloop.first %}
+                        checked
+                      {% endif %}
+                    >
+                    <span class="anaphys-perso__swatch-dot" aria-hidden="true"></span>
+                    <span class="anaphys-perso__swatch-name">{{ color_name | escape }}</span>
+                  </label>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endif -%}
+
+        <div class="field">
+          <input
+            class="field__input"
+            type="text"
+            id="Perso-Ref-{{ block.id }}"
+            name="properties[Référence]"
+            form="{{ product_form_id }}"
+            maxlength="{{ block.settings.ref_max }}"
+            placeholder="{{ block.settings.ref_label | escape }}"
+            data-perso-ref
+            disabled
+          >
+          <label class="field__label" for="Perso-Ref-{{ block.id }}">{{ block.settings.ref_label | escape }}</label>
+        </div>
+        {%- if block.settings.ref_help != blank -%}
+          <p class="anaphys-perso__help">{{ block.settings.ref_help | escape }}</p>
+        {%- endif -%}
+        {%- if block.settings.note != blank -%}
+          <p class="anaphys-perso__note">{{ block.settings.note | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <input
+      type="hidden"
+      data-extra-item
+      data-variant="{{ option_variant.id }}"
+      data-follow-quantity
+      form="{{ product_form_id }}"
+      disabled
+    >
+  </anaphys-personalize>
+  <script src="{{ 'anaphys-product-extras.js' | asset_url }}" defer="defer"></script>
+{%- elsif request.design_mode -%}
+  <p class="anaphys-benefits__empty" {{ block.shopify_attributes }}>
+    Choisis le produit « option » (supplément de personnalisation) dans ce bloc.
+  </p>
+{%- endif -%}

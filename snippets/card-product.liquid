@@ -28,7 +28,10 @@
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
-{%- if card_product and card_product != empty -%}
+{%- if card_product.tags contains 'anaphys-option' -%}
+  {%- comment -%} Produit technique (option payante) : jamais affiché dans les grilles {%- endcomment -%}
+  <span class="anaphys-hidden-card" hidden></span>
+{%- elsif card_product and card_product != empty -%}
   {%- liquid
     assign ratio = 1
     if card_product.featured_media and media_aspect_ratio == 'portrait'
@@ -59,6 +62,7 @@
           class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
           style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
         >
+          {%- render 'anaphys-problem-badge', product: card_product, class: 'anaphys-problem-badge--card' -%}
           {%- if card_product.featured_media -%}
             <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
               <div class="media media--transparent media--hover-effect">

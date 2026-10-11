@@ -1,0 +1,13 @@
+{%- comment -%}
+  Badge « problème » : le besoin auquel répond le produit (métachamp custom.badge_probleme).
+  Accepts:
+  - product: {Object}
+  - class: {String} classe en plus (optionnel)
+{%- endcomment -%}
+{%- assign problem = product.metafields.custom.badge_probleme.value -%}
+{%- if problem != blank -%}
+  <span class="anaphys-problem-badge{% if class %} {{ class }}{% endif %}">
+    <span class="visually-hidden">Pour :</span>
+    {{- problem | escape -}}
+  </span>
+{%- endif -%}

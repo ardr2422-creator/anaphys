@@ -120,7 +120,20 @@
   </fieldset>
 
   <input type="hidden" name="quantity" value="1" form="{{ product_form_id }}" data-offer-quantity>
+  {%- if gift_variant and gift_variant.available -%}
+    {%- comment -%} Cadeau : ajouté avec le soin quand l'option choisie le prévoit {%- endcomment -%}
+    <input
+      type="hidden"
+      data-extra-item
+      data-offer-gift
+      data-variant="{{ gift_variant.id }}"
+      data-quantity="1"
+      form="{{ product_form_id }}"
+      disabled
+    >
+  {%- endif -%}
 </anaphys-offers>
+<script src="{{ 'anaphys-product-extras.js' | asset_url }}" defer="defer"></script>
 
 <script>
   if (!customElements.get('anaphys-offers')) {
@@ -139,9 +152,9 @@
           });
           this.select(this.querySelector('.anaphys-offer__input:checked') || this.querySelector('.anaphys-offer__input'));
 
-          // Le cadeau part avec le produit : le formulaire envoie une liste d'articles à la place de id + quantity.
-          if (this.form && this.giftVariant) {
-            this.form.closest('product-form')?.addEventListener('submit', (event) => this.withGift(event), true);
+          // Le cadeau part avec le produit (voir anaphys-product-extras.js), sauf s'il est déjà dans le panier.
+          this.giftInput = this.querySelector('[data-offer-gift]');
+          if (this.giftInput) {
             this.refreshGiftState();
             if (typeof subscribe === 'function') subscribe(PUB_SUB_EVENTS.cartUpdate, () => this.refreshGiftState());
           }
@@ -166,6 +179,12 @@
           this.querySelectorAll('.anaphys-offer').forEach((card) => card.classList.toggle('is-selected', card.contains(input)));
           this.quantityInput.value = input.value;
           this.current = input;
+          this.updateGift();
+        }
+
+        updateGift() {
+          if (!this.giftInput) return;
+          this.giftInput.disabled = !(this.current?.dataset.gift === 'true' && !this.giftInCart);
         }
 
         renderPrices() {
@@ -206,33 +225,7 @@
           } catch (e) {
             this.giftInCart = false;
           }
-        }
-
-        withGift() {
-          if (this.current?.dataset.gift !== 'true' || this.giftInCart) return;
-          const idInput = this.form.querySelector('[name="id"]');
-          if (!idInput) return;
-          const added = [
-            ['items[0][id]', idInput.value],
-            ['items[0][quantity]', this.quantityInput.value],
-            ['items[1][id]', this.giftVariant],
-            ['items[1][quantity]', '1'],
-          ].map(([name, value]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            this.form.appendChild(input);
-            return input;
-          });
-          idInput.disabled = true;
-          this.quantityInput.disabled = true;
-          // Rétablit le formulaire une fois les données lues par product-form.
-          setTimeout(() => {
-            added.forEach((input) => input.remove());
-            idInput.disabled = false;
-            this.quantityInput.disabled = false;
-          });
+          this.updateGift();
         }
       }
     );

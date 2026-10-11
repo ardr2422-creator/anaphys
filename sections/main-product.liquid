@@ -100,6 +100,7 @@
                   </p>
                 {%- when 'title' -%}
                   <div class="product__title" {{ block.shopify_attributes }}>
+                    {%- render 'anaphys-problem-badge', product: product, class: 'anaphys-problem-badge--product' -%}
                     <h1>{{ product.title | escape }}</h1>
                     <a href="{{ product.url }}" class="product__title">
                       <h2 class="h1">
@@ -699,6 +700,8 @@
                   {% render 'anaphys-delivery-steps', block: block %}
                 {%- when 'offers' -%}
                   {% render 'anaphys-offers', block: block, product: product, product_form_id: product_form_id %}
+                {%- when 'personalize' -%}
+                  {% render 'anaphys-personalize', block: block, product: product, product_form_id: product_form_id %}
                 {%- when 'trust_row' -%}
                   {% render 'anaphys-trust-row', block: block %}
                 {%- when 'product_info' -%}
@@ -2559,6 +2562,118 @@
           "max": 30,
           "step": 1,
           "default": 0
+        }
+      ]
+    },
+    {
+      "type": "personalize",
+      "name": "Personnalisation",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "product",
+          "id": "option_product",
+          "label": "Produit « option » (le supplément)",
+          "info": "Son prix est le supplément facturé, une fois par soin."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Personnalise ton soin"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Sous-titre",
+          "default": "Ton prénom sur l'étiquette : ça devient ton soin."
+        },
+        {
+          "type": "header",
+          "content": "Aperçu"
+        },
+        {
+          "type": "text",
+          "id": "preview_prefix",
+          "label": "Texte au-dessus du prénom",
+          "default": "Le soin de"
+        },
+        {
+          "type": "text",
+          "id": "preview_caption",
+          "label": "Légende de l'aperçu",
+          "default": "Aperçu de ton étiquette"
+        },
+        {
+          "type": "header",
+          "content": "Champs"
+        },
+        {
+          "type": "text",
+          "id": "name_label",
+          "label": "Prénom : libellé",
+          "default": "Ton prénom"
+        },
+        {
+          "type": "text",
+          "id": "name_placeholder",
+          "label": "Prénom affiché par défaut dans l'aperçu",
+          "default": "Ton prénom"
+        },
+        {
+          "type": "range",
+          "id": "name_max",
+          "min": 8,
+          "max": 30,
+          "step": 1,
+          "default": 15,
+          "label": "Prénom : nombre de caractères max"
+        },
+        {
+          "type": "text",
+          "id": "name_error",
+          "label": "Message si le prénom manque",
+          "default": "Ajoute ton prénom pour personnaliser ton soin."
+        },
+        {
+          "type": "text",
+          "id": "color_label",
+          "label": "Couleur : libellé",
+          "default": "Couleur de ton étiquette"
+        },
+        {
+          "type": "textarea",
+          "id": "colors",
+          "label": "Couleurs proposées",
+          "info": "Une par ligne, au format Nom:#code couleur",
+          "default": "Sauge:#ACBFA4\nSable:#E8DCC8\nTerre:#B9785C\nNuit:#404E5C\nBlanc:#FFFFFF"
+        },
+        {
+          "type": "text",
+          "id": "ref_label",
+          "label": "Référence : libellé",
+          "default": "Ta référence (optionnel)"
+        },
+        {
+          "type": "range",
+          "id": "ref_max",
+          "min": 8,
+          "max": 40,
+          "step": 1,
+          "default": 24,
+          "label": "Référence : nombre de caractères max"
+        },
+        {
+          "type": "text",
+          "id": "ref_help",
+          "label": "Référence : aide",
+          "default": "Une date, une initiale, un mot qui compte pour toi."
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Ton étiquette est préparée rien que pour toi. La préparation peut prendre un peu plus de temps."
         }
       ]
     },
