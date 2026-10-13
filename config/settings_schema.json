@@ -44,6 +44,51 @@
     ]
   },
   {
+    "name": "Packs ANAPHYS",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Remises affichées sur les packs. Elles doivent correspondre aux réductions automatiques créées dans Shopify (Réductions), sinon le prix affiché ne sera pas celui payé."
+      },
+      {
+        "type": "range",
+        "id": "pack_discount_2",
+        "label": "Remise à 2 soins",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "pack_discount_3",
+        "label": "Remise à 3 soins",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "pack_discount_5",
+        "label": "Remise à 5 soins",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "unit": "%",
+        "default": 20
+      },
+      {
+        "type": "checkbox",
+        "id": "pack_cart_enable",
+        "label": "Proposer de compléter un pack dans le panier",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "Panier ANAPHYS",
     "settings": [
       {

@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main": {
+      "type": "anaphys-packs",
+      "settings": {
+        "eyebrow": "Les packs ANAPHYS",
+        "heading": "Choisis ton pack",
+        "heading_size": "h0",
+        "text": "<p>Plus tu prends de soins, plus tu économises : <strong>-10 %</strong> dès 2 soins, <strong>-15 %</strong> dès 3, <strong>-20 %</strong> pour le rituel complet. La remise s'applique toute seule au paiement.</p>",
+        "limit": 8,
+        "note": "Livraison en 8 à 10 jours ouvrés.",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "diagnostic": {
+      "type": "anaphys-quiz-cta",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "diagnostic"
+  ]
+}

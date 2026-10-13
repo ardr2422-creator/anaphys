@@ -97,6 +97,15 @@
           "settings": {
             "option_product": "personnalisation-soin"
           }
+        },
+        "packs": {
+          "type": "packs",
+          "settings": {
+            "heading": "Économise avec un pack",
+            "limit": 3,
+            "link_label": "Voir tous les packs",
+            "link": "/pages/packs"
+          }
         }
       },
       "block_order": [
@@ -107,6 +116,7 @@
         "personalize",
         "buy_buttons",
         "trust",
+        "packs",
         "description",
         "info"
       ],

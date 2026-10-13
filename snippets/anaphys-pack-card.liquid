@@ -1,0 +1,120 @@
+{%- comment -%}
+  Carte d'un pack (métaobjet anaphys_pack).
+  Le prix du pack = somme des soins, moins la remise du palier (réglages « Packs ANAPHYS »).
+  La remise elle-même est appliquée par les réductions automatiques Shopify.
+  Accepts:
+  - pack: {Object} métaobjet anaphys_pack
+  - compact: {Boolean} version courte (fiche produit)
+  - heading_tag: {String} balise du titre (h3 par défaut)
+{%- endcomment -%}
+{%- liquid
+  assign pack_products = pack.produits.value
+  assign pack_total = 0
+  assign pack_count = 0
+  assign pack_available = true
+  assign pack_variants = ''
+  for pack_product in pack_products
+    assign pack_variant = pack_product.selected_or_first_available_variant
+    if pack_variant == blank or pack_variant.available == false
+      assign pack_available = false
+    else
+      assign pack_total = pack_total | plus: pack_variant.price
+      assign pack_variants = pack_variants | append: pack_variant.id | append: ','
+    endif
+    assign pack_count = pack_count | plus: 1
+  endfor
+  assign pack_variants = pack_variants | split: ',' | join: ','
+
+  assign pack_pct = 0
+  if pack_count >= 5
+    assign pack_pct = settings.pack_discount_5
+  elsif pack_count >= 3
+    assign pack_pct = settings.pack_discount_3
+  elsif pack_count >= 2
+    assign pack_pct = settings.pack_discount_2
+  endif
+  assign pack_keep = 100 | minus: pack_pct
+  assign pack_price = pack_total | times: pack_keep | divided_by: 100
+  assign pack_saving = pack_total | minus: pack_price
+  assign heading_tag = heading_tag | default: 'h3'
+-%}
+
+{%- if pack_count > 0 -%}
+  <article class="anaphys-pack{% if compact %} anaphys-pack--compact{% endif %}{% if pack.badge != blank %} anaphys-pack--featured{% endif %}" id="pack-{{ pack.system.handle }}">
+    {%- if pack.badge != blank and compact != true -%}
+      <span class="anaphys-pack__badge">{{ pack.badge | escape }}</span>
+    {%- endif -%}
+
+    <div class="anaphys-pack__media{% if pack.image != blank %} anaphys-pack__media--image{% endif %}" style="--pack-count: {{ pack_count }};">
+      {%- if pack.image != blank and compact != true -%}
+        {{ pack.image.value | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', alt: pack.titre.value }}
+      {%- else -%}
+        {%- for pack_product in pack_products -%}
+          {%- if pack_product.featured_image -%}
+            <span class="anaphys-pack__thumb">
+              {{ pack_product.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', sizes: '120px', alt: pack_product.title }}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="anaphys-pack__body">
+      <{{ heading_tag }} class="anaphys-pack__title">{{ pack.titre.value | escape }}</{{ heading_tag }}>
+      {%- if pack.accroche != blank -%}
+        <p class="anaphys-pack__hook">{{ pack.accroche.value | escape }}</p>
+      {%- endif -%}
+
+      {%- unless compact -%}
+        <ul class="anaphys-pack__list" role="list">
+          {%- for pack_product in pack_products -%}
+            {%- assign pack_step = pack_product.metafields.custom.etape_rituel.value | append: '' | strip -%}
+            <li>
+              {%- render 'anaphys-icon', icon: 'check_circle', class: 'anaphys-pack__check' -%}
+              <a href="{{ pack_product.url }}">
+                {%- if pack_step != blank -%}<span class="anaphys-pack__step">{{ pack_step | escape }}</span> {% endif -%}
+                {{ pack_product.title | escape }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <p class="anaphys-pack__names">
+          {%- for pack_product in pack_products -%}
+            {{ pack_product.title | escape }}{% unless forloop.last %} + {% endunless %}
+          {%- endfor -%}
+        </p>
+      {%- endunless -%}
+
+      <div class="anaphys-pack__footer">
+        <div class="anaphys-pack__prices">
+          <span class="anaphys-pack__price">{{ pack_price | money }}</span>
+          {%- if pack_pct > 0 -%}
+            <s class="anaphys-pack__compare"><span class="visually-hidden">Au lieu de </span>{{ pack_total | money }}</s>
+            <span class="anaphys-pack__pct">-{{ pack_pct }} %</span>
+          {%- endif -%}
+        </div>
+        {%- if pack_saving > 0 -%}
+          <p class="anaphys-pack__saving">Tu économises {{ pack_saving | money }}</p>
+        {%- endif -%}
+
+        {%- if pack_available -%}
+          <button
+            type="button"
+            class="button anaphys-pack__add"
+            data-pack-add
+            data-variants="{{ pack_variants }}"
+            data-pack-title="{{ pack.titre.value | escape }}"
+          >
+            <span class="anaphys-pack__add-label">Ajouter le pack</span>
+            <span class="anaphys-pack__add-done" hidden>Pack ajouté</span>
+            {%- render 'loading-spinner' -%}
+          </button>
+          <p class="anaphys-pack__error" role="alert" data-pack-error hidden></p>
+        {%- else -%}
+          <button type="button" class="button anaphys-pack__add" disabled>Bientôt de retour</button>
+        {%- endif -%}
+      </div>
+    </div>
+  </article>
+{%- endif -%}

@@ -702,6 +702,8 @@
                   {% render 'anaphys-offers', block: block, product: product, product_form_id: product_form_id %}
                 {%- when 'personalize' -%}
                   {% render 'anaphys-personalize', block: block, product: product, product_form_id: product_form_id %}
+                {%- when 'packs' -%}
+                  {% render 'anaphys-product-packs', block: block, product: product %}
                 {%- when 'trust_row' -%}
                   {% render 'anaphys-trust-row', block: block %}
                 {%- when 'product_info' -%}
@@ -2562,6 +2564,43 @@
           "max": 30,
           "step": 1,
           "default": 0
+        }
+      ]
+    },
+    {
+      "type": "packs",
+      "name": "Packs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Affiche les packs (Contenu › Métaobjets › Pack ANAPHYS) qui contiennent ce soin."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Économise avec un pack"
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Nombre de packs maximum",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Texte du lien",
+          "default": "Voir tous les packs"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
         }
       ]
     },

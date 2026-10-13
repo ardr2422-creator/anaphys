@@ -1,0 +1,161 @@
+{%- comment -%}
+  Packs de soins ANAPHYS (métaobjets anaphys_pack, dans l'ordre de l'admin).
+  Le bouton ajoute tous les soins d'un coup ; la remise du palier s'applique au paiement.
+{%- endcomment -%}
+{{ 'anaphys-packs.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'anaphys-packs.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign packs = shop.metaobjects.anaphys_pack.values
+  assign limit = section.settings.limit
+-%}
+
+<div class="anaphys-packs color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="anaphys-packs__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="anaphys-packs__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="anaphys-packs__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="anaphys-packs__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if packs.size > 0 -%}
+      <ul class="anaphys-packs__grid" role="list" style="--packs-count: {{ packs.size | at_most: limit }};">
+        {%- for pack in packs limit: limit -%}
+          <li class="anaphys-packs__item">
+            {%- render 'anaphys-pack-card', pack: pack -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if section.settings.note != blank -%}
+        <p class="anaphys-packs__note">{{ section.settings.note | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <div class="anaphys-packs__cta">
+          <a href="{{ section.settings.button_link }}" class="button anaphys-button-light">{{ section.settings.button_label | escape }}</a>
+        </div>
+      {%- endif -%}
+    {%- elsif request.design_mode -%}
+      <p class="anaphys-packs__empty">Crée tes packs dans Contenu › Métaobjets › Pack ANAPHYS.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Packs ANAPHYS",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les packs se gèrent dans Contenu › Métaobjets › Pack ANAPHYS. Les remises se règlent dans Paramètres du thème › Packs ANAPHYS."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Les packs"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Plus de soins, plus d'économies"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Taille du titre",
+      "options": [
+        { "value": "h2", "label": "Petite" },
+        { "value": "h1", "label": "Moyenne" },
+        { "value": "h0", "label": "Grande" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Tes soins réunis, à prix doux. La remise s'applique toute seule au paiement.</p>"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Nombre de packs",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note sous les packs",
+      "default": "Livraison en 8 à 10 jours ouvrés."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Palette de couleurs",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Marge du haut",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Marge du bas",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Packs ANAPHYS"
+    }
+  ]
+}
+{% endschema %}

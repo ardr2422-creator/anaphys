@@ -1,0 +1,111 @@
+{%- comment -%}
+  Panier : propose de compléter un pack quand un soin de plus fait passer au palier de remise suivant.
+  On garde le pack auquel il manque le moins de soins.
+{%- endcomment -%}
+{%- if settings.pack_cart_enable and cart.item_count > 0 -%}
+  {%- liquid
+    assign packs = shop.metaobjects.anaphys_pack.values
+    assign cart_ids = cart.items | map: 'product_id' | join: ',' | prepend: ',' | append: ','
+
+    # Soins comptés pour la remise : ceux qui font partie d'au moins un pack
+    assign pack_ids = ','
+    for pack in packs
+      for p in pack.produits.value
+        assign pack_ids = pack_ids | append: p.id | append: ','
+      endfor
+    endfor
+    assign eligible = 0
+    for item in cart.items
+      assign key = ',' | append: item.product_id | append: ','
+      if pack_ids contains key
+        assign eligible = eligible | plus: item.quantity
+      endif
+    endfor
+
+    assign current_pct = 0
+    if eligible >= 5
+      assign current_pct = settings.pack_discount_5
+    elsif eligible >= 3
+      assign current_pct = settings.pack_discount_3
+    elsif eligible >= 2
+      assign current_pct = settings.pack_discount_2
+    endif
+
+    assign best = nil
+    assign best_missing = 99
+    for pack in packs
+      assign have = 0
+      assign missing = 0
+      assign missing_ok = true
+      for p in pack.produits.value
+        assign key = ',' | append: p.id | append: ','
+        if cart_ids contains key
+          assign have = have | plus: 1
+        else
+          assign missing = missing | plus: 1
+          unless p.selected_or_first_available_variant.available
+            assign missing_ok = false
+          endunless
+        endif
+      endfor
+      if have > 0 and missing > 0 and missing_ok and missing < best_missing
+        assign after = eligible | plus: missing
+        assign after_pct = 0
+        if after >= 5
+          assign after_pct = settings.pack_discount_5
+        elsif after >= 3
+          assign after_pct = settings.pack_discount_3
+        elsif after >= 2
+          assign after_pct = settings.pack_discount_2
+        endif
+        if after_pct > current_pct
+          assign best = pack
+          assign best_missing = missing
+          assign best_pct = after_pct
+        endif
+      endif
+    endfor
+  -%}
+
+  {%- if best -%}
+    {%- liquid
+      assign add_ids = ''
+      assign add_total = 0
+      assign add_names = ''
+      for p in best.produits.value
+        assign key = ',' | append: p.id | append: ','
+        unless cart_ids contains key
+          assign v = p.selected_or_first_available_variant
+          assign add_ids = add_ids | append: v.id | append: ','
+          assign add_total = add_total | plus: v.price
+          if add_names != ''
+            assign add_names = add_names | append: ' + '
+          endif
+          assign add_names = add_names | append: p.title
+        endunless
+      endfor
+      assign add_ids = add_ids | split: ',' | join: ','
+    -%}
+    <div class="anaphys-cart-pack">
+      {%- render 'anaphys-icon', icon: 'redeem', class: 'anaphys-cart-pack__icon' -%}
+      <div class="anaphys-cart-pack__body">
+        <p class="anaphys-cart-pack__title">Complète ton {{ best.titre.value | escape }}</p>
+        <p class="anaphys-cart-pack__text">
+          Ajoute {{ add_names | escape }} et ton panier passe à <strong>-{{ best_pct }} %</strong>.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="anaphys-cart-pack__add"
+        data-pack-add
+        data-variants="{{ add_ids }}"
+        data-pack-title="{{ best.titre.value | escape }}"
+      >
+        <span class="anaphys-pack__add-label">Ajouter · {{ add_total | money }}</span>
+        <span class="anaphys-pack__add-done" hidden>Ajouté</span>
+        {%- render 'loading-spinner' -%}
+      </button>
+      <p class="anaphys-pack__error" role="alert" data-pack-error hidden></p>
+    </div>
+  {%- endif -%}
+{%- endif -%}

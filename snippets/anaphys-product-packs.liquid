@@ -1,0 +1,34 @@
+{%- comment -%}
+  Fiche produit : les packs qui contiennent ce soin.
+  Accepts:
+  - block: {Object} bloc « Packs »
+  - product: {Object}
+{%- endcomment -%}
+{%- liquid
+  assign packs = shop.metaobjects.anaphys_pack.values
+  assign shown = 0
+-%}
+{%- capture pack_cards -%}
+  {%- for pack in packs -%}
+    {%- assign pack_ids = pack.produits.value | map: 'id' -%}
+    {%- if pack_ids contains product.id and shown < block.settings.limit -%}
+      {%- assign shown = shown | plus: 1 -%}
+      <li>{%- render 'anaphys-pack-card', pack: pack, compact: true, heading_tag: 'h4' -%}</li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if shown > 0 -%}
+  {{ 'anaphys-packs.css' | asset_url | stylesheet_tag }}
+  <div class="anaphys-product-packs" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h3 class="anaphys-product-packs__heading">{{ block.settings.heading | escape }}</h3>
+    {%- endif -%}
+    <ul class="anaphys-product-packs__list" role="list">
+      {{ pack_cards }}
+    </ul>
+    {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+      <a class="anaphys-product-packs__link" href="{{ block.settings.link }}">{{ block.settings.link_label | escape }}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
