@@ -49,13 +49,23 @@
       {%- if pack.image != blank and compact != true -%}
         {{ pack.image.value | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', alt: pack.titre.value }}
       {%- else -%}
-        {%- for pack_product in pack_products -%}
+        {%- liquid
+          assign thumb_limit = 10
+          if compact
+            assign thumb_limit = 3
+          endif
+          assign thumb_more = pack_count | minus: thumb_limit
+        -%}
+        {%- for pack_product in pack_products limit: thumb_limit -%}
           {%- if pack_product.featured_image -%}
             <span class="anaphys-pack__thumb">
               {{ pack_product.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', sizes: '120px', alt: pack_product.title }}
             </span>
           {%- endif -%}
         {%- endfor -%}
+        {%- if thumb_more > 0 -%}
+          <span class="anaphys-pack__thumb anaphys-pack__thumb--more">+{{ thumb_more }}</span>
+        {%- endif -%}
       {%- endif -%}
     </div>
 
@@ -81,7 +91,9 @@
       {%- else -%}
         <p class="anaphys-pack__names">
           {%- for pack_product in pack_products -%}
-            {{ pack_product.title | escape }}{% unless forloop.last %} + {% endunless %}
+            {%- assign pack_step = pack_product.metafields.custom.etape_rituel.value | append: '' | strip -%}
+            {%- if pack_step != blank -%}{{ pack_step | escape }}{%- else -%}{{ pack_product.title | escape }}{%- endif -%}
+            {%- unless forloop.last %} · {% endunless -%}
           {%- endfor -%}
         </p>
       {%- endunless -%}
@@ -106,7 +118,7 @@
             data-variants="{{ pack_variants }}"
             data-pack-title="{{ pack.titre.value | escape }}"
           >
-            <span class="anaphys-pack__add-label">Ajouter le pack</span>
+            <span class="anaphys-pack__add-label">{% if compact %}Ajouter{% else %}Ajouter le pack{% endif %}</span>
             <span class="anaphys-pack__add-done" hidden>Pack ajouté</span>
             {%- render 'loading-spinner' -%}
           </button>

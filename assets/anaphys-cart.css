@@ -355,7 +355,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 0.6rem 1.2rem;
-  margin: 1.6rem 0 0.8rem;
+  margin: 0 0 1.4rem;
   padding: 1.2rem 1.4rem;
   border: 1px dashed rgb(var(--color-accent-anaphys));
   border-radius: 1.2rem;
@@ -424,4 +424,8 @@
     grid-column: 1 / -1;
     width: 100%;
   }
+}
+.cart__items .anaphys-cart-pack {
+  max-width: 64rem;
+  margin: 2rem 0 0 auto;
 }

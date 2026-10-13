@@ -21,6 +21,21 @@
 {%- liquid
   assign packs = shop.metaobjects.anaphys_pack.values
   assign limit = section.settings.limit
+  # Ordre : champ « ordre » du pack (1 en premier), puis les packs sans ordre
+  assign pack_handles = ''
+  for i in (1..20)
+    for pack in packs
+      if pack.ordre.value == i
+        assign pack_handles = pack_handles | append: pack.system.handle | append: ','
+      endif
+    endfor
+  endfor
+  for pack in packs
+    if pack.ordre == blank
+      assign pack_handles = pack_handles | append: pack.system.handle | append: ','
+    endif
+  endfor
+  assign pack_handles = pack_handles | split: ','
 -%}
 
 <div class="anaphys-packs color-{{ section.settings.color_scheme }} gradient">
@@ -41,7 +56,8 @@
 
     {%- if packs.size > 0 -%}
       <ul class="anaphys-packs__grid" role="list" style="--packs-count: {{ packs.size | at_most: limit }};">
-        {%- for pack in packs limit: limit -%}
+        {%- for pack_handle in pack_handles limit: limit -%}
+          {%- assign pack = shop.metaobjects.anaphys_pack[pack_handle] -%}
           <li class="anaphys-packs__item">
             {%- render 'anaphys-pack-card', pack: pack -%}
           </li>

@@ -7,9 +7,25 @@
 {%- liquid
   assign packs = shop.metaobjects.anaphys_pack.values
   assign shown = 0
+  # Ordre : champ « ordre » du pack (1 en premier), puis les packs sans ordre
+  assign pack_handles = ''
+  for i in (1..20)
+    for pack in packs
+      if pack.ordre.value == i
+        assign pack_handles = pack_handles | append: pack.system.handle | append: ','
+      endif
+    endfor
+  endfor
+  for pack in packs
+    if pack.ordre == blank
+      assign pack_handles = pack_handles | append: pack.system.handle | append: ','
+    endif
+  endfor
+  assign pack_handles = pack_handles | split: ','
 -%}
 {%- capture pack_cards -%}
-  {%- for pack in packs -%}
+  {%- for pack_handle in pack_handles -%}
+    {%- assign pack = shop.metaobjects.anaphys_pack[pack_handle] -%}
     {%- assign pack_ids = pack.produits.value | map: 'id' -%}
     {%- if pack_ids contains product.id and shown < block.settings.limit -%}
       {%- assign shown = shown | plus: 1 -%}
